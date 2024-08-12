@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { MobileNumber } from './entities/mobile-number.entity';
 import { CreateMobileNumberDto } from './dto/create-mobile-number.dto';
 import { UpdateMobileNumberDto } from './dto/update-mobile-number.dto';
+import { User } from '../users/entities/user.entity';
 
 @Injectable()
 export class MobileNumberService {
@@ -13,10 +14,11 @@ export class MobileNumberService {
   ) {}
 
   async create(createMobileNumberDto: CreateMobileNumberDto) {
-    const mobile = await this.mobileNumbersRepository.save(
-      createMobileNumberDto,
-    );
-    return mobile;
+    const mobileNo = await this.mobileNumbersRepository.create({
+      ...createMobileNumberDto,
+    });
+    mobileNo.user = { id: createMobileNumberDto.userId } as User;
+    return await this.mobileNumbersRepository.save(mobileNo);
   }
 
   findAll(page: number = 1, limit: number = 10) {
