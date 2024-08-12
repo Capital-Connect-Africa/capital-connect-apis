@@ -38,9 +38,23 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 }
 
 ####
+# Fetch Number of employees.
+GET http://localhost:3000/company/list/no-of-employees
+
+####
+# Fetch Years of operation.
+GET http://localhost:3000/company/list/years-of-operation
+
+####
 # Fetch companies
 
 GET http://localhost:3000/company
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+####
+# Fetch companies paginated
+
+GET http://localhost:3000/company?page=4&limit=5
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
 ####

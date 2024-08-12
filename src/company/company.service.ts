@@ -13,6 +13,7 @@ import { User } from 'src/users/entities/user.entity';
 import { Submission } from 'src/submission/entities/submission.entity';
 import { Question } from 'src/question/entities/question.entity';
 import { FilterCompanyDto } from './dto/filter-company.dto';
+import { NumberOfEmployees, YearsOfOperation } from './company.type';
 
 @Injectable()
 export class CompanyService {
@@ -27,6 +28,14 @@ export class CompanyService {
     private userService: UsersService,
   ) {}
 
+  getNumberOfEmployees(): Array<string> {
+    return Object.values(NumberOfEmployees);
+  }
+
+  getYearsOfOperation(): Array<string> {
+    return Object.values(YearsOfOperation);
+  }
+
   async create(id: number, createCompanyDto: CreateCompanyDto) {
     const userFound = await this.userRepository.findOne({ where: { id } });
     if (!userFound) {
@@ -38,12 +47,20 @@ export class CompanyService {
     }
   }
 
-  findAll() {
-    return this.companyRepository.find({ relations: ['companyLogo', 'user'] });
+  findAll(page: number = 1, limit: number = 10) {
+    const skip = (page - 1) * limit;
+    return this.companyRepository.find({ 
+      skip,
+      take: limit,
+      relations: ['companyLogo', 'user'] 
+    });
   }
 
   async findOne(id: number) {
-    const company = await this.companyRepository.findOne({ where: { id }, relations: ['companyLogo', 'user'] });
+    const company = await this.companyRepository.findOne({
+      where: { id },
+      relations: ['companyLogo', 'user'],
+    });
     if (company) {
       return company;
     } else {
@@ -64,7 +81,10 @@ export class CompanyService {
   }
 
   async findOneByUser(user: User) {
-    const company = await this.companyRepository.findOne({ where: { user }, relations: ['companyLogo', 'user'], });
+    const company = await this.companyRepository.findOne({
+      where: { user },
+      relations: ['companyLogo', 'user'],
+    });
     if (company) {
       return company;
     } else {

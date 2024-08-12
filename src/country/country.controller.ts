@@ -20,6 +20,12 @@ export class CountryController {
     return this.countriesService.findAll();
   }
 
+  @Post()
+  @Roles(Role.Admin)
+  async create(@Body() country: Country): Promise<Country> {
+    return this.countriesService.create(country);
+  }
+
   @Post('bulk')
   @Roles(Role.Admin)
   async bulkCreate(@Body() countries: Country[]): Promise<Country[]> {
