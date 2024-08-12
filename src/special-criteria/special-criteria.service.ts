@@ -4,13 +4,33 @@ import { UpdateSpecialCriterionDto } from './dto/update-special-criterion.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { SpecialCriterion } from './entities/special-criterion.entity';
 import { Repository } from 'typeorm';
+import { AddQuestionDto } from './dto/add-question.dto';
+import { Question } from 'src/question/entities/question.entity';
 
 @Injectable()
 export class SpecialCriteriaService {
   constructor(
     @InjectRepository(SpecialCriterion)
     private readonly specialCriteriaRepository: Repository<SpecialCriterion>,
+    @InjectRepository(Question)
+    private readonly questionsRepository: Repository<Question>,
   ){}
+
+  async addQuestionsToSpecialCriteria(dto: AddQuestionDto) {
+    const specialCriteria = await this.specialCriteriaRepository.findOne({
+        where: { id: dto.specialCriteriaId },
+        relations: ['questions'],
+    });
+
+    if (!specialCriteria) {
+        throw new Error('SpecialCriteria not found');
+    }
+
+    const questions = await this.questionsRepository.findByIds(dto.questionIds);
+    specialCriteria.questions.push(...questions);
+    
+    return this.specialCriteriaRepository.save(specialCriteria);
+  }
 
   async create(createSpecialCriterionDto: CreateSpecialCriterionDto) {
     return await this.specialCriteriaRepository.save(createSpecialCriterionDto);

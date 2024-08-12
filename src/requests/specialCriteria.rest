@@ -6,6 +6,14 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
     "title": "",
     "description": ""
 }
+### Add question to special criteria
+POST http://localhost:3000/special-criteria/add-questions
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+{
+  "specialCriteriaId": 13,
+  "questionIds": [1, 15]
+}
 
 ### Get Special criteria by Id
 GET http://localhost:3000/special-criteria/1

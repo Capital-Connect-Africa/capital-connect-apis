@@ -7,6 +7,7 @@ import { RolesGuard } from 'src/auth/roles.guard';
 import { Roles } from 'src/auth/roles.decorator';
 import { Role } from 'src/auth/role.enum';
 import throwInternalServer from 'src/shared/utils/exceptions.util';
+import { AddQuestionDto } from './dto/add-question.dto';
 
 @Controller('special-criteria')
 @UseGuards(JwtAuthGuard, RolesGuard)
@@ -21,6 +22,11 @@ export class SpecialCriteriaController {
     } catch (error) {
       throwInternalServer(error);
     }
+  }
+
+  @Post('add-questions')
+    async addQuestions(@Body() dto: AddQuestionDto) {
+        return this.specialCriteriaService.addQuestionsToSpecialCriteria(dto);
   }
 
   @Get()
