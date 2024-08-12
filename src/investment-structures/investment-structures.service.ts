@@ -15,7 +15,7 @@ export class InvestmentStructuresService {
     return await this.investmentStructureRepository.save(createInvestmentStructureDto);
   }
 
-  findAll(page: number = 1, limit: number = 10) {
+  findAll(page: number = 1, limit: number = 15) {
     const skip = (page - 1) * limit;
     return this.investmentStructureRepository.find({
       skip,
