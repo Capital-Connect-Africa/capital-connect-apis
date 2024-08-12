@@ -12,6 +12,7 @@ import {
   Request,
   HttpStatus,
   HttpCode,
+  Query,
 } from '@nestjs/common';
 import { CompanyService } from './company.service';
 import { CreateCompanyDto } from './dto/create-company.dto';
@@ -36,8 +37,13 @@ export class CompanyController {
 
   @UseGuards(JwtAuthGuard)
   @Get()
-  findAll() {
-    return this.companyService.findAll();
+  async findAll(@Query('page') page: number, @Query('limit') limit: number) {
+    try {
+      const companies = await this.companyService.findAll(page, limit);
+      return companies;
+    } catch (error) {
+      throwInternalServer(error);
+    }
   }
 
   @Get(':id')
