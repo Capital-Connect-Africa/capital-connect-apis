@@ -5,9 +5,7 @@ Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
 {
-    "phoneNo": "254727206415",
-    "isVerified": true,
-    "otp": "Wfgt5e",
+    "phoneNo": "+254727206415",
     "userId": 1
 }
 
@@ -33,12 +31,20 @@ Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
 {
-  "phoneNo": "254727206416",
-  "isVerified": false,
-  "otp": "Wfgt5yt"
+  "phoneNo": "2547272064160"
 }
 
 ###
 # Delete Mobile
 DELETE http://localhost:3000/mobile-numbers/8
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+### Create Mobile
+POST http://localhost:3000/mobile-numbers/verify
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+{
+    "phoneNo": "+254727206415",
+    "otp": "639237"
+}

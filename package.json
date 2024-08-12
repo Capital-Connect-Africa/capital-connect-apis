@@ -55,6 +55,7 @@
     "pg": "^8.11.5",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1",
+    "sib-api-v3-typescript": "^2.2.2",
     "winston": "^3.13.0"
   },
   "devDependencies": {

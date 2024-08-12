@@ -3,21 +3,18 @@ import {
   IsDate,
   IsNumber,
   IsOptional,
+  IsPhoneNumber,
   IsString,
-  MinLength,
 } from 'class-validator';
 
 export class CreateMobileNumberDto {
   @IsString()
-  @MinLength(9)
+  @IsPhoneNumber()
   phoneNo: string;
 
   @IsBoolean()
   @IsOptional()
   isVerified?: boolean;
-
-  @IsString()
-  otp: string;
 
   @IsNumber()
   userId: number;

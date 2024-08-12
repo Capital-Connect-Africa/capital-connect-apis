@@ -9,11 +9,11 @@ import { UpdateMobileNumberDto } from './dto/update-mobile-number.dto';
 export class MobileNumberService {
   constructor(
     @InjectRepository(MobileNumber)
-    private mobileNUmbersRepository: Repository<MobileNumber>,
+    private mobileNumbersRepository: Repository<MobileNumber>,
   ) {}
 
   async create(createMobileNumberDto: CreateMobileNumberDto) {
-    const mobile = await this.mobileNUmbersRepository.save(
+    const mobile = await this.mobileNumbersRepository.save(
       createMobileNumberDto,
     );
     return mobile;
@@ -21,16 +21,20 @@ export class MobileNumberService {
 
   findAll(page: number = 1, limit: number = 10) {
     const skip = (page - 1) * limit;
-    return this.mobileNUmbersRepository.find({
+    return this.mobileNumbersRepository.find({
       skip,
       take: limit,
+      relations: ['user'],
     });
   }
 
   async findOne(id: number) {
-    const mobile = await this.mobileNUmbersRepository.findOneBy({ id });
+    const mobile = await this.mobileNumbersRepository.findOne({
+      where: { id },
+      relations: ['user'],
+    });
     if (!mobile) {
-      throw new NotFoundException(`MobileNumber with id ${id} not found`);
+      throw new NotFoundException(`Mobile Number with id ${id} not found`);
     }
     return mobile;
   }
@@ -41,11 +45,11 @@ export class MobileNumberService {
     if (phoneNo) updates['phoneNo'] = phoneNo;
     if (isVerified) updates['isVerified'] = isVerified;
     if (Object.keys(updates).length > 0)
-      await this.mobileNUmbersRepository.update(id, updateMobileNumberDto);
-    return this.mobileNUmbersRepository.findOneBy({ id });
+      await this.mobileNumbersRepository.update(id, updateMobileNumberDto);
+    return this.mobileNumbersRepository.findOneBy({ id });
   }
 
   remove(id: number) {
-    this.mobileNUmbersRepository.delete(id);
+    this.mobileNumbersRepository.delete(id);
   }
 }
