@@ -47,8 +47,13 @@ export class CompanyService {
     }
   }
 
-  findAll() {
-    return this.companyRepository.find({ relations: ['companyLogo', 'user'] });
+  findAll(page: number = 1, limit: number = 10) {
+    const skip = (page - 1) * limit;
+    return this.companyRepository.find({ 
+      skip,
+      take: limit,
+      relations: ['companyLogo', 'user'] 
+    });
   }
 
   async findOne(id: number) {
