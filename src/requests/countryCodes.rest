@@ -1,0 +1,86 @@
+###
+# Load country codes
+GET http://localhost:3000/country-codes/bulklocal
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+###
+# Load country codes prod
+GET http://api.capitalconnect.africa/country-codes/bulklocal
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+###
+# Create country code
+POST http://localhost:3000/country-codes
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+{
+    "name": "Afghanistan", 
+    "code": "+93"
+}
+
+###
+# Create Country code prod
+POST http://api.capitalconnect.africa/country-codes
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+{
+    "name": "",
+    "code": ""
+}
+
+###
+# Get country code
+GET http://localhost:3000/country-codes/1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+###
+# Get country code prod
+GET https://capitalconnect-0060e0fb0eb4.herokuapp.com/country-codes/129
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+###
+# Get country codes
+GET http://localhost:3000/country-codes
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+###
+# Get country codes prod
+GET https://capitalconnect-0060e0fb0eb4.herokuapp.com/country-codes
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+###
+# Get country codes prod
+GET http://api.capitalconnect.africa/country-codes
+
+
+###
+# Update country code
+PUT http://localhost:3000/country-codes/14
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+{
+    "name": "",
+    "code": ""
+}
+
+###
+# Update country code prod
+PUT http://api.capitalconnect.africa/country-codes/129
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+{
+    "name": "",
+    "code": ""
+}
+
+###
+# Delete country code
+DELETE http://localhost:3000/country-codes/145
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+###
+# Delete country code
+DELETE http://api.capitalconnect.africa/country-codes/17
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
