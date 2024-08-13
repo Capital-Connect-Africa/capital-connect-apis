@@ -80,7 +80,7 @@ export class MatchmakingService {
     });
 
     return this.matchmakingRepository.save(newMatch);
-  }
+  }  
 
   async connectWithCompany(
     investorProfileId: number,
@@ -99,7 +99,7 @@ export class MatchmakingService {
     }
 
     throw new Error('Company must be marked as interesting first');
-  }
+  } 
 
   async getInterestingCompanies(
     investorProfileId: number,
@@ -144,4 +144,53 @@ export class MatchmakingService {
       relations: ['investorProfile'],
     });
   }
+
+// New methods added below.....
+  async markAsNotInteresting(
+    investorProfileId: number,
+    companyId: number,
+  ): Promise<Matchmaking> {
+    const match = await this.matchmakingRepository.findOne({
+      where: {
+        investorProfile: { id: investorProfileId },
+        company: { id: companyId },
+      },
+    });
+  
+    if (match) {
+      match.status = 'not interesting';
+      return this.matchmakingRepository.save(match);
+    }
+  
+    const noMatch = this.matchmakingRepository.create({
+      investorProfile: { id: investorProfileId },
+      company: { id: companyId },
+      status: 'not interesting',
+    });
+  
+    return this.matchmakingRepository.save(noMatch);
+  }
+
+  async disconnectFromCompany(
+    investorProfileId: number,
+    companyId: number,
+  ): Promise<Matchmaking> {
+    const match = await this.matchmakingRepository.findOne({
+      where: {
+        investorProfile: { id: investorProfileId },
+        company: { id: companyId },
+      },
+    });
+  
+    if (match) {
+      if (match.status === 'connected') {
+        match.status = 'disconnected';
+        return this.matchmakingRepository.save(match);
+      } else {
+        throw new Error('Company is not currently connected');
+      }
+    }
+  
+    throw new Error('Matchmaking record not found');
+  } 
 }
