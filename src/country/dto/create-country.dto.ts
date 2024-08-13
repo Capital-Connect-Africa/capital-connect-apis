@@ -6,4 +6,7 @@ export class CreateCountryDto {
   
     @IsString()
     code: string; // ISO 3166-1 alpha-2 code
+
+    @IsString()
+    phone: string; // Phone dailing code.
 }

@@ -16,7 +16,8 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
 {
     "name": "",
-    "code": ""
+    "code": "",
+    "phone": ""
 }
 
 ###
@@ -26,7 +27,8 @@ Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 {
     "name": "",
-    "code": ""
+    "code": "",
+    "phone": ""
 }
 
 ###
@@ -61,8 +63,7 @@ Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
 {
-    "name": "",
-    "code": ""
+    "phone": ""
 }
 
 ###
@@ -71,13 +72,12 @@ PUT http://api.capitalconnect.africa/countries/129
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 {
-    "name": "",
-    "code": ""
+    "phone": ""
 }
 
 ###
 # Delete country
-DELETE http://localhost:3000/countries/17
+DELETE http://localhost:3000/countries/
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
 ###

@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Delete, Param, Put, NotFoundException, BadRequestException, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Delete, Param, Put, NotFoundException, BadRequestException, UseGuards, HttpCode, HttpStatus, InternalServerErrorException } from '@nestjs/common';
 import { CountryService } from './country.service';
 import { Country } from './entities/country.entity';
 import { CreateCountryDto } from './dto/create-country.dto';
@@ -38,6 +38,7 @@ export class CountryController {
     const countries: CreateCountryDto[] = countriesData.map((country) => ({
       name: country.name,
       code: country.code,
+      phone: country.phone,
     }));
 
     return await this.countriesService.bulkCreate(countries);

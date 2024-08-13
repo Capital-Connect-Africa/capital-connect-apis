@@ -33,10 +33,11 @@ export class CountryService {
   }
 
   async update(id: number, updateCountryDto: UpdateCountryDto) {
-    const { name, code } = updateCountryDto;
+    const { name, code, phone } = updateCountryDto;
     const updates = {};
     if (name) updates['name'] = name;
     if (code) updates['code'] = code;
+    if (phone) updates['phone'] = phone;
     if (Object.keys(updates).length > 0)
       await this.countriesRepository.update(id, updateCountryDto);
     return this.countriesRepository.findOneBy({ id });
@@ -44,5 +45,5 @@ export class CountryService {
 
   async remove(id: number): Promise<void> {
     await this.countriesRepository.delete(id);
-  }
+  }  
 }
