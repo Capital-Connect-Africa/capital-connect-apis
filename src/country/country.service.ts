@@ -13,8 +13,12 @@ export class CountryService {
   ) {}
 
   async findAll(): Promise<Country[]> {
-    return this.countriesRepository.find();
-  }
+    return this.countriesRepository.find({
+      order: {
+        name: 'ASC',
+      },
+    });
+  }  
 
   async create(country: CreateCountryDto): Promise<Country> {
     return this.countriesRepository.save(country);
