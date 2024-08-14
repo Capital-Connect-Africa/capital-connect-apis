@@ -14,7 +14,7 @@ Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
 ### Mark a company as not interesting (investorProfileId/companyId)
-POST http://localhost:3000/matchmaking/declined/2/1
+POST http://localhost:3000/matchmaking/decline/2/1
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 

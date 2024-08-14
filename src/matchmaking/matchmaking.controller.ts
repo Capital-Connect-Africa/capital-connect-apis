@@ -75,13 +75,13 @@ export class MatchmakingController {
   getConnectedInvestors(@Param('companyId') companyId: number) {
     return this.matchmakingService.getConnectedInvestors(companyId);
   }
-// New methods called down here....
-  @Post('declined/:investorProfileId/:companyId')
+
+  @Post('decline/:investorProfileId/:companyId')
   markAsDeclined(
     @Param('investorProfileId') investorProfileId: number,
     @Param('companyId') companyId: number,
   ) {
-    return this.matchmakingService.markAsDeclined( investorProfileId, companyId );
+    return this.matchmakingService.markAsDeclined(investorProfileId, companyId);
   }
 
   @Post('disconnect/:investorProfileId/:companyId')
@@ -89,13 +89,14 @@ export class MatchmakingController {
     @Param('investorProfileId') investorProfileId: number,
     @Param('companyId') companyId: number,
   ) {
-    return this.matchmakingService.disconnectFromCompany(investorProfileId, companyId );
+    return this.matchmakingService.disconnectFromCompany(
+      investorProfileId,
+      companyId,
+    );
   }
 
   @Get('declined/:investorProfileId')
-  getDeclinedCompanies(
-    @Param('investorProfileId') investorProfileId: number,
-  ) {
+  getDeclinedCompanies(@Param('investorProfileId') investorProfileId: number) {
     return this.matchmakingService.getDeclinedCompanies(investorProfileId);
   }
 }
