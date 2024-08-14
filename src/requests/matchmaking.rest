@@ -13,13 +13,28 @@ POST http://localhost:3000/matchmaking/interesting/1/3
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
+### Mark a company as not interesting (investorProfileId/companyId)
+POST http://localhost:3000/matchmaking/decline/2/1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
 ### Connect with a company (investorProfileId/companyId)
-POST http://localhost:3000/matchmaking/connect/1/2
+POST http://localhost:3000/matchmaking/connect/2/2
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+### Disconnect from a connected company (investorProfileId/companyId)
+POST http://localhost:3000/matchmaking/disconnect/1/2
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
 ### Get interesting companies for an investor profile (investor profile id)
 GET http://localhost:3000/matchmaking/interested/1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+### Get declined companies for an investor profile (investor profile id)
+GET http://localhost:3000/matchmaking/declined/1
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 

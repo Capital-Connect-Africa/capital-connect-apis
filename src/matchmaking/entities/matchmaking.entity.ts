@@ -25,8 +25,12 @@ export class Matchmaking {
   @JoinColumn({ name: 'companyId' })
   company: Company;
 
-  @Column({ default: 'interesting' })
-  status: 'interesting' | 'connected';
+  @Column({
+    type: 'enum',
+    enum: ['interesting', 'declined', 'connected'],
+    default: 'interesting',
+  })
+  status: 'interesting' | 'declined' | 'connected';  
 
   @CreateDateColumn()
   createdAt: Date;
