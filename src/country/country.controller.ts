@@ -1,8 +1,19 @@
-import { Controller, Get, Post, Body, Delete, Param, Put, NotFoundException, BadRequestException, UseGuards, HttpCode, HttpStatus, InternalServerErrorException } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Delete,
+  Param,
+  Put,
+  NotFoundException,
+  BadRequestException,
+  UseGuards,
+} from '@nestjs/common';
 import { CountryService } from './country.service';
 import { Country } from './entities/country.entity';
 import { CreateCountryDto } from './dto/create-country.dto';
-import * as countriesData from './countries.json' // Create a JSON file with country data
+import * as countriesData from './countries.json'; // Create a JSON file with country data
 import { UpdateCountryDto } from './dto/update-country.dto';
 import throwInternalServer from 'src/shared/utils/exceptions.util';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
@@ -38,10 +49,24 @@ export class CountryController {
     const countries: CreateCountryDto[] = countriesData.map((country) => ({
       name: country.name,
       code: country.code,
-      phone: country.phone,
+      phoneCode: country.phoneCode,
     }));
 
     return await this.countriesService.bulkCreate(countries);
+  }
+
+  @Get('bulkupdatelocal')
+  @Roles(Role.Admin)
+  async bulkUpdateLocal(): Promise<Promise<Country | null>[]> {
+    const countries: CreateCountryDto[] = countriesData.map((country) => ({
+      name: country.name,
+      code: country.code,
+      phoneCode: country.phoneCode,
+    }));
+
+    return countries.map((updateCountryDto) => {
+      return this.countriesService.updateDto(updateCountryDto);
+    });
   }
 
   @Get(':id')
@@ -51,7 +76,10 @@ export class CountryController {
 
   @Put(':id')
   @Roles(Role.Admin)
-  async update(@Param('id') id: string, @Body() updateCountryDto: UpdateCountryDto) {
+  async update(
+    @Param('id') id: string,
+    @Body() updateCountryDto: UpdateCountryDto,
+  ) {
     try {
       await this.countriesService.findOne(+id);
       const country = await this.countriesService.update(+id, updateCountryDto);

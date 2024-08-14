@@ -14,5 +14,5 @@ export class Country {
   code: string; // ISO 3166-1 alpha-2 code
 
   @Column()
-  phone: string;
+  phoneCode: string;
 }
