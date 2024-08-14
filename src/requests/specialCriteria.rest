@@ -23,6 +23,10 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 GET http://localhost:3000/special-criteria
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
+### Get all Special criteria by Investor profile
+GET http://localhost:3000/special-criteria/3
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
 ### Update Special criteria
 PUT http://localhost:3000/special-criteria
 Content-Type: application/json

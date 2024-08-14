@@ -15,7 +15,7 @@ export class SpecialCriteriaController {
   constructor(private readonly specialCriteriaService: SpecialCriteriaService) {}
 
   @Post()
-  @Roles(Role.Admin)
+  @Roles(Role.Admin, Role.Advisor, Role.Investor)
   create(@Body() createSpecialCriterionDto: CreateSpecialCriterionDto) {
     try {
       return this.specialCriteriaService.create(createSpecialCriterionDto);
@@ -40,6 +40,11 @@ export class SpecialCriteriaController {
   }
 
   @Get(':id')
+  async findByInvestorProfileId(@Query('investorProfileId') investorProfileId: number) {
+    return this.specialCriteriaService.findAll(investorProfileId);
+  }
+
+  @Get(':id')
   findOne(@Param('id') id: string) {
     try {
       return this.specialCriteriaService.findOne(+id);
@@ -49,7 +54,7 @@ export class SpecialCriteriaController {
   }
 
   @Put(':id')
-  @Roles(Role.Admin)
+  @Roles(Role.Admin, Role.Advisor, Role.Investor)
   async update(@Param('id') id: string, @Body() updateSpecialCriterionDto: UpdateSpecialCriterionDto) {
     try {
       await this.specialCriteriaService.findOne(+id);
@@ -64,7 +69,7 @@ export class SpecialCriteriaController {
   }
 
   @Delete(':id')
-  @Roles(Role.Admin)
+  @Roles(Role.Admin, Role.Advisor, Role.Investor)
   @HttpCode(HttpStatus.NO_CONTENT)
   async remove(@Param('id') id: string) {
     try {
