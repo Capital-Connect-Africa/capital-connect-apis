@@ -193,4 +193,16 @@ export class MatchmakingService {
   
     throw new Error('Matchmaking record not found');
   } 
+
+  async getDeclinedCompanies(
+    investorProfileId: number,
+  ): Promise<Matchmaking[]> {
+    return this.matchmakingRepository.find({
+      where: {
+        investorProfile: { id: investorProfileId },
+        status: 'not interesting',
+      },
+      relations: ['company'],
+    });
+  }
 }

@@ -76,7 +76,7 @@ export class MatchmakingController {
     return this.matchmakingService.getConnectedInvestors(companyId);
   }
 // New methods called down here....
-  @Post('not-interesting/:investorProfileId/:companyId')
+  @Post('declined/:investorProfileId/:companyId')
   markAsNotIntersting(
     @Param('investorProfileId') investorProfileId: number,
     @Param('companyId') companyId: number,
@@ -90,5 +90,12 @@ export class MatchmakingController {
     @Param('companyId') companyId: number,
   ) {
     return this.matchmakingService.disconnectFromCompany(investorProfileId, companyId );
+  }
+
+  @Get('declined/:investorProfileId')
+  getDeclinedCompanies(
+    @Param('investorProfileId') investorProfileId: number,
+  ) {
+    return this.matchmakingService.getDeclinedCompanies(investorProfileId);
   }
 }
