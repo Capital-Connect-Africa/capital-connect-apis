@@ -10,7 +10,8 @@ export class CountryService {
   constructor(
     @InjectRepository(Country)
     private countriesRepository: Repository<Country>,
-  ) {}
+  ) {
+  }
 
   async findAll(): Promise<Country[]> {
     return this.countriesRepository.find({
@@ -37,16 +38,33 @@ export class CountryService {
   }
 
   async update(id: number, updateCountryDto: UpdateCountryDto) {
-    const { name, code } = updateCountryDto;
+    const { name, code, phoneCode } = updateCountryDto;
     const updates = {};
     if (name) updates['name'] = name;
     if (code) updates['code'] = code;
+    if (phoneCode) updates['phoneCode'] = phoneCode;
     if (Object.keys(updates).length > 0)
-      await this.countriesRepository.update(id, updateCountryDto);
+      await this.countriesRepository.update(id, updates);
     return this.countriesRepository.findOneBy({ id });
   }
 
   async remove(id: number): Promise<void> {
     await this.countriesRepository.delete(id);
+  }
+
+  async updateDto(updateCountryDto: UpdateCountryDto) {
+    const { name, code, phoneCode } = updateCountryDto;
+    const country = await this.countriesRepository.findOneBy({ code });
+    if (country) {
+      const updates = {};
+      if (name) updates['name'] = name;
+      if (code) updates['code'] = code;
+      if (phoneCode) updates['phoneCode'] = phoneCode;
+      if (Object.keys(updates).length > 0)
+        await this.countriesRepository.update(country.id, updates);
+      return this.countriesRepository.findOneBy({ id: country.id });
+    } else {
+      return this.create(updateCountryDto as CreateCountryDto);
+    }
   }
 }
