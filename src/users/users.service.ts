@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
@@ -19,11 +23,17 @@ export class UsersService {
   ) {}
 
   async findOne(id: number): Promise<User | undefined> {
-    return this.usersRepository.findOne({ where: { id } });
+    return this.usersRepository.findOne({
+      where: { id },
+      relations: ['mobileNumbers'],
+    });
   }
 
   async findByUsername(username: string): Promise<User | undefined> {
-    return this.usersRepository.findOne({ where: { username } });
+    return this.usersRepository.findOne({
+      where: { username },
+      relations: ['mobileNumbers'],
+    });
   }
 
   async isUsernameTaken(username: string): Promise<boolean> {
@@ -37,7 +47,7 @@ export class UsersService {
   }
 
   async findAll(): Promise<User[]> {
-    return this.usersRepository.find();
+    return this.usersRepository.find({ relations: ['mobileNumbers'] });
   }
 
   async update(id: number, updateUserDto: Partial<User>): Promise<User> {
@@ -46,7 +56,9 @@ export class UsersService {
       if (!isEmailValid) {
         throw new BadRequestException('Invalid email format');
       }
-      const isUsernameTaken = await this.isUsernameTaken(updateUserDto.username);
+      const isUsernameTaken = await this.isUsernameTaken(
+        updateUserDto.username,
+      );
       if (isUsernameTaken) {
         throw new BadRequestException('Username is already taken');
       }
@@ -67,26 +79,29 @@ export class UsersService {
 
   async requestPasswordReset(email: string): Promise<void> {
     try {
-      const user = await this.usersRepository.findOne({ where: { username: email } });
+      const user = await this.usersRepository.findOne({
+        where: { username: email },
+      });
       if (!user) {
         throw new NotFoundException('User not found');
       }
-  
+
       user.resetPasswordToken = randomBytes(32).toString('hex');
       user.resetPasswordExpires = addHours(new Date(), 1); // Token valid for 1 hour
-  
+
       await this.usersRepository.save(user);
 
       const msg = {
         to: user.username,
         from: process.env.FROM_EMAIL,
         subject: 'Password Reset',
-        text: `You are receiving this email because you (or someone else) have requested the reset of the password for your account.\n\n` +
+        text:
+          `You are receiving this email because you (or someone else) have requested the reset of the password for your account.\n\n` +
           `Please click on the following link, or paste this into your browser to complete the process:\n\n` +
           `${process.env.FRONTEND_URL}/reset-password/${user.resetPasswordToken}\n\n` +
           `If you did not request this, please ignore this email and your password will remain unchanged.\n`,
       };
-  
+
       // await this.sendResetEmail(user);
       await this.sendResetEmailViaBrevo(msg, user);
       // await this.sendResetEmailSendGrid(user);
@@ -96,7 +111,9 @@ export class UsersService {
   }
 
   async resetPassword(token: string, newPassword: string): Promise<void> {
-    const user = await this.usersRepository.findOne({ where: { resetPasswordToken: token } });
+    const user = await this.usersRepository.findOne({
+      where: { resetPasswordToken: token },
+    });
     if (!user || user.resetPasswordExpires < new Date()) {
       throw new BadRequestException('Invalid or expired token');
     }
@@ -117,16 +134,12 @@ export class UsersService {
       },
     });
 
-    console.log("Auth", {
-      user: process.env.GMAIL_USER,
-      pass: process.env.GMAIL_PASS,
-    })
-
     const mailOptions = {
       to: user.username,
       from: process.env.GMAIL_USER,
       subject: 'Password Reset',
-      text: `You are receiving this email because you (or someone else) have requested the reset of the password for your account.\n\n` +
+      text:
+        `You are receiving this email because you (or someone else) have requested the reset of the password for your account.\n\n` +
         `Please click on the following link, or paste this into your browser to complete the process:\n\n` +
         `${process.env.FRONTEND_URL}/reset-password/${user.resetPasswordToken}\n\n` +
         `If you did not request this, please ignore this email and your password will remain unchanged.\n`,
@@ -140,43 +153,56 @@ export class UsersService {
       to: user.username,
       from: process.env.FROM_EMAIL,
       subject: 'Password Reset',
-      text: `You are receiving this email because you (or someone else) have requested the reset of the password for your account.\n\n` +
+      text:
+        `You are receiving this email because you (or someone else) have requested the reset of the password for your account.\n\n` +
         `Please click on the following link, or paste this into your browser to complete the process:\n\n` +
         `${process.env.FRONTEND_URL}/reset-password/${user.resetPasswordToken}\n\n` +
         `If you did not request this, please ignore this email and your password will remain unchanged.\n`,
     };
-  
+
     await sgMail.send(msg);
   }
 
-  async sendResetEmailViaBrevo(msg: any, user: User){
-    let apiInstance = new brevo.TransactionalEmailsApi();
+  async sendResetEmailViaBrevo(msg: any, user: User) {
+    const apiInstance = new brevo.TransactionalEmailsApi();
 
-    let apiKey = apiInstance.authentications['apiKey'];
+    const apiKey = apiInstance.authentications['apiKey'];
     apiKey.apiKey = process.env.BREVO_API_KEY;
 
-    let sendSmtpEmail = new brevo.SendSmtpEmail();
+    const sendSmtpEmail = new brevo.SendSmtpEmail();
 
     sendSmtpEmail.subject = msg.subject;
     sendSmtpEmail.htmlContent = `<html><body><h1>Follow instructions below to reset your password</h1><p>${msg.text}</p></body></html>`;
-    sendSmtpEmail.sender = { "name": "Capital Connect", "email": process.env.FROM_EMAIL };
+    sendSmtpEmail.sender = {
+      name: 'Capital Connect',
+      email: process.env.FROM_EMAIL,
+    };
     sendSmtpEmail.to = [
-      { "email": msg.to, "name": `${user.firstName} ${user.lastName}` }
+      { email: msg.to, name: `${user.firstName} ${user.lastName}` },
     ];
-    sendSmtpEmail.replyTo = { "name": "Capital Connect", "email": process.env.FROM_EMAIL };
+    sendSmtpEmail.replyTo = {
+      name: 'Capital Connect',
+      email: process.env.FROM_EMAIL,
+    };
     // sendSmtpEmail.headers = { "Some-Custom-Name": "unique-id-1234" };
     // sendSmtpEmail.params = { "parameter": "My param value", "subject": "common subject" };
 
-
-    apiInstance.sendTransacEmail(sendSmtpEmail).then(function (data) {
-      console.log('API called successfully. Returned data: ' + JSON.stringify(data));
-    }, function (error) {
-      console.error(error);
-    });
+    apiInstance.sendTransacEmail(sendSmtpEmail).then(
+      function (data) {
+        console.log(
+          'API called successfully. Returned data: ' + JSON.stringify(data),
+        );
+      },
+      function (error) {
+        console.error(error);
+      },
+    );
   }
 
   async verifyEmail(token: string): Promise<void> {
-    const user = await this.usersRepository.findOne({ where: { emailVerificationToken: token } });
+    const user = await this.usersRepository.findOne({
+      where: { emailVerificationToken: token },
+    });
     if (!user || user.emailVerificationExpires < new Date()) {
       throw new BadRequestException('Invalid or expired token');
     }

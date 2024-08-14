@@ -1,11 +1,18 @@
-###
-# Load countries
+
+### Load countries
 GET http://localhost:3000/countries/bulklocal
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
-###
-# Load countries prod
+### Update countries
+GET http://localhost:3000/countries/bulkupdatelocal
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+### Load countries prod
 GET http://api.capitalconnect.africa/countries/bulklocal
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+### Update countries prod
+GET http://api.capitalconnect.africa/countries/bulkupdatelocal
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
 ###
@@ -16,7 +23,8 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
 {
     "name": "",
-    "code": ""
+    "code": "",
+    "phoneCode": ""
 }
 
 ###
@@ -24,9 +32,11 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 POST http://api.capitalconnect.africa/countries
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
 {
     "name": "",
-    "code": ""
+    "code": "",
+    "phoneCode": ""
 }
 
 ###
@@ -39,8 +49,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 GET https://capitalconnect-0060e0fb0eb4.herokuapp.com/countries/129
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
-###
-# Get countries
+### Get countries
 GET http://localhost:3000/countries
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
@@ -61,8 +70,7 @@ Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
 {
-    "name": "",
-    "code": ""
+    "phoneCode": ""
 }
 
 ###
@@ -70,14 +78,14 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 PUT http://api.capitalconnect.africa/countries/129
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
 {
-    "name": "",
-    "code": ""
+    "phoneCode": ""
 }
 
 ###
 # Delete country
-DELETE http://localhost:3000/countries/17
+DELETE http://localhost:3000/countries/
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
 ###

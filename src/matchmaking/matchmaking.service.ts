@@ -80,7 +80,7 @@ export class MatchmakingService {
     });
 
     return this.matchmakingRepository.save(newMatch);
-  }
+  }  
 
   async connectWithCompany(
     investorProfileId: number,
@@ -99,7 +99,7 @@ export class MatchmakingService {
     }
 
     throw new Error('Company must be marked as interesting first');
-  }
+  } 
 
   async getInterestingCompanies(
     investorProfileId: number,
@@ -142,6 +142,67 @@ export class MatchmakingService {
         status: 'connected',
       },
       relations: ['investorProfile'],
+    });
+  }
+
+// New methods added below.....
+  async markAsDeclined(
+    investorProfileId: number,
+    companyId: number,
+  ): Promise<Matchmaking> {
+    const match = await this.matchmakingRepository.findOne({
+      where: {
+        investorProfile: { id: investorProfileId },
+        company: { id: companyId },
+      },
+    });
+  
+    if (match) {
+      match.status = 'declined';
+      return this.matchmakingRepository.save(match);
+    }
+  
+    const noMatch = this.matchmakingRepository.create({
+      investorProfile: { id: investorProfileId },
+      company: { id: companyId },
+      status: 'declined',
+    });
+  
+    return this.matchmakingRepository.save(noMatch);
+  }
+
+  async disconnectFromCompany(
+    investorProfileId: number,
+    companyId: number,
+  ): Promise<Matchmaking> {
+    const match = await this.matchmakingRepository.findOne({
+      where: {
+        investorProfile: { id: investorProfileId },
+        company: { id: companyId },
+      },
+    });
+  
+    if (match) {
+      if (match.status === 'connected') {
+        match.status = 'interesting';
+        return this.matchmakingRepository.save(match);
+      } else {
+        throw new Error('Company is not currently connected');
+      }
+    }
+  
+    throw new Error('Matchmaking record not found');
+  } 
+
+  async getDeclinedCompanies(
+    investorProfileId: number,
+  ): Promise<Matchmaking[]> {
+    return this.matchmakingRepository.find({
+      where: {
+        investorProfile: { id: investorProfileId },
+        status: 'declined',
+      },
+      relations: ['company'],
     });
   }
 }
