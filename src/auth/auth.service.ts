@@ -7,7 +7,6 @@ import { Role } from './role.enum';
 import * as sgMail from '@sendgrid/mail';
 import { randomBytes } from 'crypto';
 import { addHours } from 'date-fns';
-import { first } from 'rxjs';
 const brevo = require('@getbrevo/brevo');
 
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);

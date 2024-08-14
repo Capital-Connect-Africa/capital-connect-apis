@@ -12,4 +12,7 @@ export class Country {
   @Column()
   @Column({ unique: true })
   code: string; // ISO 3166-1 alpha-2 code
+
+  @Column()
+  phoneCode: string;
 }
