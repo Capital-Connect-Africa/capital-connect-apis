@@ -27,10 +27,10 @@ export class Matchmaking {
 
   @Column({
     type: 'enum',
-    enum: ['interesting', 'not interesting', 'connected', 'disconnected'],
+    enum: ['interesting', 'declined', 'connected'],
     default: 'interesting',
   })
-  status: 'interesting' | 'not interesting' | 'connected' | 'disconnected';  
+  status: 'interesting' | 'declined' | 'connected';  
 
   @CreateDateColumn()
   createdAt: Date;

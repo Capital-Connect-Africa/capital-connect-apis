@@ -146,7 +146,7 @@ export class MatchmakingService {
   }
 
 // New methods added below.....
-  async markAsNotInteresting(
+  async markAsDeclined(
     investorProfileId: number,
     companyId: number,
   ): Promise<Matchmaking> {
@@ -158,14 +158,14 @@ export class MatchmakingService {
     });
   
     if (match) {
-      match.status = 'not interesting';
+      match.status = 'declined';
       return this.matchmakingRepository.save(match);
     }
   
     const noMatch = this.matchmakingRepository.create({
       investorProfile: { id: investorProfileId },
       company: { id: companyId },
-      status: 'not interesting',
+      status: 'declined',
     });
   
     return this.matchmakingRepository.save(noMatch);
@@ -184,7 +184,7 @@ export class MatchmakingService {
   
     if (match) {
       if (match.status === 'connected') {
-        match.status = 'disconnected';
+        match.status = 'interesting';
         return this.matchmakingRepository.save(match);
       } else {
         throw new Error('Company is not currently connected');
@@ -200,7 +200,7 @@ export class MatchmakingService {
     return this.matchmakingRepository.find({
       where: {
         investorProfile: { id: investorProfileId },
-        status: 'not interesting',
+        status: 'declined',
       },
       relations: ['company'],
     });

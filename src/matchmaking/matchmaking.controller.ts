@@ -77,11 +77,11 @@ export class MatchmakingController {
   }
 // New methods called down here....
   @Post('declined/:investorProfileId/:companyId')
-  markAsNotIntersting(
+  markAsDeclined(
     @Param('investorProfileId') investorProfileId: number,
     @Param('companyId') companyId: number,
   ) {
-    return this.matchmakingService.markAsNotInteresting( investorProfileId, companyId );
+    return this.matchmakingService.markAsDeclined( investorProfileId, companyId );
   }
 
   @Post('disconnect/:investorProfileId/:companyId')
