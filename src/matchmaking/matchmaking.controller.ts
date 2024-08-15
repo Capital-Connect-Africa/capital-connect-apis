@@ -3,6 +3,7 @@ import {
   Get,
   Param,
   Post,
+  Query,
   Request,
   UseGuards,
 } from '@nestjs/common';
@@ -57,13 +58,19 @@ export class MatchmakingController {
   @Get('interested/:investorProfileId')
   getInterestingCompanies(
     @Param('investorProfileId') investorProfileId: number,
+    @Query('page') page: number,
+    @Query('limit') limit: number,
   ) {
-    return this.matchmakingService.getInterestingCompanies(investorProfileId);
+    return this.matchmakingService.getInterestingCompanies(investorProfileId, page, limit);
   }
 
   @Get('connected/:investorProfileId')
-  getConnectedCompanies(@Param('investorProfileId') investorProfileId: number) {
-    return this.matchmakingService.getConnectedCompanies(investorProfileId);
+  getConnectedCompanies(
+    @Param('investorProfileId') investorProfileId: number,
+    @Query('page') page: number,
+    @Query('limit') limit: number,
+  ) {
+    return this.matchmakingService.getConnectedCompanies(investorProfileId, page, limit);
   }
 
   @Get('investors/interested/:companyId')
@@ -96,7 +103,11 @@ export class MatchmakingController {
   }
 
   @Get('declined/:investorProfileId')
-  getDeclinedCompanies(@Param('investorProfileId') investorProfileId: number) {
-    return this.matchmakingService.getDeclinedCompanies(investorProfileId);
+  getDeclinedCompanies(
+    @Param('investorProfileId') investorProfileId: number,
+    @Query('page') page: number,
+    @Query('limit') limit: number,
+  ) {
+    return this.matchmakingService.getDeclinedCompanies(investorProfileId, page, limit);
   }
 }

@@ -108,6 +108,8 @@ export class MatchmakingService {
 
   async getInterestingCompanies(
     investorProfileId: number,
+    page: number = 1,
+    limit: number = 10,
   ): Promise<Matchmaking[]> {
     return this.matchmakingRepository.find({
       where: {
@@ -115,11 +117,15 @@ export class MatchmakingService {
         status: 'interesting',
       },
       relations: ['company'],
+      take: limit,
+      skip: (page - 1) * limit,
     });
   }
 
   async getConnectedCompanies(
     investorProfileId: number,
+    page: number = 1,
+    limit: number = 10,
   ): Promise<Matchmaking[]> {
     return this.matchmakingRepository.find({
       where: {
@@ -127,15 +133,23 @@ export class MatchmakingService {
         status: 'connected',
       },
       relations: ['company'],
+      take: limit,
+      skip: (page - 1) * limit,
     });
   }
 
-  async getMatchedCompanies(investorProfileId: number): Promise<Matchmaking[]> {
+  async getMatchedCompanies(
+    investorProfileId: number,
+    page: number = 1,
+    limit: number = 10,
+  ): Promise<Matchmaking[]> {
     return this.matchmakingRepository.find({
       where: {
         investorProfile: { id: investorProfileId },
       },
       relations: ['company'],
+      take: limit,
+      skip: (page - 1) * limit,
     });
   }
 
@@ -209,7 +223,9 @@ export class MatchmakingService {
   }
 
   async getDeclinedCompanies(
-    investorProfileId: number,
+    investorProfileId: number, 
+    page: number = 1,
+    limit: number = 10, 
   ): Promise<Matchmaking[]> {
     return this.matchmakingRepository.find({
       where: {
@@ -217,6 +233,8 @@ export class MatchmakingService {
         status: 'declined',
       },
       relations: ['company'],
+      take: limit,
+      skip: (page - 1) * limit,
     });
   }
 }
