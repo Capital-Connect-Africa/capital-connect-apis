@@ -44,6 +44,14 @@ export class SpecialCriteriaService {
     });
   }
 
+  findByInvestorProfileId(investorProfileId: number) {
+    return this.specialCriteriaRepository.find({
+      where: {
+        investorProfile: { id: investorProfileId },
+      },
+    });
+  }  
+
   findOne(id: number) {
     const special = this.specialCriteriaRepository.findOneBy( {id} );
     if (!special) {
