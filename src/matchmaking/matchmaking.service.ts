@@ -35,7 +35,12 @@ export class MatchmakingService {
     );
     filterDto.growthStages = profileFound.businessGrowthStages;
     filterDto.registrationStructures = profileFound.registrationStructures;
-    return await this.companyService.filterCompanies(filterDto);
+    const companies = await this.companyService.filterCompanies(filterDto);
+    const matchingCompanies = await this.getMatchedCompanies(profileFound.id);
+    const companyIds = matchingCompanies.map((match) => match.company.id);
+    return companies.filter(
+      (company) => companyIds.includes(company.id) === false,
+    );
   }
 
   async getMatchingInvestorProfiles(id) {
@@ -80,7 +85,7 @@ export class MatchmakingService {
     });
 
     return this.matchmakingRepository.save(newMatch);
-  }  
+  }
 
   async connectWithCompany(
     investorProfileId: number,
@@ -99,7 +104,7 @@ export class MatchmakingService {
     }
 
     throw new Error('Company must be marked as interesting first');
-  } 
+  }
 
   async getInterestingCompanies(
     investorProfileId: number,
@@ -125,6 +130,15 @@ export class MatchmakingService {
     });
   }
 
+  async getMatchedCompanies(investorProfileId: number): Promise<Matchmaking[]> {
+    return this.matchmakingRepository.find({
+      where: {
+        investorProfile: { id: investorProfileId },
+      },
+      relations: ['company'],
+    });
+  }
+
   async getInterestedInvestors(companyId: number): Promise<Matchmaking[]> {
     return this.matchmakingRepository.find({
       where: {
@@ -145,7 +159,7 @@ export class MatchmakingService {
     });
   }
 
-// New methods added below.....
+  // New methods added below.....
   async markAsDeclined(
     investorProfileId: number,
     companyId: number,
@@ -156,18 +170,18 @@ export class MatchmakingService {
         company: { id: companyId },
       },
     });
-  
+
     if (match) {
       match.status = 'declined';
       return this.matchmakingRepository.save(match);
     }
-  
+
     const noMatch = this.matchmakingRepository.create({
       investorProfile: { id: investorProfileId },
       company: { id: companyId },
       status: 'declined',
     });
-  
+
     return this.matchmakingRepository.save(noMatch);
   }
 
@@ -181,7 +195,7 @@ export class MatchmakingService {
         company: { id: companyId },
       },
     });
-  
+
     if (match) {
       if (match.status === 'connected') {
         match.status = 'interesting';
@@ -190,9 +204,9 @@ export class MatchmakingService {
         throw new Error('Company is not currently connected');
       }
     }
-  
+
     throw new Error('Matchmaking record not found');
-  } 
+  }
 
   async getDeclinedCompanies(
     investorProfileId: number,
