@@ -11,6 +11,7 @@ import { randomBytes } from 'crypto';
 import { addHours } from 'date-fns';
 import * as nodemailer from 'nodemailer';
 import * as sgMail from '@sendgrid/mail';
+import { resetPasswordTemplate } from 'src/templates/email-reset';
 const brevo = require('@getbrevo/brevo');
 
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
@@ -82,29 +83,27 @@ export class UsersService {
       const user = await this.usersRepository.findOne({
         where: { username: email },
       });
+  
       if (!user) {
         throw new NotFoundException('User not found');
       }
-
+  
+      // Generate reset token and set expiration
       user.resetPasswordToken = randomBytes(32).toString('hex');
       user.resetPasswordExpires = addHours(new Date(), 1); // Token valid for 1 hour
-
+  
+      // Save the user with the reset token and expiration
       await this.usersRepository.save(user);
-
-      const msg = {
-        to: user.username,
-        from: process.env.FROM_EMAIL,
-        subject: 'Password Reset',
-        text:
-          `You are receiving this email because you (or someone else) have requested the reset of the password for your account.\n\n` +
-          `Please click on the following link, or paste this into your browser to complete the process:\n\n` +
-          `${process.env.FRONTEND_URL}/reset-password/${user.resetPasswordToken}\n\n` +
-          `If you did not request this, please ignore this email and your password will remain unchanged.\n`,
-      };
-
-      // await this.sendResetEmail(user);
+  
+      // Construct the reset password URL
+      const resetPasswordUrl = `${process.env.FRONTEND_URL}/reset-password/${user.resetPasswordToken}`;
+  
+      // Import the email content from template file.
+       const msg = { html: resetPasswordTemplate(resetPasswordUrl),};
+  
+      // Send the reset email
       await this.sendResetEmailViaBrevo(msg, user);
-      // await this.sendResetEmailSendGrid(user);
+  
     } catch (error) {
       throw error;
     }
