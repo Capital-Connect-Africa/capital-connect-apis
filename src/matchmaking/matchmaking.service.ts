@@ -37,8 +37,9 @@ export class MatchmakingService {
     filterDto.registrationStructures = profileFound.registrationStructures;
     const companies = await this.companyService.filterCompanies(filterDto);
     const matchingCompanies = await this.getMatchedCompanies(profileFound.id);
-    return companies.filter((company) =>
-      matchingCompanies.some((match) => match.company.id !== company.id),
+    const companyIds = matchingCompanies.map((match) => match.company.id);
+    return companies.filter(
+      (company) => companyIds.includes(company.id) === false,
     );
   }
 
