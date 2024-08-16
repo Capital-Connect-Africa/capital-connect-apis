@@ -10,6 +10,9 @@ import {
   Put,
   NotFoundException,
   BadRequestException,
+  Delete,
+  HttpCode,
+  HttpStatus,
 } from '@nestjs/common';
 import { SubmissionService } from './submission.service';
 import {
@@ -209,6 +212,17 @@ export class SubmissionController {
         scores.push({ ...section, ...score });
       }
       return scores;
+    } catch (error) {
+      throwInternalServer(error);
+    }
+  }
+
+  @Delete(':id')
+  @Roles(Role.Admin, Role.User)
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async remove(@Param('id') id: string) {
+    try {
+      await this.submissionService.remove(+id);
     } catch (error) {
       throwInternalServer(error);
     }

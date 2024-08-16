@@ -213,4 +213,8 @@ export class SubmissionService {
       percentageScore: percentageScore ? Math.round(percentageScore) : 0,
     };
   }
+
+  remove(id: number) {
+    this.submissionRepository.delete(id);
+  }
 }
