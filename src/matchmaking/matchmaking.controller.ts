@@ -1,4 +1,5 @@
 import {
+  Body,
   Controller,
   Get,
   Param,
@@ -109,5 +110,10 @@ export class MatchmakingController {
     @Query('limit') limit: number,
   ) {
     return this.matchmakingService.getDeclinedCompanies(investorProfileId, page, limit);
+  }
+
+  @Post('decline-reason')
+  createMatchDeclineReason(@Body('reason') reason: string, @Body('matchMakingId') matchMakingId: number) {
+    return this.matchmakingService.createMatchDeclineReason(reason, matchMakingId);
   }
 }

@@ -6,9 +6,11 @@ import {
   JoinColumn,
   CreateDateColumn,
   UpdateDateColumn,
+  OneToMany,
 } from 'typeorm';
 import { InvestorProfile } from '../../investor-profile/entities/investor-profile.entity';
 import { Company } from '../../company/entities/company.entity';
+import { MatchDeclineReason } from './match-decline.entity';
 
 @Entity('match_makings')
 export class Matchmaking {
@@ -24,6 +26,11 @@ export class Matchmaking {
   @ManyToOne(() => Company, { eager: true })
   @JoinColumn({ name: 'companyId' })
   company: Company;
+
+  @OneToMany(() => MatchDeclineReason, declineReason => declineReason.matchMaking, {
+    cascade: true,
+  })
+  declineReasons: MatchDeclineReason[];
 
   @Column({
     type: 'enum',
