@@ -1,6 +1,6 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
-@Entity("esg-focus-areas")
+@Entity('esg-focus-areas')
 export class EsgFocusAreas {
   @PrimaryGeneratedColumn()
   id: number;

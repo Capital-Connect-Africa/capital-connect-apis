@@ -19,6 +19,9 @@ findAll(page: number = 1, limit: number = 10) {
   return this.esgFocusAreasRepository.find({
     skip,
     take: limit,
+    order:{
+      title: 'ASC'
+    }
   });
 }
 
