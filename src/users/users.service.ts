@@ -11,7 +11,7 @@ import { randomBytes } from 'crypto';
 import { addHours } from 'date-fns';
 import * as nodemailer from 'nodemailer';
 import * as sgMail from '@sendgrid/mail';
-import { resetPasswordTemplate } from 'src/templates/email-reset';
+import { resetPasswordTemplate } from '../templates/password-reset';
 const brevo = require('@getbrevo/brevo');
 
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);

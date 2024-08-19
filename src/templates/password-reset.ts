@@ -55,10 +55,13 @@ export const resetPasswordTemplate = (resetPasswordUrl: string) => `
         <a href="${resetPasswordUrl}" class="button">Reset Password</a>
         <p>If you did not request this, please ignore this email and your password will remain unchanged.</p>
         <div class="footer">
-            <p><a href="https://capitalconnect.africa/terms-and-conditions/">Terms and Conditions</a></p>
+            <p>
+              <a href="https://capitalconnect.africa">www.capitalconnect.africa</a>&nbsp;|&nbsp;
+              <a href="https://capitalconnect.africa/terms-and-conditions/">Terms and Conditions</a>
+            </p>
             <p>Copyright 2024 Africa Mali Access. All Rights Reserved by Capital Connect Africa</p>
         </div>
     </div>
 </body>
 
-</html>`
+</html>`;
