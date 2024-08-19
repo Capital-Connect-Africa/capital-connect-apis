@@ -10,6 +10,7 @@ import {
 } from 'typeorm';
 import { InvestorProfile } from '../../investor-profile/entities/investor-profile.entity';
 import { Company } from '../../company/entities/company.entity';
+import { DeclineReason } from './declineReasons.entity';
 
 @Entity('match_makings')
 export class Matchmaking {
@@ -26,8 +27,8 @@ export class Matchmaking {
   @JoinColumn({ name: 'companyId' })
   company: Company;
 
-  @Column('text', {array: true})
-  declineReasons: string[];
+  @Column('text', {array: true, nullable: true})
+  declineReasons: DeclineReason[];
 
   @Column({
     type: 'enum',

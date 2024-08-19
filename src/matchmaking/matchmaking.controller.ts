@@ -15,6 +15,7 @@ import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { Roles } from '../auth/roles.decorator';
 import { Role } from '../auth/role.enum';
 import { DeclineReason } from './entities/declineReasons.entity';
+import { CreateDeclineReasonDto } from './dto/create-decline-reason.dto';
 
 @UseGuards(JwtAuthGuard)
 @Controller('matchmaking')
@@ -113,9 +114,14 @@ export class MatchmakingController {
     return this.matchmakingService.getDeclinedCompanies(investorProfileId, page, limit);
   }
 
-  @Post('decline-reasons')
+  @Post(':id/decline-reasons')
   @Roles(Role.Investor)
-  async createDeclineReasons(@Body('reason') reason: string): Promise<DeclineReason> {
-    return this.matchmakingService.createDeclineReasons(reason);
+  addDeclineReason(
+    @Param('id') id: number,
+    @Body() createDeclineReasonDto: CreateDeclineReasonDto) {
+    const declineReason = new DeclineReason();
+    declineReason.reason = createDeclineReasonDto.reason;
+
+    return this.matchmakingService.addDeclineReason(id, declineReason);
   }
 }

@@ -241,8 +241,19 @@ export class MatchmakingService {
     });
   }
 
-  async createDeclineReasons(reason: string): Promise<DeclineReason> {
-    const declineReason = this.declineReasonRepository.create({ reason });
-    return this.declineReasonRepository.save(declineReason);
+  async addDeclineReason(matchmakingId: number, declineReason: DeclineReason): Promise<Matchmaking> {
+    const matchmaking = await this.matchmakingRepository.findOne({
+      where: { id: matchmakingId },
+      relations: ['declineReasons'],
+    });
+
+    if (!matchmaking) {
+      throw new Error('Matchmaking not found');
+    }
+
+    matchmaking.declineReasons.push(declineReason);
+    await this.matchmakingRepository.save(matchmaking);
+
+    return matchmaking;
   }
 }
