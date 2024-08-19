@@ -83,34 +83,31 @@ export class UsersService {
       const user = await this.usersRepository.findOne({
         where: { username: email },
       });
-  
+
       if (!user) {
         throw new NotFoundException('User not found');
       }
-  
+
       // Generate reset token and set expiration
       user.resetPasswordToken = randomBytes(32).toString('hex');
       user.resetPasswordExpires = addHours(new Date(), 1); // Token valid for 1 hour
-  
+
       // Save the user with the reset token and expiration
       await this.usersRepository.save(user);
-  
+
       // Construct the reset password URL
       const resetPasswordUrl = `${process.env.FRONTEND_URL}/reset-password/${user.resetPasswordToken}`;
-  
-      // Import the email content from template file.
-      const emailContent = resetPasswordTemplate(resetPasswordUrl);
 
-      // Prepare the message object
+      // Import the email content from template file.
       const msg = {
         to: user.username,
-        subject: 'Password Reset Request',
-        html: emailContent,
+        from: process.env.FROM_EMAIL,
+        subject: 'Password Reset',
+        html: resetPasswordTemplate(resetPasswordUrl),
       };
-  
+
       // Send the reset email
       await this.sendResetEmailViaBrevo(msg, user);
-  
     } catch (error) {
       throw error;
     }
@@ -178,7 +175,7 @@ export class UsersService {
     const sendSmtpEmail = new brevo.SendSmtpEmail();
 
     sendSmtpEmail.subject = msg.subject;
-    sendSmtpEmail.htmlContent = `<html><body><h1>Follow instructions below to reset your password</h1><p>${msg.text}</p></body></html>`;
+    sendSmtpEmail.htmlContent = msg.html;
     sendSmtpEmail.sender = {
       name: 'Capital Connect',
       email: process.env.FROM_EMAIL,
