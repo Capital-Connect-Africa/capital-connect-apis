@@ -1,4 +1,5 @@
 import {
+  Body,
   Controller,
   Get,
   Param,
@@ -12,6 +13,7 @@ import { InvestorProfile } from '../investor-profile/entities/investor-profile.e
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { Roles } from '../auth/roles.decorator';
 import { Role } from '../auth/role.enum';
+import { FilterCompanyDto } from '../company/dto/filter-company.dto';
 
 @UseGuards(JwtAuthGuard)
 @Controller('matchmaking')
@@ -98,5 +100,10 @@ export class MatchmakingController {
   @Get('declined/:investorProfileId')
   getDeclinedCompanies(@Param('investorProfileId') investorProfileId: number) {
     return this.matchmakingService.getDeclinedCompanies(investorProfileId);
+  }
+
+  @Post('search-companies')
+  searchCompanies(@Body() searchDto: FilterCompanyDto) {
+    return this.matchmakingService.searchCompanies(searchDto);
   }
 }

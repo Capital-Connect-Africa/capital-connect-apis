@@ -52,3 +52,19 @@ GET http://localhost:3000/matchmaking/investors/connected/2
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
 ###
+### Company filtering
+POST http://localhost:3000/matchmaking/search-companies
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+{
+  "countries": ["Kenya", "Rwanda"],
+  "businessSectors": ["Agriculture", "Healthcare", "Venture Capital"],
+  "businessSubsectors": ["Farming", "Pharmacy"],
+  "productsAndServices": "Software",
+  "registrationStructures": ["Limited Company", "Partnership"],
+  "yearsOfOperation": "0 - 1 years",
+  "growthStages": ["Seed", "Series A"],
+  "numberOfEmployees": "1-10 employees",
+  "fullTimeBusiness": false
+}
