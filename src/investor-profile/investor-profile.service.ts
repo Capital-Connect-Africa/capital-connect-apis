@@ -41,7 +41,7 @@ export class InvestorProfileService {
     return this.investorProfileRepository.save(investorProfile);
   }
 
-  findAll( page: number = 1, limit: number = 10): Promise<InvestorProfile[]> {
+  findAll(page: number = 1, limit: number = 10): Promise<InvestorProfile[]> {
     const skip = (page - 1) * limit;
     return this.investorProfileRepository.find({
       skip,

@@ -219,4 +219,8 @@ export class MatchmakingService {
       relations: ['company'],
     });
   }
+
+  async searchCompanies(filterDto: FilterCompanyDto): Promise<Company[]> {
+    return this.companyService.filterCompaniesByOr(filterDto);
+  }
 }
