@@ -21,6 +21,9 @@ export class StageService {
     return this.stagesRepository.find({
       skip,
       take: limit,
+      order:{
+        title: 'ASC'
+      }
     });
   }
 

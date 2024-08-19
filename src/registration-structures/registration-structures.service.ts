@@ -20,6 +20,9 @@ export class RegistrationStructuresService {
     return this.registrationStructureRepository.find({
       skip,
       take: limit,
+      order:{
+        title: 'ASC'
+      }
     });
   }
 

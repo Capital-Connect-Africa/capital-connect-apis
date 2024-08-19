@@ -20,6 +20,9 @@ export class UseOfFundsService {
     return this.useOfFundsRepository.find({
       skip,
       take: limit,
+      order:{
+        title: 'ASC'
+      }
     });
   }
 

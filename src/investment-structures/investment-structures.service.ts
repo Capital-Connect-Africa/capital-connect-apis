@@ -20,6 +20,9 @@ export class InvestmentStructuresService {
     return this.investmentStructureRepository.find({
       skip,
       take: limit,
+      order:{
+        title: 'ASC'
+      }
     });
   }
 
