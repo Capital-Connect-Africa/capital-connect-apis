@@ -75,6 +75,7 @@ export class SubmissionService {
   async findOne(id: number): Promise<Submission> {
     const submission = await this.submissionRepository.findOne({
       where: { id },
+      relations: ['user', 'question', 'answer'],
     });
     if (!submission) {
       throw new NotFoundException(`Submission with id ${id} not found`);
