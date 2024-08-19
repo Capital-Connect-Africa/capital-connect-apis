@@ -75,6 +75,7 @@ export class SubmissionService {
   async findOne(id: number): Promise<Submission> {
     const submission = await this.submissionRepository.findOne({
       where: { id },
+      relations: ['user', 'question', 'answer'],
     });
     if (!submission) {
       throw new NotFoundException(`Submission with id ${id} not found`);
@@ -212,5 +213,9 @@ export class SubmissionService {
       targetScore,
       percentageScore: percentageScore ? Math.round(percentageScore) : 0,
     };
+  }
+
+  remove(id: number) {
+    this.submissionRepository.delete(id);
   }
 }
