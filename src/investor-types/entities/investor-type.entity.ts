@@ -1,6 +1,6 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
-@Entity("investor-types")
+@Entity('investor-types')
 export class InvestorType {
   @PrimaryGeneratedColumn()
   id: number;

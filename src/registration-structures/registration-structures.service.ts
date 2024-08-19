@@ -12,7 +12,9 @@ export class RegistrationStructuresService {
     private registrationStructureRepository: Repository<RegistrationStructure>,
   ) {}
   async create(createRegistrationStructureDto: CreateRegistrationStructureDto) {
-    return await this.registrationStructureRepository.save(createRegistrationStructureDto);
+    return await this.registrationStructureRepository.save(
+      createRegistrationStructureDto,
+    );
   }
 
   findAll(page: number = 1, limit: number = 10) {
@@ -20,23 +22,37 @@ export class RegistrationStructuresService {
     return this.registrationStructureRepository.find({
       skip,
       take: limit,
+      order: {
+        title: 'ASC',
+      },
     });
   }
 
   async findOne(id: number) {
-    const funding = await this.registrationStructureRepository.findOneBy({ id });
+    const funding = await this.registrationStructureRepository.findOneBy({
+      id,
+    });
     if (!funding) {
-      throw new NotFoundException(`Registration Structure with id ${id} not found`);
+      throw new NotFoundException(
+        `Registration Structure with id ${id} not found`,
+      );
     }
     return funding;
   }
 
-  async update(id: number, updateRegistrationStructureDto: UpdateRegistrationStructureDto) {
+  async update(
+    id: number,
+    updateRegistrationStructureDto: UpdateRegistrationStructureDto,
+  ) {
     const { title, description } = updateRegistrationStructureDto;
     const updates = {};
     if (title) updates['title'] = title;
     if (description) updates['description'] = description;
-    if (Object.keys(updates).length > 0) await this.registrationStructureRepository.update(id, updateRegistrationStructureDto);
+    if (Object.keys(updates).length > 0)
+      await this.registrationStructureRepository.update(
+        id,
+        updateRegistrationStructureDto,
+      );
     return this.registrationStructureRepository.findOneBy({ id });
   }
 
