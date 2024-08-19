@@ -10,6 +10,9 @@ import {
   Put,
   NotFoundException,
   BadRequestException,
+  Delete,
+  HttpCode,
+  HttpStatus,
 } from '@nestjs/common';
 import { SubmissionService } from './submission.service';
 import {
@@ -210,6 +213,37 @@ export class SubmissionController {
       }
       return scores;
     } catch (error) {
+      throwInternalServer(error);
+    }
+  }
+
+  @Delete(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async remove(@Request() req, @Param('id') id: string) {
+    try {
+      const user = req.user;
+      const submission = await this.submissionService.findOne(+id);
+      if (!submission) {
+        throw new NotFoundException(`Submission with id ${id} not found`);
+      }
+      const owner = submission.user;
+
+      if (user.roles.includes('admin')) {
+        await this.submissionService.remove(+id);
+        return;
+      }
+
+      if (owner.id !== user.id) {
+        throw new UnauthorizedException(
+          `You are not authorized to delete this user's responses.`,
+        );
+      }
+      await this.submissionService.remove(+id);
+    } catch (error) {
+      if (error instanceof NotFoundException) return;
+      if (error instanceof UnauthorizedException) {
+        throw error;
+      }
       throwInternalServer(error);
     }
   }
