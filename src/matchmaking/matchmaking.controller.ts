@@ -14,6 +14,7 @@ import { InvestorProfile } from '../investor-profile/entities/investor-profile.e
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { Roles } from '../auth/roles.decorator';
 import { Role } from '../auth/role.enum';
+import { DeclineReason } from './entities/declineReasons.entity';
 
 @UseGuards(JwtAuthGuard)
 @Controller('matchmaking')
@@ -110,5 +111,11 @@ export class MatchmakingController {
     @Query('limit') limit: number,
   ) {
     return this.matchmakingService.getDeclinedCompanies(investorProfileId, page, limit);
+  }
+
+  @Post('decline-reasons')
+  @Roles(Role.Investor)
+  async createDeclineReasons(@Body('reason') reason: string): Promise<DeclineReason> {
+    return this.matchmakingService.createDeclineReasons(reason);
   }
 }

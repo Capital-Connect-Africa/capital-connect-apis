@@ -8,6 +8,7 @@ import { Repository } from 'typeorm';
 import { Sector } from '../sector/entities/sector.entity';
 import { Matchmaking } from './entities/matchmaking.entity';
 import { Company } from '../company/entities/company.entity';
+import { DeclineReason } from './entities/declineReasons.entity';
 
 @Injectable()
 export class MatchmakingService {
@@ -20,6 +21,8 @@ export class MatchmakingService {
     private readonly matchmakingRepository: Repository<Matchmaking>,
     @InjectRepository(Company)
     private readonly companyRepository: Repository<Company>,
+    @InjectRepository(DeclineReason)
+    private readonly declineReasonRepository: Repository<DeclineReason>
   ) {}
 
   async getMatchingCompanies(id) {
@@ -236,5 +239,10 @@ export class MatchmakingService {
       take: limit,
       skip: (page - 1) * limit,
     });
+  }
+
+  async createDeclineReasons(reason: string): Promise<DeclineReason> {
+    const declineReason = this.declineReasonRepository.create({ reason });
+    return this.declineReasonRepository.save(declineReason);
   }
 }
