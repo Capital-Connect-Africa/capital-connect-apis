@@ -20,9 +20,9 @@ export class UseOfFundsService {
     return this.useOfFundsRepository.find({
       skip,
       take: limit,
-      order:{
-        title: 'ASC'
-      }
+      order: {
+        title: 'ASC',
+      },
     });
   }
 
@@ -39,7 +39,8 @@ export class UseOfFundsService {
     const updates = {};
     if (title) updates['title'] = title;
     if (description) updates['description'] = description;
-    if (Object.keys(updates).length > 0) await this.useOfFundsRepository.update(id, updateUseOfFundsDto);
+    if (Object.keys(updates).length > 0)
+      await this.useOfFundsRepository.update(id, updateUseOfFundsDto);
     return this.useOfFundsRepository.findOneBy({ id });
   }
 
