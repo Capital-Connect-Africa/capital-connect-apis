@@ -10,7 +10,6 @@ import {
 } from 'typeorm';
 import { InvestorProfile } from '../../investor-profile/entities/investor-profile.entity';
 import { Company } from '../../company/entities/company.entity';
-import { MatchDeclineReason } from './match-decline.entity';
 
 @Entity('match_makings')
 export class Matchmaking {
@@ -27,10 +26,8 @@ export class Matchmaking {
   @JoinColumn({ name: 'companyId' })
   company: Company;
 
-  @OneToMany(() => MatchDeclineReason, declineReason => declineReason.matchMaking, {
-    cascade: true,
-  })
-  declineReasons: MatchDeclineReason[];
+  @Column('text', {array: true})
+  declineReasons: string[];
 
   @Column({
     type: 'enum',
