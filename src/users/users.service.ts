@@ -99,7 +99,14 @@ export class UsersService {
       const resetPasswordUrl = `${process.env.FRONTEND_URL}/reset-password/${user.resetPasswordToken}`;
   
       // Import the email content from template file.
-       const msg = { html: resetPasswordTemplate(resetPasswordUrl),};
+      const emailContent = resetPasswordTemplate(resetPasswordUrl);
+
+      // Prepare the message object
+      const msg = {
+        to: user.username,
+        subject: 'Password Reset Request',
+        html: emailContent,
+      };
   
       // Send the reset email
       await this.sendResetEmailViaBrevo(msg, user);
