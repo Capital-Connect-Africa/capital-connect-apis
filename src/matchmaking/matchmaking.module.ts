@@ -14,6 +14,7 @@ import { CompanyModule } from '../company/company.module';
 import { InvestorProfileModule } from '../investor-profile/investor-profile.module';
 import { ContactPerson } from '../contact-person/entities/contact-person.entity';
 import { Matchmaking } from './entities/matchmaking.entity';
+import { DeclineReason } from './entities/declineReasons.entity';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { Matchmaking } from './entities/matchmaking.entity';
       SubSector,
       ContactPerson,
       Matchmaking,
+      DeclineReason
     ]),
     CompanyModule,
     InvestorProfileModule,

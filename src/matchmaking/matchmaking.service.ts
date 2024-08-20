@@ -8,6 +8,7 @@ import { Repository } from 'typeorm';
 import { Sector } from '../sector/entities/sector.entity';
 import { Matchmaking } from './entities/matchmaking.entity';
 import { Company } from '../company/entities/company.entity';
+import { DeclineReason } from './entities/declineReasons.entity';
 
 @Injectable()
 export class MatchmakingService {
@@ -20,6 +21,8 @@ export class MatchmakingService {
     private readonly matchmakingRepository: Repository<Matchmaking>,
     @InjectRepository(Company)
     private readonly companyRepository: Repository<Company>,
+    @InjectRepository(DeclineReason)
+    private readonly declineReasonRepository: Repository<DeclineReason>,
   ) {}
 
   async getMatchingCompanies(id) {
@@ -108,6 +111,8 @@ export class MatchmakingService {
 
   async getInterestingCompanies(
     investorProfileId: number,
+    page: number = 1,
+    limit: number = 10,
   ): Promise<Matchmaking[]> {
     return this.matchmakingRepository.find({
       where: {
@@ -115,11 +120,15 @@ export class MatchmakingService {
         status: 'interesting',
       },
       relations: ['company'],
+      take: limit,
+      skip: (page - 1) * limit,
     });
   }
 
   async getConnectedCompanies(
     investorProfileId: number,
+    page: number = 1,
+    limit: number = 10,
   ): Promise<Matchmaking[]> {
     return this.matchmakingRepository.find({
       where: {
@@ -127,15 +136,23 @@ export class MatchmakingService {
         status: 'connected',
       },
       relations: ['company'],
+      take: limit,
+      skip: (page - 1) * limit,
     });
   }
 
-  async getMatchedCompanies(investorProfileId: number): Promise<Matchmaking[]> {
+  async getMatchedCompanies(
+    investorProfileId: number,
+    page: number = 1,
+    limit: number = 10,
+  ): Promise<Matchmaking[]> {
     return this.matchmakingRepository.find({
       where: {
         investorProfile: { id: investorProfileId },
       },
       relations: ['company'],
+      take: limit,
+      skip: (page - 1) * limit,
     });
   }
 
@@ -163,6 +180,7 @@ export class MatchmakingService {
   async markAsDeclined(
     investorProfileId: number,
     companyId: number,
+    declineReasons: string[],
   ): Promise<Matchmaking> {
     const match = await this.matchmakingRepository.findOne({
       where: {
@@ -173,6 +191,7 @@ export class MatchmakingService {
 
     if (match) {
       match.status = 'declined';
+      match.declineReasons = declineReasons;
       return this.matchmakingRepository.save(match);
     }
 
@@ -210,6 +229,8 @@ export class MatchmakingService {
 
   async getDeclinedCompanies(
     investorProfileId: number,
+    page: number = 1,
+    limit: number = 10,
   ): Promise<Matchmaking[]> {
     return this.matchmakingRepository.find({
       where: {
@@ -217,7 +238,30 @@ export class MatchmakingService {
         status: 'declined',
       },
       relations: ['company'],
+      take: limit,
+      skip: (page - 1) * limit,
     });
+  }
+
+  async addDeclineReason(
+    matchmakingId: number,
+    declineReason: DeclineReason,
+  ): Promise<Matchmaking> {
+    const matchmaking = await this.matchmakingRepository.findOne({
+      where: { id: matchmakingId },
+    });
+
+    if (!matchmaking) {
+      throw new Error('Matchmaking not found');
+    }
+
+    matchmaking.declineReasons = [
+      ...matchmaking.declineReasons,
+      declineReason.reason,
+    ];
+    await this.matchmakingRepository.save(matchmaking);
+
+    return matchmaking;
   }
 
   async searchCompanies(filterDto: FilterCompanyDto): Promise<Company[]> {
