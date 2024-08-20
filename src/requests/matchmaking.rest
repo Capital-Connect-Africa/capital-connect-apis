@@ -52,10 +52,9 @@ GET http://localhost:3000/matchmaking/investors/connected/2
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
 ### Match decline reason.
-POST http://localhost:3000/matchmaking/decline-reasons
+POST http://localhost:3000/matchmaking/1/decline-reasons
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 {
-    "reason": "No possibility of further growth.",
-    "matchMakingId": 4
+    "reason": "No possibility for further growth."
 }
