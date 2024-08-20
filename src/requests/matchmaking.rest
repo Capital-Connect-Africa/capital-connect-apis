@@ -18,6 +18,10 @@ POST http://localhost:3000/matchmaking/decline/2/1
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
+{
+  "declineReasons": ["No possibility for further growth.", "Not interested in the sector."]
+}
+
 ### Connect with a company (investorProfileId/companyId)
 POST http://localhost:3000/matchmaking/connect/2/2
 Content-Type: application/json

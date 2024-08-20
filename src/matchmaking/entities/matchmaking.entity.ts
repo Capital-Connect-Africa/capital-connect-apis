@@ -28,7 +28,7 @@ export class Matchmaking {
   company: Company;
 
   @Column('text', {array: true, nullable: true})
-  declineReasons: DeclineReason[];
+  declineReasons: string[];
 
   @Column({
     type: 'enum',

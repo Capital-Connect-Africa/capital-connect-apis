@@ -17,6 +17,7 @@ import { Role } from '../auth/role.enum';
 import { FilterCompanyDto } from '../company/dto/filter-company.dto';
 import { DeclineReason } from './entities/declineReasons.entity';
 import { CreateDeclineReasonDto } from './dto/create-decline-reason.dto';
+import { DeclineReasonsDto } from "./dto/decline-reasons.dto";
 
 @UseGuards(JwtAuthGuard)
 @Controller('matchmaking')
@@ -65,7 +66,11 @@ export class MatchmakingController {
     @Query('page') page: number,
     @Query('limit') limit: number,
   ) {
-    return this.matchmakingService.getInterestingCompanies(investorProfileId, page, limit);
+    return this.matchmakingService.getInterestingCompanies(
+      investorProfileId,
+      page,
+      limit,
+    );
   }
 
   @Get('connected/:investorProfileId')
@@ -74,7 +79,11 @@ export class MatchmakingController {
     @Query('page') page: number,
     @Query('limit') limit: number,
   ) {
-    return this.matchmakingService.getConnectedCompanies(investorProfileId, page, limit);
+    return this.matchmakingService.getConnectedCompanies(
+      investorProfileId,
+      page,
+      limit,
+    );
   }
 
   @Get('investors/interested/:companyId')
@@ -91,8 +100,9 @@ export class MatchmakingController {
   markAsDeclined(
     @Param('investorProfileId') investorProfileId: number,
     @Param('companyId') companyId: number,
+    @Body() declineReasons: DeclineReasonsDto,
   ) {
-    return this.matchmakingService.markAsDeclined(investorProfileId, companyId);
+    return this.matchmakingService.markAsDeclined(investorProfileId, companyId, declineReasons.declineReasons);
   }
 
   @Post('disconnect/:investorProfileId/:companyId')
@@ -112,14 +122,19 @@ export class MatchmakingController {
     @Query('page') page: number,
     @Query('limit') limit: number,
   ) {
-    return this.matchmakingService.getDeclinedCompanies(investorProfileId, page, limit);
+    return this.matchmakingService.getDeclinedCompanies(
+      investorProfileId,
+      page,
+      limit,
+    );
   }
 
   @Post(':id/decline-reasons')
   @Roles(Role.Investor)
   addDeclineReason(
     @Param('id') id: number,
-    @Body() createDeclineReasonDto: CreateDeclineReasonDto) {
+    @Body() createDeclineReasonDto: CreateDeclineReasonDto,
+  ) {
     const declineReason = new DeclineReason();
     declineReason.reason = createDeclineReasonDto.reason;
 

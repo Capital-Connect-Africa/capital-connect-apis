@@ -22,7 +22,7 @@ export class MatchmakingService {
     @InjectRepository(Company)
     private readonly companyRepository: Repository<Company>,
     @InjectRepository(DeclineReason)
-    private readonly declineReasonRepository: Repository<DeclineReason>
+    private readonly declineReasonRepository: Repository<DeclineReason>,
   ) {}
 
   async getMatchingCompanies(id) {
@@ -180,6 +180,7 @@ export class MatchmakingService {
   async markAsDeclined(
     investorProfileId: number,
     companyId: number,
+    declineReasons: string[],
   ): Promise<Matchmaking> {
     const match = await this.matchmakingRepository.findOne({
       where: {
@@ -190,6 +191,7 @@ export class MatchmakingService {
 
     if (match) {
       match.status = 'declined';
+      match.declineReasons = declineReasons;
       return this.matchmakingRepository.save(match);
     }
 
@@ -226,9 +228,9 @@ export class MatchmakingService {
   }
 
   async getDeclinedCompanies(
-    investorProfileId: number, 
+    investorProfileId: number,
     page: number = 1,
-    limit: number = 10, 
+    limit: number = 10,
   ): Promise<Matchmaking[]> {
     return this.matchmakingRepository.find({
       where: {
@@ -241,17 +243,22 @@ export class MatchmakingService {
     });
   }
 
-  async addDeclineReason(matchmakingId: number, declineReason: DeclineReason): Promise<Matchmaking> {
+  async addDeclineReason(
+    matchmakingId: number,
+    declineReason: DeclineReason,
+  ): Promise<Matchmaking> {
     const matchmaking = await this.matchmakingRepository.findOne({
       where: { id: matchmakingId },
-      relations: ['declineReasons'],
     });
 
     if (!matchmaking) {
       throw new Error('Matchmaking not found');
     }
 
-    matchmaking.declineReasons.push(declineReason);
+    matchmaking.declineReasons = [
+      ...matchmaking.declineReasons,
+      declineReason.reason,
+    ];
     await this.matchmakingRepository.save(matchmaking);
 
     return matchmaking;
