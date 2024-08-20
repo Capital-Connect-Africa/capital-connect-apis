@@ -21,6 +21,9 @@ export class SubSectorService {
     return this.subSectorsRepository.find({
       skip,
       take: limit,
+      order: {
+        name: 'ASC',
+      },
     });
   }
 
