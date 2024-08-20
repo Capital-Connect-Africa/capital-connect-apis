@@ -54,7 +54,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 ####
 # Fetch companies paginated
 
-GET http://localhost:3000/company?page=4&limit=5
+GET http://localhost:3000/company?page=1&limit=5
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
 ####

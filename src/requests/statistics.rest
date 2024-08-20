@@ -1,0 +1,8 @@
+### Get user statistics
+GET http://localhost:3000/statistics/users
+Authorization: Bearer 3fJsm0xhzodY2CTo-bPTmgPkxyVEeab4NACx2JtX1xo
+Content-Type: application/json
+
+### Get user statistics
+GET https://capitalconnect-0060e0fb0eb4.herokuapp.com/statistics/users
+Authorization: Bearer 3fJsm0xhzodY2CTo-bPTmgPkxyVEeab4NACx2JtX1xo

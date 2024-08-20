@@ -65,7 +65,7 @@ export class SubmissionService {
     if (answerId) updates['answerId'] = answerId;
     if (text) updates['text'] = text;
     if (Object.keys(updates).length > 0)
-      await this.submissionRepository.update(id, updateSubmissionDto);
+      await this.submissionRepository.update(id, updates);
     return this.submissionRepository.findOne({
       where: { id },
       relations: ['user', 'question', 'answer'],

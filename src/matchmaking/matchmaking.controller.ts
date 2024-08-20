@@ -14,6 +14,7 @@ import { InvestorProfile } from '../investor-profile/entities/investor-profile.e
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { Roles } from '../auth/roles.decorator';
 import { Role } from '../auth/role.enum';
+import { FilterCompanyDto } from '../company/dto/filter-company.dto';
 import { DeclineReason } from './entities/declineReasons.entity';
 import { CreateDeclineReasonDto } from './dto/create-decline-reason.dto';
 
@@ -123,5 +124,10 @@ export class MatchmakingController {
     declineReason.reason = createDeclineReasonDto.reason;
 
     return this.matchmakingService.addDeclineReason(id, declineReason);
+  }
+
+  @Post('search-companies')
+  searchCompanies(@Body() searchDto: FilterCompanyDto) {
+    return this.matchmakingService.searchCompanies(searchDto);
   }
 }

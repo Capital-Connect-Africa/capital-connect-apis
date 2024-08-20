@@ -256,4 +256,8 @@ export class MatchmakingService {
 
     return matchmaking;
   }
+
+  async searchCompanies(filterDto: FilterCompanyDto): Promise<Company[]> {
+    return this.companyService.filterCompaniesByOr(filterDto);
+  }
 }
