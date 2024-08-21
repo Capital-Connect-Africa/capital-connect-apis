@@ -1,14 +1,15 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { InvestorProfileService } from '../investor-profile/investor-profile.service';
-import { CompanyService } from '../company/company.service';
-import { FilterCompanyDto } from '../company/dto/filter-company.dto';
-import { FilterInvestorProfilesDto } from '../investor-profile/dto/filter-investor-profile.dto';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { Sector } from '../sector/entities/sector.entity';
-import { Matchmaking } from './entities/matchmaking.entity';
-import { Company } from '../company/entities/company.entity';
-import { DeclineReason } from './entities/declineReasons.entity';
+import { Injectable, NotFoundException } from "@nestjs/common";
+import { InvestorProfileService } from "../investor-profile/investor-profile.service";
+import { CompanyService } from "../company/company.service";
+import { FilterCompanyDto } from "../company/dto/filter-company.dto";
+import { FilterInvestorProfilesDto } from "../investor-profile/dto/filter-investor-profile.dto";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Repository } from "typeorm";
+import { Sector } from "../sector/entities/sector.entity";
+import { Matchmaking } from "./entities/matchmaking.entity";
+import { Company } from "../company/entities/company.entity";
+import { DeclineReason } from "./entities/declineReasons.entity";
+import { MatchStatus } from "./MatchStatus.enum";
 
 @Injectable()
 export class MatchmakingService {
@@ -79,14 +80,14 @@ export class MatchmakingService {
     });
 
     if (match) {
-      match.status = 'interesting';
+      match.status = MatchStatus.INTERESTING;
       return this.matchmakingRepository.save(match);
     }
 
     const newMatch = this.matchmakingRepository.create({
       investorProfile: { id: investorProfileId },
       company: { id: companyId },
-      status: 'interesting',
+      status: MatchStatus.INTERESTING,
     });
 
     return this.matchmakingRepository.save(newMatch);
@@ -104,7 +105,7 @@ export class MatchmakingService {
     });
 
     if (match) {
-      match.status = 'connected';
+      match.status = MatchStatus.CONNECTED;
       return this.matchmakingRepository.save(match);
     }
 
@@ -119,7 +120,7 @@ export class MatchmakingService {
     return this.matchmakingRepository.find({
       where: {
         investorProfile: { id: investorProfileId },
-        status: 'interesting',
+        status: MatchStatus.INTERESTING,
       },
       relations: ['company'],
       take: limit,
@@ -135,7 +136,7 @@ export class MatchmakingService {
     return this.matchmakingRepository.find({
       where: {
         investorProfile: { id: investorProfileId },
-        status: 'connected',
+        status: MatchStatus.CONNECTED,
       },
       relations: ['company'],
       take: limit,
@@ -172,7 +173,7 @@ export class MatchmakingService {
     return this.matchmakingRepository.find({
       where: {
         company: { id: companyId },
-        status: 'interesting',
+        status: MatchStatus.INTERESTING,
       },
       relations: ['investorProfile'],
     });
@@ -182,7 +183,7 @@ export class MatchmakingService {
     return this.matchmakingRepository.find({
       where: {
         company: { id: companyId },
-        status: 'connected',
+        status: MatchStatus.CONNECTED,
       },
       relations: ['investorProfile'],
     });
@@ -202,7 +203,7 @@ export class MatchmakingService {
     });
 
     if (match) {
-      match.status = 'declined';
+      match.status = MatchStatus.DECLINED;
       match.declineReasons = declineReasons;
       return this.matchmakingRepository.save(match);
     }
@@ -210,7 +211,7 @@ export class MatchmakingService {
     const noMatch = this.matchmakingRepository.create({
       investorProfile: { id: investorProfileId },
       company: { id: companyId },
-      status: 'declined',
+      status: MatchStatus.DECLINED,
     });
 
     return this.matchmakingRepository.save(noMatch);
@@ -229,7 +230,7 @@ export class MatchmakingService {
 
     if (match) {
       if (match.status === 'connected') {
-        match.status = 'interesting';
+        match.status = MatchStatus.INTERESTING;
         return this.matchmakingRepository.save(match);
       } else {
         throw new Error('Company is not currently connected');
@@ -247,7 +248,7 @@ export class MatchmakingService {
     return this.matchmakingRepository.find({
       where: {
         investorProfile: { id: investorProfileId },
-        status: 'declined',
+        status: MatchStatus.DECLINED,
       },
       relations: ['company'],
       take: limit,
