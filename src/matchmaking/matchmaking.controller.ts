@@ -17,7 +17,7 @@ import { Role } from '../auth/role.enum';
 import { FilterCompanyDto } from '../company/dto/filter-company.dto';
 import { DeclineReason } from './entities/declineReasons.entity';
 import { CreateDeclineReasonDto } from './dto/create-decline-reason.dto';
-import { DeclineReasonsDto } from "./dto/decline-reasons.dto";
+import { DeclineReasonsDto } from './dto/decline-reasons.dto';
 
 @UseGuards(JwtAuthGuard)
 @Controller('matchmaking')
@@ -102,7 +102,11 @@ export class MatchmakingController {
     @Param('companyId') companyId: number,
     @Body() declineReasons: DeclineReasonsDto,
   ) {
-    return this.matchmakingService.markAsDeclined(investorProfileId, companyId, declineReasons.declineReasons);
+    return this.matchmakingService.markAsDeclined(
+      investorProfileId,
+      companyId,
+      declineReasons.declineReasons,
+    );
   }
 
   @Post('disconnect/:investorProfileId/:companyId')

@@ -6,11 +6,9 @@ import {
   JoinColumn,
   CreateDateColumn,
   UpdateDateColumn,
-  OneToMany,
 } from 'typeorm';
 import { InvestorProfile } from '../../investor-profile/entities/investor-profile.entity';
 import { Company } from '../../company/entities/company.entity';
-import { DeclineReason } from './declineReasons.entity';
 
 @Entity('match_makings')
 export class Matchmaking {

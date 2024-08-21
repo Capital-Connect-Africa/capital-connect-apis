@@ -28,7 +28,7 @@ export class MatchmakingService {
   async getMatchingCompanies(id) {
     const profileFound = await this.investorProfileService.findOneByUserId(id);
     if (!profileFound) {
-      throw new NotFoundException();
+      throw new NotFoundException('Investor profile not found');
     }
 
     const filterDto = new FilterCompanyDto();
@@ -49,7 +49,7 @@ export class MatchmakingService {
   async getMatchingInvestorProfiles(id) {
     const companyFound = await this.companyService.findOneByOwnerId(id);
     if (!companyFound) {
-      throw new NotFoundException();
+      throw new NotFoundException('Company not found');
     }
 
     const filterDto = new FilterInvestorProfilesDto();
