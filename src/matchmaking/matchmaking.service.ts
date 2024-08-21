@@ -39,7 +39,9 @@ export class MatchmakingService {
     filterDto.growthStages = profileFound.businessGrowthStages;
     filterDto.registrationStructures = profileFound.registrationStructures;
     const companies = await this.companyService.filterCompanies(filterDto);
-    const matchingCompanies = await this.getMatchedCompanies(profileFound.id);
+    const matchingCompanies = await this.getMatchedCompaniesForFiltering(
+      profileFound.id,
+    );
     const companyIds = matchingCompanies.map((match) => match.company.id);
     return companies.filter(
       (company) => companyIds.includes(company.id) === false,
@@ -138,6 +140,16 @@ export class MatchmakingService {
       relations: ['company'],
       take: limit,
       skip: (page - 1) * limit,
+    });
+  }
+
+  async getMatchedCompaniesForFiltering(
+    investorProfileId: number,
+  ): Promise<Matchmaking[]> {
+    return this.matchmakingRepository.find({
+      where: {
+        investorProfile: { id: investorProfileId },
+      },
     });
   }
 
