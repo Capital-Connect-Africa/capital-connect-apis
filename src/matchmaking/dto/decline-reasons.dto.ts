@@ -1,6 +1,7 @@
-import { IsArray, IsString } from "class-validator";
+import { IsArray, IsOptional } from 'class-validator';
 
 export class DeclineReasonsDto {
-    @IsArray()
-    declineReasons: string[];
-  }
+  @IsArray()
+  @IsOptional()
+  declineReasons: string[];
+}
