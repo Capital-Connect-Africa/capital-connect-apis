@@ -8,7 +8,6 @@ GET http://localhost:3000/matchmaking/investor-profiles
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
-
 ### Mark a company as interesting (investorProfileId/companyId)
 POST http://localhost:3000/matchmaking/interesting/2/2
 Content-Type: application/json
@@ -20,7 +19,7 @@ Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
 {
-  "declineReasons": ["No possibility for further growth.", "Not interested in the sector.", "No possibility for further growth.", "Not interested in the sector."]
+  "declineReasons": ["No possibility for further growth.", "Not interested in the sector."]
 }
 
 ### Connect with a company (investorProfileId/companyId)
