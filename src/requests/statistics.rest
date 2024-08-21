@@ -1,8 +1,24 @@
 ### Get user statistics
 GET http://localhost:3000/statistics/users
-Authorization: Bearer 3fJsm0xhzodY2CTo-bPTmgPkxyVEeab4NACx2JtX1xo
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 Content-Type: application/json
 
 ### Get user statistics
 GET https://capitalconnect-0060e0fb0eb4.herokuapp.com/statistics/users
-Authorization: Bearer 3fJsm0xhzodY2CTo-bPTmgPkxyVEeab4NACx2JtX1xo
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+### Get matchmaking statistics
+GET http://localhost:3000/statistics/matchmaking
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+### Get matchmaking statistics
+GET https://capitalconnect-0060e0fb0eb4.herokuapp.com/statistics/matchmaking
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+### Get matchmaking statistics per invetor (investorId)
+GET http://localhost:3000/statistics/matchmaking/6
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+### Get matchmaking statistics per invetor (investorId)
+GET https://capitalconnect-0060e0fb0eb4.herokuapp.com/statistics/matchmaking/6
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
