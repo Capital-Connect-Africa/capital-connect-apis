@@ -6,12 +6,16 @@ Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
 {
-    "name": "Capital Connect",
+    "name": "Gatuma Family",
     "country": "Kenya",
     "businessSector": "Venture Capital",
     "businessSubsector": "Capital Raising",
     "productsAndServices": "Fintech",
     "registrationStructure": "B2B",
+    "investmentStructures": "Trade Finance",
+    "useOfFunds": "Working Capital",
+    "esgFocusAreas": "Youth Empowerment",
+    "fundsNeeded": 50000,
     "yearsOfOperation": "0 - 1 years",
     "growthStage": "funded",
     "numberOfEmployees": "1-10 employees",
@@ -67,7 +71,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 ####
 # Fetch company by user id
 
-GET http://localhost:3000/company/owner/1
+GET http://localhost:3000/company/owner/2
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
 ####
@@ -82,20 +86,24 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 #Update company by id
 
 
-PATCH http://localhost:3000/company/3
+PATCH http://localhost:3000/company/1
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
 {
-    "name": "Bazuu Enterprise 255",
-    "country": "Tanzania",
-    "businessSector": "Sector 1 updated",
-    "businessSubsector": "Updated Sub Sector 1",
+    "name": "Gatuma Family",
+    "country": "Kenya",
+    "businessSector": "Investments",
+    "businessSubsector": "New Investments",
     "productsAndServices": "FMCG",
     "registrationStructure": "Partnership",
+    "investmentStructures": "Trade Finance",
+    "useOfFunds": "Working Capital",
+    "esgFocusAreas": "Youth Empowerment",
+    "fundsNeeded": 50000,
     "yearsOfOperation": "0 - 1 years",
-    "growthStage": "Start-up - post revenues",
-    "numberOfEmployees": "11-50 employees",
+    "growthStage": "Established",
+    "numberOfEmployees": "11-20 employees",
     "fullTimeBusiness": true
 }
 
