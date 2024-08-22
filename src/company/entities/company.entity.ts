@@ -32,6 +32,18 @@ export class Company {
   @Column()
   registrationStructure: string;
 
+  @Column()
+  investmentStructures: string;
+
+  @Column()
+  useOfFunds: string;
+
+  @Column()
+  esgFocusAreas: string;
+
+  @Column()
+  fundsNeeded: number;
+
   @Column({
     type: 'enum',
     enum: YearsOfOperation,
