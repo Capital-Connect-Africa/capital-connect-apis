@@ -104,6 +104,17 @@ export class SubmissionService {
     );
   }
 
+  async findOneByQuestionId(
+  questionId: number,
+  userId: number,
+): Promise<Submission> {
+  const submission = await this.submissionRepository.findOne({
+    where: { user: { id: userId }, question: { id: questionId } },
+    relations: ['question', 'answer'],
+  });
+  return submission;
+}
+
   async findByUser(userId: number): Promise<Submission[]> {
     return this.submissionRepository.find({
       where: { user: { id: userId } },
