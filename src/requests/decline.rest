@@ -1,0 +1,32 @@
+###
+# Create Decline Reason
+POST http://localhost:3000/decline-reasons
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+{
+    "reason": "No possibility for growth"
+}
+
+###
+# Get Decline Reason by Id
+GET http://localhost:3000/decline-reasons/1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+###
+# Get all Decline Reasons
+GET http://localhost:3000/decline-reasons
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+###
+# Update Decline Reason by ID
+PATCH http://localhost:3000/decline-reasons/1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+{
+    "reason": "Poor infrastructure"
+}
+###
+# Delete Decline Reason by ID
+DELETE http://localhost:3000/decline-reasons/1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
