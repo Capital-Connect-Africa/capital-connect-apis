@@ -13,6 +13,7 @@ import {
   Delete,
   HttpCode,
   HttpStatus,
+  Query,
 } from '@nestjs/common';
 import { SubmissionService } from './submission.service';
 import {
@@ -153,6 +154,29 @@ export class SubmissionController {
     } catch (error) {
       throwInternalServer(error);
     }
+  }
+
+  @Get('by-question-ids')
+  async getSubmissionsByQuestionIds(
+    @Query('questionIds') questionIds: string, // Expecting comma-separated question IDs
+    @Query('userId') userId: number,
+  ): Promise<Submission[]> {
+    const questionIdsArray = questionIds.split(',').map(Number);
+    return this.submissionService.findAllByQuestionIds(questionIdsArray, userId);
+  }
+
+  @Get('by-question/:questionId')
+  async findOneByQuestionId(
+    @Param('questionId') questionId: number,
+    @Query('userId') userId: number,
+  ): Promise<Submission> {
+    const submission = await this.submissionService.findOneByQuestionId(questionId, userId);
+    
+    if (!submission) {
+      throw new NotFoundException('Submission not found');
+    }
+    
+    return submission;
   }
 
   @Get('user/:userId/section/:sectionId')

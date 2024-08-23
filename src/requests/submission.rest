@@ -4,10 +4,10 @@ Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
 {
-  "userId": 3,
-  "questionId": 12,
-  "answerId": 14,
-  "text": "true"
+  "userId": 2,
+  "questionId": 1,
+  "answerId": 3,
+  "text": "second"
 }
 
 ### Create multiple submissions
@@ -42,6 +42,14 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
 ### Fetch submissions by user
 GET http://localhost:3000/submissions/user/6
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+### Get Submission by Question ID and User ID
+GET http://localhost:3000/submissions/by-question/1?userId=2
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+### Get Submission by Question ID and User ID
+GET http://localhost:3000/submissions/by-question-ids?questionIds=1,2,3&userId=2
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
 ### Fetch submissions by user prod
