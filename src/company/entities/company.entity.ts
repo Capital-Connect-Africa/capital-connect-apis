@@ -33,7 +33,7 @@ export class Company {
   registrationStructure: string;
 
   @Column()
-  investmentStructures: string;
+  investmentStructure: string;
 
   @Column()
   useOfFunds: string;
