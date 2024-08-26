@@ -9,15 +9,14 @@ import {
 } from 'typeorm';
 import { InvestorProfile } from '../../investor-profile/entities/investor-profile.entity';
 import { Company } from '../../company/entities/company.entity';
+import { MatchStatus } from '../MatchStatus.enum';
 
 @Entity('match_makings')
 export class Matchmaking {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => InvestorProfile, { eager: true,
-    onDelete: 'CASCADE',
-  },)
+  @ManyToOne(() => InvestorProfile, { eager: true, onDelete: 'CASCADE' })
   @JoinColumn({ name: 'investorProfileId' })
   investorProfile: InvestorProfile;
 
@@ -25,12 +24,15 @@ export class Matchmaking {
   @JoinColumn({ name: 'companyId' })
   company: Company;
 
+  @Column('text', { array: true, nullable: true })
+  declineReasons: string[];
+
   @Column({
     type: 'enum',
-    enum: ['interesting', 'declined', 'connected'],
-    default: 'interesting',
+    enum: MatchStatus,
+    default: MatchStatus.INTERESTING,
   })
-  status: 'interesting' | 'declined' | 'connected';  
+  status: MatchStatus;
 
   @CreateDateColumn()
   createdAt: Date;

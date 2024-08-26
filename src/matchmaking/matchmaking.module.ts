@@ -14,6 +14,9 @@ import { CompanyModule } from '../company/company.module';
 import { InvestorProfileModule } from '../investor-profile/investor-profile.module';
 import { ContactPerson } from '../contact-person/entities/contact-person.entity';
 import { Matchmaking } from './entities/matchmaking.entity';
+import { DeclineReason } from './entities/declineReasons.entity';
+import { DeclineService } from './decline.service';
+import { DeclineController } from './decline.controller';
 
 @Module({
   imports: [
@@ -28,11 +31,12 @@ import { Matchmaking } from './entities/matchmaking.entity';
       SubSector,
       ContactPerson,
       Matchmaking,
+      DeclineReason
     ]),
     CompanyModule,
     InvestorProfileModule,
   ],
-  providers: [MatchmakingService],
-  controllers: [MatchmakingController],
+  providers: [MatchmakingService, DeclineService],
+  controllers: [MatchmakingController, DeclineController],
 })
 export class MatchmakingModule {}

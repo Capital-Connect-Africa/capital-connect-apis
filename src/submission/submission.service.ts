@@ -65,7 +65,7 @@ export class SubmissionService {
     if (answerId) updates['answerId'] = answerId;
     if (text) updates['text'] = text;
     if (Object.keys(updates).length > 0)
-      await this.submissionRepository.update(id, updateSubmissionDto);
+      await this.submissionRepository.update(id, updates);
     return this.submissionRepository.findOne({
       where: { id },
       relations: ['user', 'question', 'answer'],
@@ -75,6 +75,7 @@ export class SubmissionService {
   async findOne(id: number): Promise<Submission> {
     const submission = await this.submissionRepository.findOne({
       where: { id },
+      relations: ['user', 'question', 'answer'],
     });
     if (!submission) {
       throw new NotFoundException(`Submission with id ${id} not found`);
@@ -102,6 +103,17 @@ export class SubmissionService {
       ),
     );
   }
+
+  async findOneByQuestionId(
+  questionId: number,
+  userId: number,
+): Promise<Submission> {
+  const submission = await this.submissionRepository.findOne({
+    where: { user: { id: userId }, question: { id: questionId } },
+    relations: ['question', 'answer'],
+  });
+  return submission;
+}
 
   async findByUser(userId: number): Promise<Submission[]> {
     return this.submissionRepository.find({
@@ -212,5 +224,9 @@ export class SubmissionService {
       targetScore,
       percentageScore: percentageScore ? Math.round(percentageScore) : 0,
     };
+  }
+
+  remove(id: number) {
+    this.submissionRepository.delete(id);
   }
 }

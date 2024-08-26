@@ -34,6 +34,7 @@ import { UseOfFundsModule } from './use-of-funds/use-of-funds.module';
 import { EsgFocusAreasModule } from './esg-focus/esg-focus-areas.module';
 import { RegistrationStructuresModule } from './registration-structures/registration-structures.module';
 import { InvestorTypesModule } from './investor-types/investor-types.module';
+import { StatisticsModule } from './statistics/statistics.module';
 import { SpecialCriteriaModule } from './special-criteria/special-criteria.module';
 
 @Module({
@@ -75,6 +76,7 @@ import { SpecialCriteriaModule } from './special-criteria/special-criteria.modul
     EsgFocusAreasModule,
     RegistrationStructuresModule,
     InvestorTypesModule,
+    StatisticsModule,
     SpecialCriteriaModule,
   ],
   providers: [

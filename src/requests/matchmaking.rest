@@ -9,14 +9,18 @@ Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
 ### Mark a company as interesting (investorProfileId/companyId)
-POST http://localhost:3000/matchmaking/interesting/1/3
+POST http://localhost:3000/matchmaking/interesting/2/2
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
 ### Mark a company as not interesting (investorProfileId/companyId)
-POST http://localhost:3000/matchmaking/decline/2/1
+POST http://localhost:3000/matchmaking/decline/2/2
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+{
+  "declineReasons": ["No possibility for further growth.", "Not interested in the sector."]
+}
 
 ### Connect with a company (investorProfileId/companyId)
 POST http://localhost:3000/matchmaking/connect/2/2
@@ -51,4 +55,28 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 GET http://localhost:3000/matchmaking/investors/connected/2
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
-###
+### Match decline reason.
+POST http://localhost:3000/matchmaking/7/decline-reasons
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+{
+    "reason": "No possibility for further growth."
+}
+
+### Company filtering
+POST http://localhost:3000/matchmaking/search-companies
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+{
+  "countries": ["Kenya", "Rwanda"],
+  "businessSectors": ["Agriculture", "Healthcare", "Venture Capital"],
+  "businessSubsectors": ["Farming", "Pharmacy"],
+  "productsAndServices": "Software",
+  "registrationStructures": ["Limited Company", "Partnership"],
+  "yearsOfOperation": "0 - 1 years",
+  "growthStages": ["Seed", "Series A"],
+  "numberOfEmployees": "1-10 employees",
+  "fullTimeBusiness": false
+}

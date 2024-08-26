@@ -1,13 +1,13 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
-@Entity("stages")
+@Entity('stages')
 export class Stage {
-    @PrimaryGeneratedColumn()
-    id: number;
-  
-    @Column()
-    title: string;
-  
-    @Column({ type: 'text', nullable: true })
-    description: string;
+  @PrimaryGeneratedColumn()
+  id: number;
+
+  @Column()
+  title: string;
+
+  @Column({ type: 'text', nullable: true })
+  description: string;
 }

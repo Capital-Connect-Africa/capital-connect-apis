@@ -1,8 +1,10 @@
 import {
+  Body,
   Controller,
   Get,
   Param,
   Post,
+  Query,
   Request,
   UseGuards,
 } from '@nestjs/common';
@@ -12,6 +14,10 @@ import { InvestorProfile } from '../investor-profile/entities/investor-profile.e
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { Roles } from '../auth/roles.decorator';
 import { Role } from '../auth/role.enum';
+import { FilterCompanyDto } from '../company/dto/filter-company.dto';
+import { DeclineReason } from './entities/declineReasons.entity';
+import { CreateDeclineReasonDto } from './dto/create-decline-reason.dto';
+import { DeclineReasonsDto } from './dto/decline-reasons.dto';
 
 @UseGuards(JwtAuthGuard)
 @Controller('matchmaking')
@@ -57,31 +63,66 @@ export class MatchmakingController {
   @Get('interested/:investorProfileId')
   getInterestingCompanies(
     @Param('investorProfileId') investorProfileId: number,
+    @Query('page') page: number,
+    @Query('limit') limit: number,
   ) {
-    return this.matchmakingService.getInterestingCompanies(investorProfileId);
+    return this.matchmakingService.getInterestingCompanies(
+      investorProfileId,
+      page,
+      limit,
+    );
   }
 
   @Get('connected/:investorProfileId')
-  getConnectedCompanies(@Param('investorProfileId') investorProfileId: number) {
-    return this.matchmakingService.getConnectedCompanies(investorProfileId);
+  getConnectedCompanies(
+    @Param('investorProfileId') investorProfileId: number,
+    @Query('page') page: number,
+    @Query('limit') limit: number,
+  ) {
+    return this.matchmakingService.getConnectedCompanies(
+      investorProfileId,
+      page,
+      limit,
+    );
   }
 
   @Get('investors/interested/:companyId')
-  getInterestedInvestors(@Param('companyId') companyId: number) {
-    return this.matchmakingService.getInterestedInvestors(companyId);
+  getInterestedInvestors(
+    @Param('companyId') companyId: number,
+    @Query('page') page: number,
+    @Query('limit') limit: number,
+  ) {
+    return this.matchmakingService.getInterestedInvestors(
+      companyId,
+      page,
+      limit,
+    );
   }
 
   @Get('investors/connected/:companyId')
-  getConnectedInvestors(@Param('companyId') companyId: number) {
-    return this.matchmakingService.getConnectedInvestors(companyId);
+  getConnectedInvestors(
+    @Param('companyId') companyId: number,
+    @Query('page') page: number,
+    @Query('limit') limit: number,
+  ) {
+    return this.matchmakingService.getConnectedInvestors(
+      companyId,
+      page,
+      limit,
+    );
   }
 
   @Post('decline/:investorProfileId/:companyId')
   markAsDeclined(
     @Param('investorProfileId') investorProfileId: number,
     @Param('companyId') companyId: number,
+    @Body() declineReasons: DeclineReasonsDto,
   ) {
-    return this.matchmakingService.markAsDeclined(investorProfileId, companyId);
+    return this.matchmakingService.markAsDeclined(
+      investorProfileId,
+      companyId,
+      declineReasons.declineReasons,
+    );
   }
 
   @Post('disconnect/:investorProfileId/:companyId')
@@ -96,7 +137,32 @@ export class MatchmakingController {
   }
 
   @Get('declined/:investorProfileId')
-  getDeclinedCompanies(@Param('investorProfileId') investorProfileId: number) {
-    return this.matchmakingService.getDeclinedCompanies(investorProfileId);
+  getDeclinedCompanies(
+    @Param('investorProfileId') investorProfileId: number,
+    @Query('page') page: number,
+    @Query('limit') limit: number,
+  ) {
+    return this.matchmakingService.getDeclinedCompanies(
+      investorProfileId,
+      page,
+      limit,
+    );
+  }
+
+  @Post(':id/decline-reasons')
+  @Roles(Role.Investor)
+  addDeclineReason(
+    @Param('id') id: number,
+    @Body() createDeclineReasonDto: CreateDeclineReasonDto,
+  ) {
+    const declineReason = new DeclineReason();
+    declineReason.reason = createDeclineReasonDto.reason;
+
+    return this.matchmakingService.addDeclineReason(id, declineReason);
+  }
+
+  @Post('search-companies')
+  searchCompanies(@Body() searchDto: FilterCompanyDto) {
+    return this.matchmakingService.searchCompanies(searchDto);
   }
 }
