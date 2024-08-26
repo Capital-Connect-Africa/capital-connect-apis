@@ -37,9 +37,9 @@ export class MobileNumberController {
     try {
       const mobileNo = await this.mobileService.create(createMobileDto);
       mobileNo.otp = generateOtp();
-      const sevedMobileNo = await this.mobileNumbersRepository.save(mobileNo);
+      const savedMobileNo = await this.mobileNumbersRepository.save(mobileNo);
 
-      const message = `Your OTP code is ${sevedMobileNo.otp}`;
+      const message = `Your OTP code is ${savedMobileNo.otp}`;
       const res = await this.otpService.sendSms(
         createMobileDto.phoneNo,
         message,
