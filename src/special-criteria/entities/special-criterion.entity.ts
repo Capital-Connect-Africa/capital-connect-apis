@@ -1,7 +1,6 @@
 import { InvestorProfile } from "src/investor-profile/entities/investor-profile.entity";
 import { Question } from "src/question/entities/question.entity";
-import { QuestionService } from "src/question/question.service";
-import { Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity("special_criteria")
 export class SpecialCriterion {
@@ -15,7 +14,7 @@ export class SpecialCriterion {
     description: string;
 
     @ManyToMany(() => Question, (questions) => questions.specialcriteria)
-    @JoinTable()
+    @JoinTable({ name: 'special_criteria_questions' })
     questions: Question[];
 
     @ManyToOne(() => InvestorProfile, (investorProfile) => investorProfile.specialCriteria)

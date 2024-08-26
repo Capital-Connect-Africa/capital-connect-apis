@@ -1,4 +1,4 @@
-import { IsOptional, IsString, MinLength } from "class-validator";
+import { IsNumber, IsOptional, IsString, MinLength } from "class-validator";
 
 export class CreateSpecialCriterionDto {
     @IsString()
@@ -8,4 +8,7 @@ export class CreateSpecialCriterionDto {
     @IsString()
     @IsOptional()
     description?: string;
+
+    @IsNumber()
+    investorProfileId: number;
 }

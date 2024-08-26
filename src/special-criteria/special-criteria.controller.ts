@@ -1,13 +1,27 @@
-import { Controller, Get, Post, Body, Param, Delete, UseGuards, Query, NotFoundException, BadRequestException, Put, HttpCode, HttpStatus } from '@nestjs/common';
-import { SpecialCriteriaService } from './special-criteria.service';
-import { CreateSpecialCriterionDto } from './dto/create-special-criterion.dto';
-import { UpdateSpecialCriterionDto } from './dto/update-special-criterion.dto';
-import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
-import { RolesGuard } from 'src/auth/roles.guard';
-import { Roles } from 'src/auth/roles.decorator';
-import { Role } from 'src/auth/role.enum';
-import throwInternalServer from 'src/shared/utils/exceptions.util';
-import { AddQuestionDto } from './dto/add-question.dto';
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpCode,
+  HttpStatus,
+  NotFoundException,
+  Param,
+  Post,
+  Put,
+  Query,
+  UseGuards
+} from "@nestjs/common";
+import { SpecialCriteriaService } from "./special-criteria.service";
+import { CreateSpecialCriterionDto } from "./dto/create-special-criterion.dto";
+import { UpdateSpecialCriterionDto } from "./dto/update-special-criterion.dto";
+import { JwtAuthGuard } from "src/auth/jwt-auth.guard";
+import { RolesGuard } from "src/auth/roles.guard";
+import { Roles } from "src/auth/roles.decorator";
+import { Role } from "src/auth/role.enum";
+import throwInternalServer from "src/shared/utils/exceptions.util";
+import { AddQuestionDto } from "./dto/add-question.dto";
 
 @Controller('special-criteria')
 @UseGuards(JwtAuthGuard, RolesGuard)
@@ -25,32 +39,38 @@ export class SpecialCriteriaController {
   }
 
   @Post('add-questions')
-    async addQuestions(@Body() dto: AddQuestionDto) {
+  async addQuestions(@Body() dto: AddQuestionDto) {
         return this.specialCriteriaService.addQuestionsToSpecialCriteria(dto);
+  }
+
+  @Post('remove-questions')
+  async removeQuestions(@Body() dto: AddQuestionDto) {
+        return this.specialCriteriaService.removeQuestionsToSpecialCriteria(dto);
   }
 
   @Get()
   async findAll(@Query('page') page: number, @Query('limit') limit: number) {
     try {
-      const special = await this.specialCriteriaService.findAll(page, limit);
-      return special;
+      return await this.specialCriteriaService.findAll(page, limit);
     } catch (error) {
       throwInternalServer(error)
     }    
   }
 
   @Get(':id')
-  async findByInvestorProfileId(@Query('investorProfileId') investorProfileId: number) {
-    return this.specialCriteriaService.findAll(investorProfileId);
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
+  async findOne(@Param('id') id: string) {
     try {
-      return this.specialCriteriaService.findOne(+id);
+      return await this.specialCriteriaService.findOne(+id);
     } catch (error) {
+      if (error instanceof NotFoundException) throw error
       throwInternalServer(error)
     }
+  }
+
+  @Get('investor-profile/:investorProfileId')
+  async findByInvestorProfileId(@Param('investorProfileId') investorProfileId: number, @Query('page') page: number, @Query('limit') limit: number) {
+    console.log("investorProfileId", investorProfileId)
+    return this.specialCriteriaService.findByInvestorProfileId(investorProfileId, page, limit);
   }
 
   @Put(':id')
@@ -58,8 +78,7 @@ export class SpecialCriteriaController {
   async update(@Param('id') id: string, @Body() updateSpecialCriterionDto: UpdateSpecialCriterionDto) {
     try {
       await this.specialCriteriaService.findOne(+id);
-      const special = await this.specialCriteriaService.update(+id, updateSpecialCriterionDto);
-      return special;
+      return await this.specialCriteriaService.update(+id, updateSpecialCriterionDto);
     } catch (error) {
       if (error instanceof NotFoundException) {
         throw new BadRequestException(`Special criteria with id ${id} not found`);
