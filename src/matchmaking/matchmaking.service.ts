@@ -1,15 +1,15 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
-import { InvestorProfileService } from "../investor-profile/investor-profile.service";
-import { CompanyService } from "../company/company.service";
-import { FilterCompanyDto } from "../company/dto/filter-company.dto";
-import { FilterInvestorProfilesDto } from "../investor-profile/dto/filter-investor-profile.dto";
-import { InjectRepository } from "@nestjs/typeorm";
-import { Repository } from "typeorm";
-import { Sector } from "../sector/entities/sector.entity";
-import { Matchmaking } from "./entities/matchmaking.entity";
-import { Company } from "../company/entities/company.entity";
-import { DeclineReason } from "./entities/declineReasons.entity";
-import { MatchStatus } from "./MatchStatus.enum";
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { InvestorProfileService } from '../investor-profile/investor-profile.service';
+import { CompanyService } from '../company/company.service';
+import { FilterCompanyDto } from '../company/dto/filter-company.dto';
+import { FilterInvestorProfilesDto } from '../investor-profile/dto/filter-investor-profile.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Sector } from '../sector/entities/sector.entity';
+import { Matchmaking } from './entities/matchmaking.entity';
+import { Company } from '../company/entities/company.entity';
+import { DeclineReason } from './entities/declineReasons.entity';
+import { MatchStatus } from './MatchStatus.enum';
 
 @Injectable()
 export class MatchmakingService {
@@ -169,23 +169,35 @@ export class MatchmakingService {
     });
   }
 
-  async getInterestedInvestors(companyId: number): Promise<Matchmaking[]> {
+  async getInterestedInvestors(
+    companyId: number,
+    page: number = 1,
+    limit: number = 10,
+  ): Promise<Matchmaking[]> {
     return this.matchmakingRepository.find({
       where: {
         company: { id: companyId },
         status: MatchStatus.INTERESTING,
       },
       relations: ['investorProfile'],
+      take: limit,
+      skip: (page - 1) * limit,
     });
   }
 
-  async getConnectedInvestors(companyId: number): Promise<Matchmaking[]> {
+  async getConnectedInvestors(
+    companyId: number,
+    page: number = 1,
+    limit: number = 10,
+  ): Promise<Matchmaking[]> {
     return this.matchmakingRepository.find({
       where: {
         company: { id: companyId },
         status: MatchStatus.CONNECTED,
       },
       relations: ['investorProfile'],
+      take: limit,
+      skip: (page - 1) * limit,
     });
   }
 

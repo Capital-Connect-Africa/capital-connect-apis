@@ -87,13 +87,29 @@ export class MatchmakingController {
   }
 
   @Get('investors/interested/:companyId')
-  getInterestedInvestors(@Param('companyId') companyId: number) {
-    return this.matchmakingService.getInterestedInvestors(companyId);
+  getInterestedInvestors(
+    @Param('companyId') companyId: number,
+    @Query('page') page: number,
+    @Query('limit') limit: number,
+  ) {
+    return this.matchmakingService.getInterestedInvestors(
+      companyId,
+      page,
+      limit,
+    );
   }
 
   @Get('investors/connected/:companyId')
-  getConnectedInvestors(@Param('companyId') companyId: number) {
-    return this.matchmakingService.getConnectedInvestors(companyId);
+  getConnectedInvestors(
+    @Param('companyId') companyId: number,
+    @Query('page') page: number,
+    @Query('limit') limit: number,
+  ) {
+    return this.matchmakingService.getConnectedInvestors(
+      companyId,
+      page,
+      limit,
+    );
   }
 
   @Post('decline/:investorProfileId/:companyId')
