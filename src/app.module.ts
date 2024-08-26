@@ -35,6 +35,7 @@ import { EsgFocusAreasModule } from './esg-focus/esg-focus-areas.module';
 import { RegistrationStructuresModule } from './registration-structures/registration-structures.module';
 import { InvestorTypesModule } from './investor-types/investor-types.module';
 import { StatisticsModule } from './statistics/statistics.module';
+import { SpecialCriteriaModule } from './special-criteria/special-criteria.module';
 
 @Module({
   imports: [
@@ -76,6 +77,7 @@ import { StatisticsModule } from './statistics/statistics.module';
     RegistrationStructuresModule,
     InvestorTypesModule,
     StatisticsModule,
+    SpecialCriteriaModule,
   ],
   providers: [
     AppService,

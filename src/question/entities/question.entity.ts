@@ -1,8 +1,9 @@
 import { Answer } from 'src/answer/entities/answer.entity';
 import { SubSection } from 'src/subsection/entities/subsection.entity';
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany, ManyToMany } from 'typeorm';
 import { QuestionType } from '../question.type';
 import { Submission } from 'src/submission/entities/submission.entity';
+import { SpecialCriterion } from 'src/special-criteria/entities/special-criterion.entity';
 
 @Entity("questions")
 export class Question {
@@ -36,4 +37,7 @@ export class Question {
 
   @OneToMany(() => Submission, submission => submission.question)
   submissions: Submission[];
+
+  @ManyToMany( () => SpecialCriterion, (specialcriteria) => specialcriteria.questions)
+  specialcriteria: SpecialCriterion[];
 }
