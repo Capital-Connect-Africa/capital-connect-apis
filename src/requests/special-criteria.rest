@@ -1,0 +1,56 @@
+### Create Special criteria
+POST http://localhost:3000/special-criteria
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+{
+    "title": "New Special Criteria",
+    "description": "This is a test criteria.",
+    "investorProfileId": 2
+}
+
+### Add question to special criteria
+POST http://localhost:3000/special-criteria/add-questions
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+{
+  "specialCriteriaId": 1,
+  "questionIds": [1, 3, 2]
+}
+
+### Remove question from special criteria
+POST http://localhost:3000/special-criteria/remove-questions
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+{
+  "specialCriteriaId": 1,
+  "questionIds": [1]
+}
+
+### Get Special criteria by Id
+GET http://localhost:3000/special-criteria/1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+### Get all Special criteria
+GET http://localhost:3000/special-criteria
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+### Get all Special criteria by Investor profile
+GET http://localhost:3000/special-criteria/investor-profile/2
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+### Update Special criteria
+PUT http://localhost:3000/special-criteria/2
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+{
+  "title": "New Special Criteria updated",
+  "description": "This is a test criteria updated."
+}
+
+### Delete Special criteria by Id
+DELETE http://localhost:3000/special-criteria/3
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
