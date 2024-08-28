@@ -45,7 +45,9 @@ export class MatchmakingController {
     @Param('investorId') investorId: number,
   ): Promise<Company[]> {
     try {
-      return await this.matchmakingService.getMatchingCompanies(investorId);
+      return await this.matchmakingService.getMatchingCompaniesByInvestorProfileId(
+        investorId,
+      );
     } catch (error) {
       if (error instanceof NotFoundException) {
         throw error;
