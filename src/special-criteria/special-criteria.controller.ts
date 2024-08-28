@@ -69,8 +69,12 @@ export class SpecialCriteriaController {
 
   @Get('investor-profile/:investorProfileId')
   async findByInvestorProfileId(@Param('investorProfileId') investorProfileId: number, @Query('page') page: number, @Query('limit') limit: number) {
-    console.log("investorProfileId", investorProfileId)
     return this.specialCriteriaService.findByInvestorProfileId(investorProfileId, page, limit);
+  }
+
+  @Get('company/:companyId')
+  async findByCompanyId(@Param('companyId') companyId: number, @Query('page') page: number, @Query('limit') limit: number) {
+    return this.specialCriteriaService.findByCompanyId(companyId, page, limit);
   }
 
   @Put(':id')

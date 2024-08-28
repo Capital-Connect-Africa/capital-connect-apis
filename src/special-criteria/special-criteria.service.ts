@@ -8,6 +8,7 @@ import { AddQuestionDto } from "./dto/add-question.dto";
 import { Question } from "src/question/entities/question.entity";
 import { InvestorProfile } from "../investor-profile/entities/investor-profile.entity";
 import { SpecialCriterionQuestion } from "./entities/special-criterion-questions.entity";
+import { Matchmaking } from "../matchmaking/entities/matchmaking.entity";
 
 @Injectable()
 export class SpecialCriteriaService {
@@ -18,6 +19,8 @@ export class SpecialCriteriaService {
     private readonly questionsRepository: Repository<Question>,
     @InjectRepository(SpecialCriterionQuestion)
     private readonly specialCriterionQuestionRepository: Repository<SpecialCriterionQuestion>,
+    @InjectRepository(Matchmaking)
+    private readonly matchmakingRepository: Repository<Matchmaking>,
   ){}
 
   async addQuestionsToSpecialCriteria(dto: AddQuestionDto) {
@@ -97,6 +100,19 @@ export class SpecialCriteriaService {
     return this.specialCriteriaRepository.find({
       where: {
         investorProfile: { id: investorProfileId },
+      },
+      skip,
+      take: limit,
+      relations: ['questions', 'investorProfile'],
+    });
+  }
+
+  async findByCompanyId(companyId: number, page: number = 1, limit: number = 10) {
+    const investorProfileIds = await this.matchmakingRepository.find({ where: { company: { id: companyId } } }).then(matches => matches.map(match => match.investorProfile.id));
+    const skip = (page - 1) * limit;
+    return this.specialCriteriaRepository.find({
+      where: {
+        investorProfile: { id: In([...investorProfileIds]) },
       },
       skip,
       take: limit,
