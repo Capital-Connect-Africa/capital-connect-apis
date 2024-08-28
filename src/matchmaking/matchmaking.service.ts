@@ -20,10 +20,6 @@ export class MatchmakingService {
     private sectorsRepository: Repository<Sector>,
     @InjectRepository(Matchmaking)
     private readonly matchmakingRepository: Repository<Matchmaking>,
-    @InjectRepository(Company)
-    private readonly companyRepository: Repository<Company>,
-    @InjectRepository(DeclineReason)
-    private readonly declineReasonRepository: Repository<DeclineReason>,
   ) {}
 
   async getMatchingCompanies(id) {
@@ -262,7 +258,7 @@ export class MatchmakingService {
         investorProfile: { id: investorProfileId },
         status: MatchStatus.DECLINED,
       },
-      relations: ['company'],
+      relations: ['company', 'declineReasons'],
       take: limit,
       skip: (page - 1) * limit,
     });
