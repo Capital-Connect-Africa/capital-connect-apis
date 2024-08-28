@@ -75,3 +75,8 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 DELETE http://localhost:3000/investor-profiles/1
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 Content-Type: application/json
+
+### Delete Investor Profile by ID prod
+GET https://capitalconnect-0060e0fb0eb4.herokuapp.com/investor-profiles
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+Content-Type: application/json
