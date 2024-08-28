@@ -1,4 +1,18 @@
-import { Controller, Get, Post, Body, Param, Delete, UseGuards, Query, NotFoundException, BadRequestException, HttpCode, HttpStatus, Put } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  Delete,
+  UseGuards,
+  Query,
+  NotFoundException,
+  BadRequestException,
+  HttpCode,
+  HttpStatus,
+  Put,
+} from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { RolesGuard } from 'src/auth/roles.guard';
 import { Roles } from 'src/auth/roles.decorator';
@@ -10,7 +24,7 @@ import { UpdateInvestorTypeDto } from './dto/update-investor-type.dto';
 
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Controller('investor-types')
-export class InvestorTypesController{
+export class InvestorTypesController {
   constructor(private readonly investorTypesService: InvestorTypesService) {}
 
   @Post()
@@ -19,13 +33,13 @@ export class InvestorTypesController{
     try {
       return this.investorTypesService.create(createInvestorTypeDto);
     } catch (error) {
-      throwInternalServer(error)
+      throwInternalServer(error);
     }
   }
 
   @Get()
   findAll(@Query('page') page: number, @Query('limit') limit: number) {
-    return this.investorTypesService.findAll(page , limit);
+    return this.investorTypesService.findAll(page, limit);
   }
 
   @Get(':id')
@@ -33,22 +47,28 @@ export class InvestorTypesController{
     try {
       return this.investorTypesService.findOne(+id);
     } catch (error) {
-      throwInternalServer(error)
+      throwInternalServer(error);
     }
   }
 
   @Put(':id')
   @Roles(Role.Admin)
-  async update(@Param('id') id: string, @Body() updateInvestorTypeDto: UpdateInvestorTypeDto) {
+  async update(
+    @Param('id') id: string,
+    @Body() updateInvestorTypeDto: UpdateInvestorTypeDto,
+  ) {
     try {
       await this.investorTypesService.findOne(+id);
-      const type = await this.investorTypesService.update(+id, updateInvestorTypeDto);
+      const type = await this.investorTypesService.update(
+        +id,
+        updateInvestorTypeDto,
+      );
       return type;
     } catch (error) {
       if (error instanceof NotFoundException) {
         throw new BadRequestException(`Investor type with id ${id} not found`);
       }
-      throwInternalServer(error)
+      throwInternalServer(error);
     }
   }
 
@@ -59,7 +79,7 @@ export class InvestorTypesController{
     try {
       await this.investorTypesService.remove(+id);
     } catch (error) {
-      throwInternalServer(error)
+      throwInternalServer(error);
     }
   }
 }

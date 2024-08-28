@@ -20,14 +20,32 @@ export class MatchmakingService {
     private sectorsRepository: Repository<Sector>,
     @InjectRepository(Matchmaking)
     private readonly matchmakingRepository: Repository<Matchmaking>,
-    @InjectRepository(Company)
-    private readonly companyRepository: Repository<Company>,
-    @InjectRepository(DeclineReason)
-    private readonly declineReasonRepository: Repository<DeclineReason>,
   ) {}
 
-  async getMatchingCompanies(id) {
+  async getMatchingCompanies(id: number) {
     const profileFound = await this.investorProfileService.findOneByUserId(id);
+    if (!profileFound) {
+      throw new NotFoundException('Investor profile not found');
+    }
+
+    const filterDto = new FilterCompanyDto();
+    filterDto.countries = profileFound.countriesOfInvestmentFocus;
+    filterDto.businessSectors = profileFound.sectors.map(
+      (sector) => sector.name,
+    );
+    filterDto.growthStages = profileFound.businessGrowthStages;
+    filterDto.registrationStructures = profileFound.registrationStructures;
+    const companies = await this.companyService.filterCompanies(filterDto);
+    const matchingCompanies = await this.getMatchedCompaniesForFiltering(
+      profileFound.id,
+    );
+    const companyIds = matchingCompanies.map((match) => match.company.id);
+    return companies.filter(
+      (company) => companyIds.includes(company.id) === false,
+    );
+  }
+  async getMatchingCompaniesByInvestorProfileId(id: number) {
+    const profileFound = await this.investorProfileService.findOne(id);
     if (!profileFound) {
       throw new NotFoundException('Investor profile not found');
     }
