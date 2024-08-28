@@ -40,7 +40,7 @@ export class MobileNumberController {
       const savedMobileNo = await this.mobileNumbersRepository.save(mobileNo);
 
       const message = `Your OTP code is ${savedMobileNo.otp}`;
-      const res = await this.otpService.sendSms(
+      const res = await this.otpService.sendSmsViaAfricasTalking(
         createMobileDto.phoneNo,
         message,
       );
@@ -48,6 +48,7 @@ export class MobileNumberController {
 
       return { success: true, message: 'OTP sent successfully' };
     } catch (error) {
+      console.log('error', error);
       throwInternalServer(error);
     }
   }
