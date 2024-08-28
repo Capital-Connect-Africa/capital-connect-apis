@@ -1,4 +1,19 @@
-import { Controller, Get, Post, Body, Param, Delete, Put, UseGuards, HttpCode, HttpStatus, NotFoundException, BadRequestException, Query, ParseIntPipe } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  Delete,
+  Put,
+  UseGuards,
+  HttpCode,
+  HttpStatus,
+  NotFoundException,
+  BadRequestException,
+  Query,
+  ParseIntPipe,
+} from '@nestjs/common';
 import { QuestionService } from './question.service';
 import { CreateQuestionDto } from './dto/create-question.dto';
 import { UpdateQuestionDto } from './dto/update-question.dto';
@@ -16,7 +31,7 @@ import { QuestionType } from './question.type';
 export class QuestionController {
   constructor(
     private readonly questionService: QuestionService,
-    private readonly subsectionService: SubsectionService
+    private readonly subsectionService: SubsectionService,
   ) {}
 
   @Post()
@@ -26,7 +41,7 @@ export class QuestionController {
       await this.subsectionService.findOne(createQuestionDto.subSectionId);
       const { text, type, subSectionId, order, tooltip } = createQuestionDto;
       const question = new Question();
-      question.text = text
+      question.text = text;
       question.type = type as QuestionType;
       question.order = order;
       question.tooltip = tooltip;
@@ -34,9 +49,11 @@ export class QuestionController {
       return this.questionService.create(question);
     } catch (error) {
       if (error instanceof NotFoundException) {
-        throw new BadRequestException('Question must be associated with an existing subsection.');
+        throw new BadRequestException(
+          'Question must be associated with an existing subsection.',
+        );
       }
-      throwInternalServer(error)
+      throwInternalServer(error);
     }
   }
 
@@ -45,7 +62,20 @@ export class QuestionController {
     try {
       return this.questionService.findAll(page, limit);
     } catch (error) {
-      throwInternalServer(error)
+      throwInternalServer(error);
+    }
+  }
+
+  @Get('search')
+  async search(
+    @Query('q') q: string,
+    @Query('page') page: number = 1,
+    @Query('count') limit: number = 10,
+  ) {
+    try {
+      return this.questionService.search(q, page, limit);
+    } catch (error) {
+      throwInternalServer(error);
     }
   }
 
@@ -54,20 +84,23 @@ export class QuestionController {
     try {
       return this.questionService.findOne(+id);
     } catch (error) {
-      throwInternalServer(error)
+      throwInternalServer(error);
     }
   }
 
   @Put(':id')
   @Roles(Role.Admin)
-  async update(@Param('id') id: string, @Body() updateQuestionDto: UpdateQuestionDto) {
+  async update(
+    @Param('id') id: string,
+    @Body() updateQuestionDto: UpdateQuestionDto,
+  ) {
     try {
       await this.questionService.findOne(+id);
     } catch (error) {
       if (error instanceof NotFoundException) {
         throw new BadRequestException(`Question with id ${id} not found`);
       }
-      throwInternalServer(error)
+      throwInternalServer(error);
     }
 
     try {
@@ -75,14 +108,19 @@ export class QuestionController {
         await this.subsectionService.findOne(updateQuestionDto.subSectionId);
       }
 
-      const question = await this.questionService.update(+id, updateQuestionDto);
+      const question = await this.questionService.update(
+        +id,
+        updateQuestionDto,
+      );
       return question;
     } catch (error) {
       console.log(error);
       if (error instanceof NotFoundException) {
-        throw new BadRequestException('Question must be associated with an existing sub section.');
+        throw new BadRequestException(
+          'Question must be associated with an existing sub section.',
+        );
       }
-      throwInternalServer(error)
+      throwInternalServer(error);
     }
   }
 
@@ -93,12 +131,14 @@ export class QuestionController {
     try {
       return this.questionService.remove(+id);
     } catch (error) {
-      throwInternalServer(error)
+      throwInternalServer(error);
     }
   }
 
   @Get('sub-section/:subSectionId')
-  async getQuestionsBySubSection(@Param('subSectionId', ParseIntPipe) subSectionId: number): Promise<Question[]> {
+  async getQuestionsBySubSection(
+    @Param('subSectionId', ParseIntPipe) subSectionId: number,
+  ): Promise<Question[]> {
     return this.questionService.findQuestionsBySubsectionId(subSectionId);
   }
 }
