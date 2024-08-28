@@ -258,7 +258,7 @@ export class MatchmakingService {
         investorProfile: { id: investorProfileId },
         status: MatchStatus.DECLINED,
       },
-      relations: ['company', 'declineReasons'],
+      relations: ['company'],
       take: limit,
       skip: (page - 1) * limit,
     });
