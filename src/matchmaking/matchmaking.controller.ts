@@ -30,6 +30,14 @@ export class MatchmakingController {
     return this.matchmakingService.getMatchingCompanies(req.user.id);
   }
 
+  @Roles(Role.Advisor, Role.Admin)
+  @Get('companies/:investorId')
+  async getMatchingCompaniesByInvestorId(
+    @Query('investorId') investorId,
+  ): Promise<Company[]> {
+    return this.matchmakingService.getMatchingCompanies(investorId);
+  }
+
   @Roles(Role.User)
   @Get('investor-profiles')
   async getMatchingInvestorProfiles(
