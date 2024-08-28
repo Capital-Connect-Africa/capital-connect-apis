@@ -46,21 +46,39 @@ export class InvestorProfileService {
     return this.investorProfileRepository.find({
       skip,
       take: limit,
-      relations: ['investor', 'sectors', 'subSectors', 'contactPersons'],
+      relations: [
+        'investor',
+        'sectors',
+        'subSectors',
+        'contactPersons',
+        'specialCriteria',
+      ],
     });
   }
 
   findOne(id: number): Promise<InvestorProfile> {
     return this.investorProfileRepository.findOne({
       where: { id },
-      relations: ['investor', 'sectors', 'subSectors', 'contactPersons'],
+      relations: [
+        'investor',
+        'sectors',
+        'subSectors',
+        'contactPersons',
+        'specialCriteria',
+      ],
     });
   }
 
-  findOneByUserId(id: number): Promise<InvestorProfile> {
-    return this.investorProfileRepository.findOne({
+  async findOneByUserId(id: number): Promise<InvestorProfile> {
+    return await this.investorProfileRepository.findOne({
       where: { investor: { id } },
-      relations: ['investor', 'sectors', 'subSectors', 'contactPersons'],
+      relations: [
+        'investor',
+        'sectors',
+        'subSectors',
+        'contactPersons',
+        'specialCriteria',
+      ],
     });
   }
 

@@ -3,8 +3,13 @@ GET http://localhost:3000/matchmaking/companies
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
-### Match companies based on investor profile criteria by investor profile id
-GET http://localhost:3000/matchmaking/companies/1
+### Match companies based on investor profile criteria by investor id
+GET http://localhost:3000/matchmaking/companies/13
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+### Match companies based on investor profile criteria by investor id
+GET https://capitalconnect-0060e0fb0eb4.herokuapp.com/matchmaking/companies/10000
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 

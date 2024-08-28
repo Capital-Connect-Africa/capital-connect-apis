@@ -88,6 +88,9 @@ export class InvestorProfile {
   )
   contactPersons: ContactPerson[];
 
-  @OneToMany(() => SpecialCriterion, (specialCriteria) => specialCriteria.investorProfile)
+  @OneToMany(
+    () => SpecialCriterion,
+    (specialCriteria) => specialCriteria.investorProfile,
+  )
   specialCriteria: SpecialCriterion[];
 }

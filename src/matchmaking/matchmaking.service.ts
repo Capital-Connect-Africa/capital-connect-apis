@@ -22,7 +22,7 @@ export class MatchmakingService {
     private readonly matchmakingRepository: Repository<Matchmaking>,
   ) {}
 
-  async getMatchingCompanies(id) {
+  async getMatchingCompanies(id: number) {
     const profileFound = await this.investorProfileService.findOneByUserId(id);
     if (!profileFound) {
       throw new NotFoundException('Investor profile not found');

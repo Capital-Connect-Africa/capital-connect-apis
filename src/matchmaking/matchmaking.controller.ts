@@ -42,7 +42,7 @@ export class MatchmakingController {
   @Roles(Role.Advisor, Role.Admin)
   @Get('companies/:investorId')
   async getMatchingCompaniesByInvestorId(
-    @Query('investorId') investorId: number,
+    @Param('investorId') investorId: number,
   ): Promise<Company[]> {
     try {
       return await this.matchmakingService.getMatchingCompanies(investorId);
