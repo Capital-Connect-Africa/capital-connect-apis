@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Get,
+  NotFoundException,
   Param,
   Post,
   Query,
@@ -18,6 +19,7 @@ import { FilterCompanyDto } from '../company/dto/filter-company.dto';
 import { DeclineReason } from './entities/declineReasons.entity';
 import { CreateDeclineReasonDto } from './dto/create-decline-reason.dto';
 import { DeclineReasonsDto } from './dto/decline-reasons.dto';
+import throwInternalServer from '../shared/utils/exceptions.util';
 
 @UseGuards(JwtAuthGuard)
 @Controller('matchmaking')
@@ -27,15 +29,29 @@ export class MatchmakingController {
   @Roles(Role.Investor)
   @Get('companies')
   async getMatchingCompanies(@Request() req): Promise<Company[]> {
-    return this.matchmakingService.getMatchingCompanies(req.user.id);
+    try {
+      return this.matchmakingService.getMatchingCompanies(req.user.id);
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
+      throwInternalServer(error);
+    }
   }
 
   @Roles(Role.Advisor, Role.Admin)
   @Get('companies/:investorId')
   async getMatchingCompaniesByInvestorId(
-    @Query('investorId') investorId,
+    @Query('investorId') investorId: number,
   ): Promise<Company[]> {
-    return this.matchmakingService.getMatchingCompanies(investorId);
+    try {
+      return await this.matchmakingService.getMatchingCompanies(investorId);
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
+      throwInternalServer(error);
+    }
   }
 
   @Roles(Role.User)
