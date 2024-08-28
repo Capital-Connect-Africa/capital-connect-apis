@@ -8,7 +8,9 @@ import {
   Query,
   Request,
   UseGuards,
+  Response,
 } from '@nestjs/common';
+import { Response as Res } from 'express';
 import { MatchmakingService } from './matchmaking.service';
 import { Company } from '../company/entities/company.entity';
 import { InvestorProfile } from '../investor-profile/entities/investor-profile.entity';
@@ -190,5 +192,25 @@ export class MatchmakingController {
   @Post('search-companies')
   searchCompanies(@Body() searchDto: FilterCompanyDto) {
     return this.matchmakingService.searchCompanies(searchDto);
+  }
+
+  @Get('download-csv/:investorProfileId')
+  async downloadMatchMakingCSV(
+    @Response() res: Res,
+    @Param('investorProfileId') investorProfileId: number,
+    @Query('status') status: string,
+  ) {
+    const csvStream = await this.matchmakingService.generateMatchMakingCSV(
+      investorProfileId,
+      status,
+    );
+
+    res.set('Content-Type', 'text/csv');
+    res.set(
+      'Content-Disposition',
+      `attachment; filename=matchmaking-${Date.now()}.csv`,
+    );
+
+    csvStream.pipe(res);
   }
 }

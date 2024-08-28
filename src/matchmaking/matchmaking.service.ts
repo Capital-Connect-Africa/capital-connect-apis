@@ -10,6 +10,8 @@ import { Matchmaking } from './entities/matchmaking.entity';
 import { Company } from '../company/entities/company.entity';
 import { DeclineReason } from './entities/declineReasons.entity';
 import { MatchStatus } from './MatchStatus.enum';
+import { Readable } from 'stream';
+import { format } from 'fast-csv';
 
 @Injectable()
 export class MatchmakingService {
@@ -309,5 +311,67 @@ export class MatchmakingService {
 
   async searchCompanies(filterDto: FilterCompanyDto): Promise<Company[]> {
     return this.companyService.filterCompaniesByOr(filterDto);
+  }
+
+  async generateMatchMakingCSV(
+    investorProfileId: number,
+    status = '',
+  ): Promise<Readable> {
+    const query = {
+      investorProfile: { id: investorProfileId },
+    };
+
+    if (status.length > 0) {
+      query['status'] = status;
+    }
+
+    const matchMakings = await this.matchmakingRepository.find({
+      where: query,
+      relations: ['company'],
+    });
+
+    console.log('matchMakings', matchMakings);
+
+    const csvStream = format({
+      headers: [
+        'Company',
+        'Business Sector',
+        'Business Sub Sector',
+        'Products And Services',
+        'Registration Structure',
+        'Investment Structure',
+        'Use Of Funds',
+        'Esg Focus Areas',
+        'Funds Needed',
+        'Years Of Operation',
+        'Growth Stage',
+        'Number Of Employees',
+        'Full Time Business',
+        'Status',
+      ],
+    });
+    const readableStream = new Readable().wrap(csvStream);
+
+    matchMakings.forEach((match) => {
+      csvStream.write({
+        Company: match.company.name,
+        'Business Sector': match.company.businessSector,
+        'Business Sub Sector': match.company.businessSubsector,
+        'Products And Services': match.company.productsAndServices,
+        'Registration Structure': match.company.registrationStructure,
+        'Investment Structure': match.company.investmentStructure,
+        'Use Of Funds': match.company.useOfFunds,
+        'Esg Focus Areas': match.company.esgFocusAreas,
+        'Funds Needed': match.company.fundsNeeded,
+        'Years Of Operation': match.company.yearsOfOperation,
+        'Growth Stage': match.company.growthStage,
+        'Number Of Employees': match.company.numberOfEmployees,
+        'Full Time Business': match.company.fullTimeBusiness,
+        Status: match.status,
+      });
+    });
+
+    csvStream.end();
+    return readableStream;
   }
 }
