@@ -1,5 +1,5 @@
-###
-# Create question
+
+### Create question
 POST http://localhost:3000/questions
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
@@ -12,9 +12,21 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
     "tooltip": "This is a tooltip"
 }
 
-# MULTIPLE_CHOICE, SINGLE_CHOICE, TRUE_FALSE, SHORT_ANSWER
-###
-# Get question
+### Create special criteria question
+POST http://localhost:3000/questions/special-criteria
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+{
+    "text": "What is a special criteria?",
+    "type": "SINGLE_CHOICE",
+    "order": 10,
+    "tooltip": "This is a tooltip"
+}
+
+### MULTIPLE_CHOICE, SINGLE_CHOICE, TRUE_FALSE, SHORT_ANSWER
+
+### Get question
 
 GET http://localhost:3000/questions/2
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
@@ -31,13 +43,12 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 GET http://localhost:3000/questions?page=1&limit=50
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
-###
-# Seach questions paginated
+### Search questions paginated
 
 GET http://localhost:3000/questions/search?q=What is the capital of Kenya?&page=1&limit=50
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
-###
-# Get questions paginated
+
+### Get questions paginated
 
 GET http://localhost:3000/questions/sub-section/2
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9

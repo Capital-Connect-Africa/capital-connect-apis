@@ -25,6 +25,7 @@ import throwInternalServer from 'src/shared/utils/exceptions.util';
 import { SubsectionService } from 'src/subsection/subsection.service';
 import { Question } from './entities/question.entity';
 import { QuestionType } from './question.type';
+import { CreateSpecialCriteriaQuestionDto } from "./dto/create-special-criteria-question.dto";
 
 @Controller('questions')
 @UseGuards(JwtAuthGuard, RolesGuard)
@@ -53,6 +54,25 @@ export class QuestionController {
           'Question must be associated with an existing subsection.',
         );
       }
+      throwInternalServer(error);
+    }
+  }
+
+  @Post('special-criteria')
+  @Roles(Role.Admin, Role.Advisor, Role.Investor)
+  async createSpecialCriteriaQuestion(
+    @Body() createSpecialCriteriaQuestionDto: CreateSpecialCriteriaQuestionDto,
+  ) {
+    try {
+      const { text, type, order, tooltip } = createSpecialCriteriaQuestionDto;
+      const question = new Question();
+      question.text = text;
+      question.type = type as QuestionType;
+      question.order = order;
+      question.tooltip = tooltip;
+      question.subSection = { id: Number(process.env.SPECIAL_CRITERIA) } as any;
+      return this.questionService.create(question);
+    } catch (error) {
       throwInternalServer(error);
     }
   }
