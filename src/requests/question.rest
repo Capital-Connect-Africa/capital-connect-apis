@@ -23,12 +23,18 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 # Get questions
 
 GET http://localhost:3000/questions
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImpyZGFuZGlhYmVsdGFAZ21haWwuY29tIiwic3ViIjo2LCJyb2xlcyI6WyJ1c2VyIl0sImlhdCI6MTcyMDY5OTE2NiwiZXhwIjoxNzIwNzg1NTY2fQ.OF4tdJVdp1T-8SkNInRoumatR5GfHEUnDNN9LJjRon8
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
 ###
 # Get questions paginated
 
 GET http://localhost:3000/questions?page=1&limit=50
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+###
+# Seach questions paginated
+
+GET http://localhost:3000/questions/search?q=What is the capital of Kenya?&page=1&limit=50
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 ###
 # Get questions paginated
