@@ -49,10 +49,10 @@ export class CompanyService {
 
   findAll(page: number = 1, limit: number = 10) {
     const skip = (page - 1) * limit;
-    return this.companyRepository.find({ 
+    return this.companyRepository.find({
       skip,
       take: limit,
-      relations: ['companyLogo', 'user'] 
+      relations: ['companyLogo', 'user'],
     });
   }
 
@@ -441,5 +441,24 @@ export class CompanyService {
 
     const companies = await queryBuilder.getMany();
     return companies;
+  }
+
+  async searchCompanies(
+    companies: Company[],
+    query: string,
+  ): Promise<Company[]> {
+    if (!query) {
+      return companies; // Return the full list if no query is provided
+    }
+
+    const lowerCaseQuery = query.toLowerCase();
+
+    return companies.filter((company) =>
+      Object.values(company).some(
+        (value) =>
+          typeof value === 'string' &&
+          value.toLowerCase().includes(lowerCaseQuery),
+      ),
+    );
   }
 }

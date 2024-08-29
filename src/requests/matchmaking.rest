@@ -101,3 +101,13 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 GET https://capitalconnect-0060e0fb0eb4.herokuapp.com/download-csv/2?status=interesting
 Content-Type: text/csv
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+### Search companies based on investor profile criteria and text
+GET http://localhost:3000/matchmaking/search-matches/2?status=interesting&q=Fintech
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+### Search companies based on investor profile criteria and text prod
+GET https://capitalconnect-0060e0fb0eb4.herokuapp.com/matchmaking/search-matches/2?status=interesting&q=kenya
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
