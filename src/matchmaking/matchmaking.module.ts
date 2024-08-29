@@ -31,7 +31,7 @@ import { DeclineController } from './decline.controller';
       SubSector,
       ContactPerson,
       Matchmaking,
-      DeclineReason
+      DeclineReason,
     ]),
     CompanyModule,
     InvestorProfileModule,

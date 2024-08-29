@@ -213,4 +213,13 @@ export class MatchmakingController {
 
     csvStream.pipe(res);
   }
+
+  @Get('search-matches/:investorProfileId')
+  searchMatches(
+    @Param('investorProfileId') investorProfileId: number,
+    @Query('status') status: string,
+    @Query('q') q: string,
+  ) {
+    return this.matchmakingService.searchMatches(investorProfileId, status, q);
+  }
 }

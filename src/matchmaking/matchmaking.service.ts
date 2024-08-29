@@ -374,4 +374,21 @@ export class MatchmakingService {
     csvStream.end();
     return readableStream;
   }
+
+  async searchMatches(investorProfileId: number, status: string, q: string) {
+    const query = {
+      investorProfile: { id: investorProfileId },
+    };
+
+    if (status.length > 0) {
+      query['status'] = status;
+    }
+    const matches = await this.matchmakingRepository.find({
+      where: query,
+      relations: ['company'],
+      take: 50,
+    });
+    const companies = matches.map((match) => match.company);
+    return await this.companyService.searchCompanies(companies, q);
+  }
 }
