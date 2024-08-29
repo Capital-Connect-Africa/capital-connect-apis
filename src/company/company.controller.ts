@@ -152,4 +152,14 @@ export class CompanyController {
   ): Promise<Company[]> {
     return this.companyService.filterCompaniesByOr(filterDto);
   }
+
+  @UseGuards(JwtAuthGuard)
+  @Roles(Role.Advisor, Role.Admin, Role.Investor)
+  @Get('search')
+  async searchCompanies( 
+    @Query('query') query: string,
+   ): Promise<Company[]> {
+    const companies = await this.companyService.findAll();
+    return this.companyService.searchCompanies(companies, query);
+  }
 }

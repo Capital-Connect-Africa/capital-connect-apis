@@ -222,4 +222,9 @@ export class MatchmakingController {
   ) {
     return this.matchmakingService.searchMatches(investorProfileId, status, q);
   }
+
+  @Get('search-matches')
+  async searchMatchesAdmin( @Query('status') status: string, @Query('q') q: string ) {
+    return this.matchmakingService.searchMatchesAdmin(status, q);
+  }
 }
