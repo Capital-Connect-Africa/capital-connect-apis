@@ -389,6 +389,10 @@ export class MatchmakingService {
       take: 50,
     });
     const companies = matches.map((match) => match.company);
-    return await this.companyService.searchCompanies(companies, q);
+    const filteredCompanies = await this.companyService.searchCompanies(
+      companies,
+      q,
+    );
+    return matches.filter((match) => filteredCompanies.includes(match.company));
   }
 }
