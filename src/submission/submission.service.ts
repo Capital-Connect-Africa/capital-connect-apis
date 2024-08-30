@@ -5,6 +5,7 @@ import { Submission } from './entities/submission.entity';
 import { Question } from 'src/question/entities/question.entity';
 import { SubSection } from 'src/subsection/entities/subsection.entity';
 import { UpdateSubmissionDto } from './dto/update-submission.dto';
+import { SpecialCriteriaService } from "../special-criteria/special-criteria.service";
 
 @Injectable()
 export class SubmissionService {
@@ -15,6 +16,7 @@ export class SubmissionService {
     private questionsRepository: Repository<Question>,
     @InjectRepository(SubSection)
     private subSectionsRepository: Repository<SubSection>,
+    private readonly specialCriteriaService: SpecialCriteriaService,
   ) {}
 
   async getSubmissionsGroupedBySubsections(userId: number): Promise<any> {
@@ -204,23 +206,58 @@ export class SubmissionService {
     const sectionQuestionIds = subSections
       .map((subSection) => subSection.questions.map((question) => question.id))
       .flat();
-    const questions = await this.findAllByQuestionIds(
+    const submissions = await this.findAllByQuestionIds(
       sectionQuestionIds,
       userId,
     );
-    const score = questions.reduce(
+    const score = submissions.reduce(
       (total, submission) => total + submission.answer.weight,
       0,
     );
-    const rawQuestions = await this.findQuestionsByIds(sectionQuestionIds);
+    const questions = await this.findQuestionsByIds(sectionQuestionIds);
 
-    // const targetScore = rawQuestions.reduce(
+    // const targetScore = questions.reduce(
     //   (total, question) =>
     //     total + question.answers.reduce((t, ans) => t + ans.weight, 0),
     //   0,
     // );
 
-    const targetScore = rawQuestions.reduce(
+    const targetScore = questions.reduce(
+      (total, question) => total + this.getMaxWeight(question),
+      0,
+    );
+
+    const percentageScore = (score / targetScore) * 100;
+    return {
+      score,
+      targetScore,
+      percentageScore: percentageScore ? Math.round(percentageScore) : 0,
+    };
+  }
+
+  async calculateScorePerSpecialCriterion(
+    userId: number,
+    specialCriterionId: number,
+  ): Promise<any> {
+    const specialCriterion =
+      await this.specialCriteriaService.findOne(specialCriterionId);
+    if (!specialCriterion) {
+      throw new NotFoundException(
+        `Special criteria with id ${specialCriterionId} not found`,
+      );
+    }
+    const questions = specialCriterion.questions;
+    const sectionQuestionIds = questions.map((question) => question.id);
+    const submissions = await this.findAllByQuestionIds(
+      sectionQuestionIds,
+      userId,
+    );
+    const score = submissions.reduce(
+      (total, submission) => total + submission.answer.weight,
+      0,
+    );
+
+    const targetScore = questions.reduce(
       (total, question) => total + this.getMaxWeight(question),
       0,
     );
