@@ -105,15 +105,15 @@ export class SubmissionService {
   }
 
   async findOneByQuestionId(
-  questionId: number,
-  userId: number,
-): Promise<Submission> {
-  const submission = await this.submissionRepository.findOne({
-    where: { user: { id: userId }, question: { id: questionId } },
-    relations: ['question', 'answer'],
-  });
-  return submission;
-}
+    questionId: number,
+    userId: number,
+  ): Promise<Submission> {
+    const submission = await this.submissionRepository.findOne({
+      where: { user: { id: userId }, question: { id: questionId } },
+      relations: ['question', 'answer'],
+    });
+    return submission;
+  }
 
   async findByUser(userId: number): Promise<Submission[]> {
     return this.submissionRepository.find({
@@ -213,11 +213,18 @@ export class SubmissionService {
       0,
     );
     const rawQuestions = await this.findQuestionsByIds(sectionQuestionIds);
+
+    // const targetScore = rawQuestions.reduce(
+    //   (total, question) =>
+    //     total + question.answers.reduce((t, ans) => t + ans.weight, 0),
+    //   0,
+    // );
+
     const targetScore = rawQuestions.reduce(
-      (total, question) =>
-        total + question.answers.reduce((t, ans) => t + ans.weight, 0),
+      (total, question) => total + this.getMaxWeight(question),
       0,
     );
+
     const percentageScore = (score / targetScore) * 100;
     return {
       score,
@@ -228,5 +235,13 @@ export class SubmissionService {
 
   remove(id: number) {
     this.submissionRepository.delete(id);
+  }
+
+  private getMaxWeight(question: Question) {
+    const weights = question.answers.map((ans) => ans.weight);
+    console.log(weights);
+    const max = weights.length > 0 ? Math.max(...weights) : 0;
+    console.log(max);
+    return max;
   }
 }

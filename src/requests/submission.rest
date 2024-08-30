@@ -71,14 +71,14 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
 ### Fetch submissions by user per section prod
 GET http://api.capitalconnect.africa/submissions/user/6/section/1
-Authorization: Bearer ..3fJsm0xhzodY2CTo-bPTmgPkxyVEeab4NACx2JtX1xo
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
 ### Calculate score for user
 GET http://localhost:3000/submissions/user/3/score
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
 ### Calculate score for user per section 6 = userId 1 = sectionId
-GET http://localhost:3000/submissions/user/3/score/1
+GET http://localhost:3000/submissions/user/6/score/1
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
 
