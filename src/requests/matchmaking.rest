@@ -113,6 +113,6 @@ Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
 ### Search companies as admin (status, query)
-GET http://localhost:3000/matchmaking/search-matches?status=declined&q=kenya
+GET http://localhost:3000/matchmaking/search-matches?status=interesting&q=kenya
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9

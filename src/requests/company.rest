@@ -150,5 +150,5 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
 ###
 # Search companies
-GET http://localhost:3000/company/search?query=technology
+GET http://localhost:3000/company/search?query=kenya
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9

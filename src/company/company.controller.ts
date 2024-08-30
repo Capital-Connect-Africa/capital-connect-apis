@@ -1,18 +1,18 @@
 import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-  UseGuards,
   BadRequestException,
-  NotFoundException,
-  Request,
-  HttpStatus,
+  Body,
+  Controller,
+  Delete,
+  Get,
   HttpCode,
+  HttpStatus,
+  NotFoundException,
+  Param,
+  Patch,
+  Post,
   Query,
+  Request,
+  UseGuards,
 } from '@nestjs/common';
 import { CompanyService } from './company.service';
 import { CreateCompanyDto } from './dto/create-company.dto';
@@ -39,11 +39,19 @@ export class CompanyController {
   @Get()
   async findAll(@Query('page') page: number, @Query('limit') limit: number) {
     try {
-      const companies = await this.companyService.findAll(page, limit);
-      return companies;
+      return await this.companyService.findAll(page, limit);
     } catch (error) {
       throwInternalServer(error);
     }
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Roles(Role.Advisor, Role.Admin, Role.Investor)
+  @Get('search')
+  async searchCompanies(@Query('query') query: string): Promise<Company[]> {
+    console.log('query', query);
+    const companies = await this.companyService.findAll(1, 50);
+    return this.companyService.searchCompanies(companies, query);
   }
 
   @Get(':id')
@@ -151,15 +159,5 @@ export class CompanyController {
     @Body() filterDto: FilterCompanyDto,
   ): Promise<Company[]> {
     return this.companyService.filterCompaniesByOr(filterDto);
-  }
-
-  @UseGuards(JwtAuthGuard)
-  @Roles(Role.Advisor, Role.Admin, Role.Investor)
-  @Get('search')
-  async searchCompanies( 
-    @Query('query') query: string,
-   ): Promise<Company[]> {
-    const companies = await this.companyService.findAll();
-    return this.companyService.searchCompanies(companies, query);
   }
 }

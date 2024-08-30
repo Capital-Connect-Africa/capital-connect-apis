@@ -398,23 +398,23 @@ export class MatchmakingService {
 
   async searchMatchesAdmin(status: string, q: string) {
     const query: any = {};
-  
+
     if (status.length > 0) {
       query['status'] = status;
     }
-  
+
     const matches = await this.matchmakingRepository.find({
       where: query,
       relations: ['company'],
       take: 50,
     });
-  
+
     const companies = matches.map((match) => match.company);
     const filteredCompanies = await this.companyService.searchCompanies(
       companies,
       q,
     );
-  
+
     return matches.filter((match) => filteredCompanies.includes(match.company));
-  }  
+  }
 }

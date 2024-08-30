@@ -224,7 +224,10 @@ export class MatchmakingController {
   }
 
   @Get('search-matches')
-  async searchMatchesAdmin( @Query('status') status: string, @Query('q') q: string ) {
+  async searchMatchesAdmin(
+    @Query('status') status: string,
+    @Query('q') q: string,
+  ) {
     return this.matchmakingService.searchMatchesAdmin(status, q);
   }
 }
