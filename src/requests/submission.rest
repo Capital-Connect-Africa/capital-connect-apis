@@ -52,6 +52,15 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 GET http://localhost:3000/submissions/by-question-ids?questionIds=1,2,3&userId=2
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
+### Get Submission by specialCriteriaId and User ID
+GET http://localhost:3000/submissions/by-special-criteria/1?userId=6
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+
+### Get Submission by specialCriteriaId and User ID prod
+GET https://capitalconnect-0060e0fb0eb4.herokuapp.com/submissions/by-special-criteria/1?userId=6
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
 ### Fetch submissions by user prod
 GET http://api.capitalconnect.africa/submissions/user/4
 Authorization: Bearer ..3fJsm0xhzodY2CTo-bPTmgPkxyVEeab4NACx2JtX1xo
@@ -62,14 +71,22 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
 ### Fetch submissions by user per section prod
 GET http://api.capitalconnect.africa/submissions/user/6/section/1
-Authorization: Bearer ..3fJsm0xhzodY2CTo-bPTmgPkxyVEeab4NACx2JtX1xo
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+### Fetch submissions by user per special criterion (userId, specialCriterionId)
+GET http://localhost:3000/submissions/user/3/criterion-score/1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+### Fetch submissions by user per special criterion prod (userId, specialCriterionId)
+GET http://api.capitalconnect.africa/submissions/user/6/criterion-score/1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
 ### Calculate score for user
 GET http://localhost:3000/submissions/user/3/score
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
 ### Calculate score for user per section 6 = userId 1 = sectionId
-GET http://localhost:3000/submissions/user/3/score/1
+GET http://localhost:3000/submissions/user/6/score/1
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
 

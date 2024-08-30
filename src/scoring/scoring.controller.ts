@@ -1,4 +1,18 @@
-import { Controller, Get, Post, Body, Param, Delete, Put, UseGuards, Query, NotFoundException, BadRequestException, HttpStatus, HttpCode } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  Delete,
+  Put,
+  UseGuards,
+  Query,
+  NotFoundException,
+  BadRequestException,
+  HttpStatus,
+  HttpCode,
+} from '@nestjs/common';
 import { ScoringService } from './scoring.service';
 import { CreateScoringDto } from './dto/create-scoring.dto';
 import { UpdateScoringDto } from './dto/update-scoring.dto';
@@ -15,12 +29,12 @@ export class ScoringController {
 
   @Post()
   @Roles(Role.Admin)
-  create(@Body() createScoringDto: CreateScoringDto) {  
+  create(@Body() createScoringDto: CreateScoringDto) {
     try {
       return this.scoringsService.create(createScoringDto);
     } catch (error) {
-      throwInternalServer(error)
-    }  
+      throwInternalServer(error);
+    }
     return this.scoringsService.create(createScoringDto);
   }
 
@@ -34,13 +48,16 @@ export class ScoringController {
     try {
       return this.scoringsService.findOne(+id);
     } catch (error) {
-      throwInternalServer(error)
+      throwInternalServer(error);
     }
   }
 
   @Put(':id')
   @Roles(Role.Admin)
-  async update(@Param('id') id: string, @Body() updateScoringDto: UpdateScoringDto) {
+  async update(
+    @Param('id') id: string,
+    @Body() updateScoringDto: UpdateScoringDto,
+  ) {
     try {
       await this.scoringsService.findOne(+id);
       const scorings = await this.scoringsService.update(+id, updateScoringDto);
@@ -49,7 +66,7 @@ export class ScoringController {
       if (error instanceof NotFoundException) {
         throw new BadRequestException(`Scorings with id ${id} not found`);
       }
-      throwInternalServer(error)
+      throwInternalServer(error);
     }
   }
 
@@ -60,12 +77,15 @@ export class ScoringController {
     try {
       await this.scoringsService.remove(+id);
     } catch (error) {
-      throwInternalServer(error)
+      throwInternalServer(error);
     }
   }
 
   @Get('score/:userScore')
-  getScoring(@Param('userScore') userScore: number, @Query('type') type: string) {
+  getScoring(
+    @Param('userScore') userScore: number,
+    @Query('type') type: string,
+  ) {
     return this.scoringsService.getScoring(userScore, type);
   }
 }

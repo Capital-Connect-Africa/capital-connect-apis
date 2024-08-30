@@ -41,13 +41,17 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 GET http://localhost:3000/special-criteria/investor-profile/2
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
+### Get all Special criteria by Investor profile prod
+GET https://capitalconnect-0060e0fb0eb4.herokuapp.com/special-criteria/investor-profile/35
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
 ### Get all Special criteria by CompanyId
 GET http://localhost:3000/special-criteria/company/3
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
 
 ### Get all Special criteria by CompanyId prod
-GET https://capitalconnect-0060e0fb0eb4.herokuapp.com/special-criteria/company/2
+GET https://capitalconnect-0060e0fb0eb4.herokuapp.com/special-criteria/company/35
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
 ### Update Special criteria

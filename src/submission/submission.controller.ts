@@ -1,36 +1,34 @@
 import {
-  Controller,
-  Post,
-  Body,
-  Get,
-  Param,
-  UseGuards,
-  Request,
-  UnauthorizedException,
-  Put,
-  NotFoundException,
   BadRequestException,
+  Body,
+  Controller,
   Delete,
+  Get,
   HttpCode,
   HttpStatus,
+  NotFoundException,
+  Param,
+  Post,
+  Put,
   Query,
-} from '@nestjs/common';
-import { SubmissionService } from './submission.service';
-import {
-  CreateSubmissionDto,
-  CreateMultipleSubmissionsDto,
-} from './dto/create-submission.dto';
-import { Submission } from './entities/submission.entity';
-import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
-import { RolesGuard } from 'src/auth/roles.guard';
-import { Roles } from 'src/auth/roles.decorator';
-import { Role } from 'src/auth/role.enum';
-import throwInternalServer from 'src/shared/utils/exceptions.util';
-import { SectionService } from 'src/section/section.service';
-import { UpdateSubmissionDto } from './dto/update-submission.dto';
-import { User } from '../users/entities/user.entity';
-import { Question } from '../question/entities/question.entity';
-import { Answer } from '../answer/entities/answer.entity';
+  Request,
+  UnauthorizedException,
+  UseGuards
+} from "@nestjs/common";
+import { SubmissionService } from "./submission.service";
+import { CreateMultipleSubmissionsDto, CreateSubmissionDto } from "./dto/create-submission.dto";
+import { Submission } from "./entities/submission.entity";
+import { JwtAuthGuard } from "src/auth/jwt-auth.guard";
+import { RolesGuard } from "src/auth/roles.guard";
+import { Roles } from "src/auth/roles.decorator";
+import { Role } from "src/auth/role.enum";
+import throwInternalServer from "src/shared/utils/exceptions.util";
+import { SectionService } from "src/section/section.service";
+import { UpdateSubmissionDto } from "./dto/update-submission.dto";
+import { User } from "../users/entities/user.entity";
+import { Question } from "../question/entities/question.entity";
+import { Answer } from "../answer/entities/answer.entity";
+import { SpecialCriteriaService } from "../special-criteria/special-criteria.service";
 
 @Controller('submissions')
 @UseGuards(JwtAuthGuard, RolesGuard)
@@ -38,6 +36,7 @@ export class SubmissionController {
   constructor(
     private readonly submissionService: SubmissionService,
     private readonly sectionService: SectionService,
+    private readonly specialCriteriaService: SpecialCriteriaService,
   ) {}
 
   @Post()
@@ -162,7 +161,31 @@ export class SubmissionController {
     @Query('userId') userId: number,
   ): Promise<Submission[]> {
     const questionIdsArray = questionIds.split(',').map(Number);
-    return this.submissionService.findAllByQuestionIds(questionIdsArray, userId);
+    return this.submissionService.findAllByQuestionIds(
+      questionIdsArray,
+      userId,
+    );
+  }
+
+  @Get('by-special-criteria/:specialCriteriaId')
+  async getSubmissionsBySpecialCriteria(
+    @Param('specialCriteriaId') specialCriteriaId: number,
+    @Query('userId') userId: number,
+  ): Promise<Submission[]> {
+    const specialCriterion =
+      await this.specialCriteriaService.findOne(specialCriteriaId);
+    if (!specialCriterion) {
+      throw new NotFoundException(
+        `Special criteria with id ${specialCriteriaId} not found`,
+      );
+    }
+    const questionIdsArray = specialCriterion.questions.map(
+      (question) => question.id,
+    );
+    return this.submissionService.findAllByQuestionIds(
+      questionIdsArray,
+      userId,
+    );
   }
 
   @Get('by-question/:questionId')
@@ -170,12 +193,15 @@ export class SubmissionController {
     @Param('questionId') questionId: number,
     @Query('userId') userId: number,
   ): Promise<Submission> {
-    const submission = await this.submissionService.findOneByQuestionId(questionId, userId);
-    
+    const submission = await this.submissionService.findOneByQuestionId(
+      questionId,
+      userId,
+    );
+
     if (!submission) {
       throw new NotFoundException('Submission not found');
     }
-    
+
     return submission;
   }
 
@@ -208,15 +234,29 @@ export class SubmissionController {
 
   @Get('user/:userId/score/:sectionId')
   async calculateScorePerSection(
-    @Param('userId') userId: string,
-    @Param('sectionId') sectionId: string,
+    @Param('userId') userId: number,
+    @Param('sectionId') sectionId: number,
   ): Promise<{ score: number }> {
     try {
-      const score = await this.submissionService.calculateScorePerSection(
-        +userId,
-        +sectionId,
+      return await this.submissionService.calculateScorePerSection(
+        userId,
+        sectionId,
       );
-      return score;
+    } catch (error) {
+      throwInternalServer(error);
+    }
+  }
+
+  @Get('user/:userId/criterion-score/:specialCriterionId')
+  async calculateScorePerCriterion(
+    @Param('userId') userId: number,
+    @Param('specialCriterionId') specialCriterionId: number,
+  ): Promise<{ score: number }> {
+    try {
+      return await this.submissionService.calculateScorePerSpecialCriterion(
+        userId,
+        specialCriterionId,
+      );
     } catch (error) {
       throwInternalServer(error);
     }
