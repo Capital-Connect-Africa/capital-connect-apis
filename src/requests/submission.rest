@@ -73,6 +73,14 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 GET http://api.capitalconnect.africa/submissions/user/6/section/1
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
+### Fetch submissions by user per special criterion (userId, specialCriterionId)
+GET http://localhost:3000/submissions/user/3/criterion-score/1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+### Fetch submissions by user per special criterion prod (userId, specialCriterionId)
+GET http://api.capitalconnect.africa/submissions/user/6/criterion-score/1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
 ### Calculate score for user
 GET http://localhost:3000/submissions/user/3/score
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
