@@ -1,8 +1,7 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
-import { ScoringType } from "../scoring.type";
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { ScoringType } from '../scoring.type';
 
-
-@Entity("scorings")
+@Entity('scorings')
 export class Scoring {
   @PrimaryGeneratedColumn()
   id: number;

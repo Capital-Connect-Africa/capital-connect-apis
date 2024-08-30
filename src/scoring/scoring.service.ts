@@ -1,4 +1,9 @@
-import { Inject, Injectable, LoggerService, NotFoundException } from '@nestjs/common';
+import {
+  Inject,
+  Injectable,
+  LoggerService,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateScoringDto } from './dto/create-scoring.dto';
 import { UpdateScoringDto } from './dto/update-scoring.dto';
 import { Scoring } from './entities/scoring.entity';
@@ -8,14 +13,14 @@ import { ScoringType } from './scoring.type';
 
 @Injectable()
 export class ScoringService {
-  constructor( 
+  constructor(
     @InjectRepository(Scoring)
     private scoringsRepository: Repository<Scoring>,
-    @Inject('CustomLogger') private readonly logger: LoggerService
+    @Inject('CustomLogger') private readonly logger: LoggerService,
   ) {}
 
   async create(createScoringDto: CreateScoringDto) {
-    const scoring = await this.scoringsRepository.save(createScoringDto)
+    const scoring = await this.scoringsRepository.save(createScoringDto);
     return scoring;
   }
 
@@ -36,7 +41,8 @@ export class ScoringService {
   }
 
   async update(id: number, updateScoringDto: UpdateScoringDto) {
-    const { score, comment, implication, action, recommendation, type } = updateScoringDto;
+    const { score, comment, implication, action, recommendation, type } =
+      updateScoringDto;
     const updates = {};
     if (score) updates['score'] = score;
     if (comment) updates['comment'] = comment;
@@ -44,7 +50,8 @@ export class ScoringService {
     if (action) updates['action'] = action;
     if (recommendation) updates['recommendation'] = recommendation;
     if (type) updates['type'] = type;
-    if (Object.keys(updates).length > 0) await this.scoringsRepository.update(id, updateScoringDto);
+    if (Object.keys(updates).length > 0)
+      await this.scoringsRepository.update(id, updateScoringDto);
     return this.scoringsRepository.findOneBy({ id });
   }
 
@@ -53,24 +60,29 @@ export class ScoringService {
   }
 
   async getScoring(userScore: number, type: string) {
-    let band = '71%-100%'
-    
+    let band = '71%-100%';
+
     if (userScore <= 30) {
-      band = '0%-30%'
+      band = '0%-30%';
     } else if (userScore <= 50) {
-      band = '31%-50%'
+      band = '31%-50%';
     } else if (userScore <= 70) {
-      band = '51%-70%'
+      band = '51%-70%';
     }
 
-    let scoreType = ScoringType.ELIGIBILITY
-    const scoringTypes = Object.values(ScoringType);
+    let scoreType = ScoringType.ELIGIBILITY;
+
     if (ScoringType[type]) {
       scoreType = type as ScoringType;
     } else {
-      this.logger.error(`Invalid scoring type: ${type}`, 'ScoringService.getScoring');
+      this.logger.error(
+        `Invalid scoring type: ${type}`,
+        'ScoringService.getScoring',
+      );
     }
 
-    return await this.scoringsRepository.findOne({ where: { score: band, type: scoreType } });
+    return await this.scoringsRepository.findOne({
+      where: { score: band, type: scoreType },
+    });
   }
 }

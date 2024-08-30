@@ -8,7 +8,14 @@ import { SpecialCriterionQuestion } from './entities/special-criterion-questions
 import { Matchmaking } from '../matchmaking/entities/matchmaking.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([SpecialCriterion, Question, SpecialCriterionQuestion, Matchmaking])],
+  imports: [
+    TypeOrmModule.forFeature([
+      SpecialCriterion,
+      Question,
+      SpecialCriterionQuestion,
+      Matchmaking,
+    ]),
+  ],
   controllers: [SpecialCriteriaController],
   providers: [SpecialCriteriaService],
 })

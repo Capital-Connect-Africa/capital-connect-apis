@@ -52,6 +52,15 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 GET http://localhost:3000/submissions/by-question-ids?questionIds=1,2,3&userId=2
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
+### Get Submission by specialCriteriaId and User ID
+GET http://localhost:3000/submissions/by-special-criteria/1?userId=6
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+
+### Get Submission by specialCriteriaId and User ID prod
+GET https://capitalconnect-0060e0fb0eb4.herokuapp.com/submissions/by-special-criteria/1?userId=6
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
 ### Fetch submissions by user prod
 GET http://api.capitalconnect.africa/submissions/user/4
 Authorization: Bearer ..3fJsm0xhzodY2CTo-bPTmgPkxyVEeab4NACx2JtX1xo

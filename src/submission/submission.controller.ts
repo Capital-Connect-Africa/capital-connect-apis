@@ -31,6 +31,7 @@ import { UpdateSubmissionDto } from './dto/update-submission.dto';
 import { User } from '../users/entities/user.entity';
 import { Question } from '../question/entities/question.entity';
 import { Answer } from '../answer/entities/answer.entity';
+import { SpecialCriteriaService } from '../special-criteria/special-criteria.service';
 
 @Controller('submissions')
 @UseGuards(JwtAuthGuard, RolesGuard)
@@ -38,6 +39,7 @@ export class SubmissionController {
   constructor(
     private readonly submissionService: SubmissionService,
     private readonly sectionService: SectionService,
+    private readonly specialCriteriaService: SpecialCriteriaService,
   ) {}
 
   @Post()
@@ -162,7 +164,31 @@ export class SubmissionController {
     @Query('userId') userId: number,
   ): Promise<Submission[]> {
     const questionIdsArray = questionIds.split(',').map(Number);
-    return this.submissionService.findAllByQuestionIds(questionIdsArray, userId);
+    return this.submissionService.findAllByQuestionIds(
+      questionIdsArray,
+      userId,
+    );
+  }
+
+  @Get('by-special-criteria/:specialCriteriaId')
+  async getSubmissionsBySpecialCriteria(
+    @Param('specialCriteriaId') specialCriteriaId: number,
+    @Query('userId') userId: number,
+  ): Promise<Submission[]> {
+    const specialCriterion =
+      await this.specialCriteriaService.findOne(specialCriteriaId);
+    if (!specialCriterion) {
+      throw new NotFoundException(
+        `Special criteria with id ${specialCriteriaId} not found`,
+      );
+    }
+    const questionIdsArray = specialCriterion.questions.map(
+      (question) => question.id,
+    );
+    return this.submissionService.findAllByQuestionIds(
+      questionIdsArray,
+      userId,
+    );
   }
 
   @Get('by-question/:questionId')
@@ -170,12 +196,15 @@ export class SubmissionController {
     @Param('questionId') questionId: number,
     @Query('userId') userId: number,
   ): Promise<Submission> {
-    const submission = await this.submissionService.findOneByQuestionId(questionId, userId);
-    
+    const submission = await this.submissionService.findOneByQuestionId(
+      questionId,
+      userId,
+    );
+
     if (!submission) {
       throw new NotFoundException('Submission not found');
     }
-    
+
     return submission;
   }
 
