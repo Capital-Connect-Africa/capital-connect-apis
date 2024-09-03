@@ -15,7 +15,7 @@ export class InvestorTypesService {
     return await this.investorTypeRepository.save(createInvestorTypeDto);
   }
 
-  findAll(page: number = 1, limit: number = 10) {
+  findAll(page: number = 1, limit: number = 20) {
     const skip = (page - 1) * limit;
     return this.investorTypeRepository.find({
       skip,
