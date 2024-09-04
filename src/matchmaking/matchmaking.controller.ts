@@ -7,8 +7,8 @@ import {
   Post,
   Query,
   Request,
-  UseGuards,
   Response,
+  UseGuards,
 } from '@nestjs/common';
 import { Response as Res } from 'express';
 import { MatchmakingService } from './matchmaking.service';
@@ -22,6 +22,7 @@ import { DeclineReason } from './entities/declineReasons.entity';
 import { CreateDeclineReasonDto } from './dto/create-decline-reason.dto';
 import { DeclineReasonsDto } from './dto/decline-reasons.dto';
 import throwInternalServer from '../shared/utils/exceptions.util';
+import { MatchStatus } from './MatchStatus.enum';
 
 @UseGuards(JwtAuthGuard)
 @Controller('matchmaking')
@@ -94,10 +95,11 @@ export class MatchmakingController {
     @Query('page') page: number,
     @Query('limit') limit: number,
   ) {
-    return this.matchmakingService.getInterestingCompanies(
+    return this.matchmakingService.getCompanies(
       investorProfileId,
       page,
       limit,
+      MatchStatus.INTERESTING,
     );
   }
 
@@ -107,10 +109,25 @@ export class MatchmakingController {
     @Query('page') page: number,
     @Query('limit') limit: number,
   ) {
-    return this.matchmakingService.getConnectedCompanies(
+    return this.matchmakingService.getCompanies(
       investorProfileId,
       page,
       limit,
+      MatchStatus.CONNECTED,
+    );
+  }
+
+  @Get('declined/:investorProfileId')
+  getDeclinedCompanies(
+    @Param('investorProfileId') investorProfileId: number,
+    @Query('page') page: number,
+    @Query('limit') limit: number,
+  ) {
+    return this.matchmakingService.getCompanies(
+      investorProfileId,
+      page,
+      limit,
+      MatchStatus.DECLINED,
     );
   }
 
@@ -120,10 +137,11 @@ export class MatchmakingController {
     @Query('page') page: number,
     @Query('limit') limit: number,
   ) {
-    return this.matchmakingService.getInterestedInvestors(
+    return this.matchmakingService.getInvestors(
       companyId,
       page,
       limit,
+      MatchStatus.INTERESTING,
     );
   }
 
@@ -133,10 +151,25 @@ export class MatchmakingController {
     @Query('page') page: number,
     @Query('limit') limit: number,
   ) {
-    return this.matchmakingService.getConnectedInvestors(
+    return this.matchmakingService.getInvestors(
       companyId,
       page,
       limit,
+      MatchStatus.CONNECTED,
+    );
+  }
+
+  @Get('investors/declined/:companyId')
+  getDeclinedInvestors(
+    @Param('companyId') companyId: number,
+    @Query('page') page: number,
+    @Query('limit') limit: number,
+  ) {
+    return this.matchmakingService.getInvestors(
+      companyId,
+      page,
+      limit,
+      MatchStatus.DECLINED,
     );
   }
 
@@ -161,19 +194,6 @@ export class MatchmakingController {
     return this.matchmakingService.disconnectFromCompany(
       investorProfileId,
       companyId,
-    );
-  }
-
-  @Get('declined/:investorProfileId')
-  getDeclinedCompanies(
-    @Param('investorProfileId') investorProfileId: number,
-    @Query('page') page: number,
-    @Query('limit') limit: number,
-  ) {
-    return this.matchmakingService.getDeclinedCompanies(
-      investorProfileId,
-      page,
-      limit,
     );
   }
 

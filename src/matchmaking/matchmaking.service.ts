@@ -46,6 +46,7 @@ export class MatchmakingService {
       (company) => companyIds.includes(company.id) === false,
     );
   }
+
   async getMatchingCompaniesByInvestorProfileId(id: number) {
     const profileFound = await this.investorProfileService.findOne(id);
     if (!profileFound) {
@@ -132,31 +133,16 @@ export class MatchmakingService {
     throw new Error('Company must be marked as interesting first');
   }
 
-  async getInterestingCompanies(
+  async getCompanies(
     investorProfileId: number,
     page: number = 1,
     limit: number = 10,
+    status: MatchStatus = MatchStatus.CONNECTED,
   ): Promise<Matchmaking[]> {
     return this.matchmakingRepository.find({
       where: {
         investorProfile: { id: investorProfileId },
-        status: MatchStatus.INTERESTING,
-      },
-      relations: ['company'],
-      take: limit,
-      skip: (page - 1) * limit,
-    });
-  }
-
-  async getConnectedCompanies(
-    investorProfileId: number,
-    page: number = 1,
-    limit: number = 10,
-  ): Promise<Matchmaking[]> {
-    return this.matchmakingRepository.find({
-      where: {
-        investorProfile: { id: investorProfileId },
-        status: MatchStatus.CONNECTED,
+        status: status,
       },
       relations: ['company'],
       take: limit,
@@ -189,15 +175,16 @@ export class MatchmakingService {
     });
   }
 
-  async getInterestedInvestors(
+  async getInvestors(
     companyId: number,
     page: number = 1,
     limit: number = 10,
+    status: MatchStatus = MatchStatus.CONNECTED,
   ): Promise<Matchmaking[]> {
     return this.matchmakingRepository.find({
       where: {
         company: { id: companyId },
-        status: MatchStatus.INTERESTING,
+        status: status,
       },
       relations: ['investorProfile'],
       take: limit,
@@ -205,23 +192,6 @@ export class MatchmakingService {
     });
   }
 
-  async getConnectedInvestors(
-    companyId: number,
-    page: number = 1,
-    limit: number = 10,
-  ): Promise<Matchmaking[]> {
-    return this.matchmakingRepository.find({
-      where: {
-        company: { id: companyId },
-        status: MatchStatus.CONNECTED,
-      },
-      relations: ['investorProfile'],
-      take: limit,
-      skip: (page - 1) * limit,
-    });
-  }
-
-  // New methods added below.....
   async markAsDeclined(
     investorProfileId: number,
     companyId: number,
@@ -270,22 +240,6 @@ export class MatchmakingService {
     }
 
     throw new Error('Matchmaking record not found');
-  }
-
-  async getDeclinedCompanies(
-    investorProfileId: number,
-    page: number = 1,
-    limit: number = 10,
-  ): Promise<Matchmaking[]> {
-    return this.matchmakingRepository.find({
-      where: {
-        investorProfile: { id: investorProfileId },
-        status: MatchStatus.DECLINED,
-      },
-      relations: ['company'],
-      take: limit,
-      skip: (page - 1) * limit,
-    });
   }
 
   async addDeclineReason(
