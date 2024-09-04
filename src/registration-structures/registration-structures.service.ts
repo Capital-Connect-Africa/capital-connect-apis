@@ -17,7 +17,7 @@ export class RegistrationStructuresService {
     );
   }
 
-  findAll(page: number = 1, limit: number = 10) {
+  findAll(page: number = 1, limit: number = 20) {
     const skip = (page - 1) * limit;
     return this.registrationStructureRepository.find({
       skip,
