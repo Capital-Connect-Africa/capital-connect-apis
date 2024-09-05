@@ -15,10 +15,10 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 GET https://capitalconnect-0060e0fb0eb4.herokuapp.com/statistics/matchmaking
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
-### Get matchmaking statistics per invetor (investorId)
-GET http://localhost:3000/statistics/matchmaking/6
+### Get matchmaking statistics per investor/company (investorId/companyId)
+GET http://localhost:3000/statistics/matchmaking/2?role=company
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
-### Get matchmaking statistics per invetor (investorId)
-GET https://capitalconnect-0060e0fb0eb4.herokuapp.com/statistics/matchmaking/6
+### Get matchmaking statistics per investor/company (investorId/companyId)
+GET https://capitalconnect-0060e0fb0eb4.herokuapp.com/statistics/matchmaking/35?role=investor
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9

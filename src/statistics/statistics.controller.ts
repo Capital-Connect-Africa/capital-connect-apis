@@ -1,4 +1,4 @@
-import { Controller, Get, Param, UseGuards } from '@nestjs/common';
+import { Controller, Get, Param, Query, UseGuards } from '@nestjs/common';
 import { StatisticsService } from './statistics.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { Roles } from '../auth/roles.decorator';
@@ -20,12 +20,15 @@ export class StatisticsController {
     return this.statisticsService.getMatchMakingStatistics();
   }
 
-  @Get('matchmaking/:investorProfileId')
+  @Get('matchmaking/:id')
   async getMatchMakingStatisticsPerInvestor(
-    @Param('investorProfileId') investorId: number,
+    @Param('id') id: number,
+    @Query('role') role: string,
   ) {
-    return this.statisticsService.getMatchMakingStatisticsPerInvestor(
-      investorId,
-    );
+    if (role === 'company') {
+      return this.statisticsService.getMatchMakingStatisticsPerCompany(id);
+    } else {
+      return this.statisticsService.getMatchMakingStatisticsPerInvestor(id);
+    }
   }
 }
