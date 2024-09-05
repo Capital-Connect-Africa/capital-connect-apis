@@ -1,4 +1,18 @@
-import { Controller, Get, Post, Body, Param, Delete, UseGuards, Put, BadRequestException, HttpCode, Query, HttpStatus, NotFoundException } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  Delete,
+  UseGuards,
+  Put,
+  BadRequestException,
+  HttpCode,
+  Query,
+  HttpStatus,
+  NotFoundException,
+} from '@nestjs/common';
 import { SectionService } from './section.service';
 import { CreateSectionDto } from './dto/create-section.dto';
 import { UpdateSectionDto } from './dto/update-section.dto';
@@ -14,7 +28,7 @@ import { SubsectionService } from 'src/subsection/subsection.service';
 export class SectionController {
   constructor(
     private readonly sectionService: SectionService,
-    private readonly subsectionService: SubsectionService
+    private readonly subsectionService: SubsectionService,
   ) {}
 
   @Post()
@@ -23,7 +37,7 @@ export class SectionController {
     try {
       return this.sectionService.create(createSectionDto);
     } catch (error) {
-      throwInternalServer(error)
+      throwInternalServer(error);
     }
   }
 
@@ -37,13 +51,16 @@ export class SectionController {
     try {
       return this.sectionService.findOne(+id);
     } catch (error) {
-      throwInternalServer(error)
+      throwInternalServer(error);
     }
   }
 
   @Put(':id')
   @Roles(Role.Admin)
-  async update(@Param('id') id: string, @Body() updateSectionDto: UpdateSectionDto) {
+  async update(
+    @Param('id') id: string,
+    @Body() updateSectionDto: UpdateSectionDto,
+  ) {
     try {
       await this.sectionService.findOne(+id);
       const section = await this.sectionService.update(+id, updateSectionDto);
@@ -52,7 +69,7 @@ export class SectionController {
       if (error instanceof NotFoundException) {
         throw new BadRequestException(`Section with id ${id} not found`);
       }
-      throwInternalServer(error)
+      throwInternalServer(error);
     }
   }
 
@@ -63,7 +80,7 @@ export class SectionController {
     try {
       await this.sectionService.remove(+id);
     } catch (error) {
-      throwInternalServer(error)
+      throwInternalServer(error);
     }
   }
 
@@ -72,7 +89,7 @@ export class SectionController {
     try {
       return await this.subsectionService.findSubsections(+id);
     } catch (error) {
-      throwInternalServer(error)
+      throwInternalServer(error);
     }
   }
 }

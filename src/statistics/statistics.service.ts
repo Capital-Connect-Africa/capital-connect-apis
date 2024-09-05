@@ -90,4 +90,36 @@ export class StatisticsService {
       connected,
     };
   }
+  async getMatchMakingStatisticsPerCompany(companyId: number): Promise<{
+    interesting: number;
+    declined: number;
+    connected: number;
+  }> {
+    const interesting = await this.matchMakingRepository.count({
+      where: {
+        status: MatchStatus.INTERESTING,
+        company: { id: companyId },
+      },
+    });
+
+    const declined = await this.matchMakingRepository.count({
+      where: {
+        status: MatchStatus.DECLINED,
+        company: { id: companyId },
+      },
+    });
+
+    const connected = await this.matchMakingRepository.count({
+      where: {
+        status: MatchStatus.CONNECTED,
+        company: { id: companyId },
+      },
+    });
+
+    return {
+      interesting,
+      declined,
+      connected,
+    };
+  }
 }

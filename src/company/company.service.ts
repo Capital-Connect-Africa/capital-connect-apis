@@ -49,10 +49,10 @@ export class CompanyService {
 
   findAll(page: number = 1, limit: number = 10) {
     const skip = (page - 1) * limit;
-    return this.companyRepository.find({ 
+    return this.companyRepository.find({
       skip,
       take: limit,
-      relations: ['companyLogo', 'user'] 
+      relations: ['companyLogo', 'user'],
     });
   }
 
@@ -80,9 +80,9 @@ export class CompanyService {
     }
   }
 
-  async findOneByUser(user: User) {
+  async findOneByUser(userId: number) {
     const company = await this.companyRepository.findOne({
-      where: { user },
+      where: { user: { id: userId } },
       relations: ['companyLogo', 'user'],
     });
     if (company) {
@@ -102,7 +102,10 @@ export class CompanyService {
   }
 
   async updateLogoUrl(id: number, logoId: number) {
+    console.log('id', id);
+    console.log('logoId', logoId);
     const company = await this.findOne(id);
+    console.log('company', company);
     if (!company) {
       throw new BadRequestException('company not available');
     }
@@ -441,5 +444,24 @@ export class CompanyService {
 
     const companies = await queryBuilder.getMany();
     return companies;
+  }
+
+  async searchCompanies(
+    companies: Company[],
+    query: string,
+  ): Promise<Company[]> {
+    if (!query) {
+      return companies; // Return the full list if no query is provided
+    }
+
+    const lowerCaseQuery = query.toLowerCase();
+
+    return companies.filter((company) =>
+      Object.values(company).some(
+        (value) =>
+          typeof value === 'string' &&
+          value.toLowerCase().includes(lowerCaseQuery),
+      ),
+    );
   }
 }

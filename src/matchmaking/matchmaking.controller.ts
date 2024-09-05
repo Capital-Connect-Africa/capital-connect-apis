@@ -7,8 +7,10 @@ import {
   Post,
   Query,
   Request,
+  Response,
   UseGuards,
 } from '@nestjs/common';
+import { Response as Res } from 'express';
 import { MatchmakingService } from './matchmaking.service';
 import { Company } from '../company/entities/company.entity';
 import { InvestorProfile } from '../investor-profile/entities/investor-profile.entity';
@@ -20,6 +22,7 @@ import { DeclineReason } from './entities/declineReasons.entity';
 import { CreateDeclineReasonDto } from './dto/create-decline-reason.dto';
 import { DeclineReasonsDto } from './dto/decline-reasons.dto';
 import throwInternalServer from '../shared/utils/exceptions.util';
+import { MatchStatus } from './MatchStatus.enum';
 
 @UseGuards(JwtAuthGuard)
 @Controller('matchmaking')
@@ -61,7 +64,14 @@ export class MatchmakingController {
   async getMatchingInvestorProfiles(
     @Request() req,
   ): Promise<InvestorProfile[]> {
-    return this.matchmakingService.getMatchingInvestorProfiles(req.user.id);
+    try {
+      return this.matchmakingService.getMatchingInvestorProfiles(req.user.id);
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
+      throwInternalServer(error);
+    }
   }
 
   @Post('interesting/:investorProfileId/:companyId')
@@ -92,10 +102,11 @@ export class MatchmakingController {
     @Query('page') page: number,
     @Query('limit') limit: number,
   ) {
-    return this.matchmakingService.getInterestingCompanies(
+    return this.matchmakingService.getCompanies(
       investorProfileId,
       page,
       limit,
+      MatchStatus.INTERESTING,
     );
   }
 
@@ -105,10 +116,25 @@ export class MatchmakingController {
     @Query('page') page: number,
     @Query('limit') limit: number,
   ) {
-    return this.matchmakingService.getConnectedCompanies(
+    return this.matchmakingService.getCompanies(
       investorProfileId,
       page,
       limit,
+      MatchStatus.CONNECTED,
+    );
+  }
+
+  @Get('declined/:investorProfileId')
+  getDeclinedCompanies(
+    @Param('investorProfileId') investorProfileId: number,
+    @Query('page') page: number,
+    @Query('limit') limit: number,
+  ) {
+    return this.matchmakingService.getCompanies(
+      investorProfileId,
+      page,
+      limit,
+      MatchStatus.DECLINED,
     );
   }
 
@@ -118,10 +144,11 @@ export class MatchmakingController {
     @Query('page') page: number,
     @Query('limit') limit: number,
   ) {
-    return this.matchmakingService.getInterestedInvestors(
+    return this.matchmakingService.getInvestors(
       companyId,
       page,
       limit,
+      MatchStatus.INTERESTING,
     );
   }
 
@@ -131,10 +158,25 @@ export class MatchmakingController {
     @Query('page') page: number,
     @Query('limit') limit: number,
   ) {
-    return this.matchmakingService.getConnectedInvestors(
+    return this.matchmakingService.getInvestors(
       companyId,
       page,
       limit,
+      MatchStatus.CONNECTED,
+    );
+  }
+
+  @Get('investors/declined/:companyId')
+  getDeclinedInvestors(
+    @Param('companyId') companyId: number,
+    @Query('page') page: number,
+    @Query('limit') limit: number,
+  ) {
+    return this.matchmakingService.getInvestors(
+      companyId,
+      page,
+      limit,
+      MatchStatus.DECLINED,
     );
   }
 
@@ -162,19 +204,6 @@ export class MatchmakingController {
     );
   }
 
-  @Get('declined/:investorProfileId')
-  getDeclinedCompanies(
-    @Param('investorProfileId') investorProfileId: number,
-    @Query('page') page: number,
-    @Query('limit') limit: number,
-  ) {
-    return this.matchmakingService.getDeclinedCompanies(
-      investorProfileId,
-      page,
-      limit,
-    );
-  }
-
   @Post(':id/decline-reasons')
   @Roles(Role.Investor)
   addDeclineReason(
@@ -190,5 +219,42 @@ export class MatchmakingController {
   @Post('search-companies')
   searchCompanies(@Body() searchDto: FilterCompanyDto) {
     return this.matchmakingService.searchCompanies(searchDto);
+  }
+
+  @Get('download-csv/:investorProfileId')
+  async downloadMatchMakingCSV(
+    @Response() res: Res,
+    @Param('investorProfileId') investorProfileId: number,
+    @Query('status') status: string,
+  ) {
+    const csvStream = await this.matchmakingService.generateMatchMakingCSV(
+      investorProfileId,
+      status,
+    );
+
+    res.set('Content-Type', 'text/csv');
+    res.set(
+      'Content-Disposition',
+      `attachment; filename=matchmaking-${Date.now()}.csv`,
+    );
+
+    csvStream.pipe(res);
+  }
+
+  @Get('search-matches/:investorProfileId')
+  searchMatches(
+    @Param('investorProfileId') investorProfileId: number,
+    @Query('status') status: string,
+    @Query('q') q: string,
+  ) {
+    return this.matchmakingService.searchMatches(investorProfileId, status, q);
+  }
+
+  @Get('search-matches')
+  async searchMatchesAdmin(
+    @Query('status') status: string,
+    @Query('q') q: string,
+  ) {
+    return this.matchmakingService.searchMatchesAdmin(status, q);
   }
 }

@@ -19,7 +19,7 @@ export class AnswerController {
   ) {}
 
   @Post()
-  @Roles(Role.Admin)
+  @Roles(Role.Admin, Role.Advisor, Role.Investor)
   async create(@Body() createAnswerDto: CreateAnswerDto) {
     const { text, weight, questionId, recommendation } = createAnswerDto;
     try {

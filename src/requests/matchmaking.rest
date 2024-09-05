@@ -57,12 +57,29 @@ GET http://localhost:3000/matchmaking/connected/1
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
 ### Get investors interested in a company (company id)
-GET http://localhost:3000/matchmaking/investors/interested/3
+GET http://localhost:3000/matchmaking/investors/interested/2
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
 ### Get investors connected to a company (company id)
 GET http://localhost:3000/matchmaking/investors/connected/2
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+### Get investors declined to a company (company id)
+GET http://localhost:3000/matchmaking/investors/declined/2
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+### Get investors interested in a company (company id) prod 
+    GET https://capitalconnect-0060e0fb0eb4.herokuapp.com/matchmaking/investors/interested/2
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+### Get investors connected to a company (company id) prod 
+    GET https://capitalconnect-0060e0fb0eb4.herokuapp.com/matchmaking/investors/connected/2
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+### Get investors declined to a company (company id) prod 
+    GET https://capitalconnect-0060e0fb0eb4.herokuapp.com/matchmaking/investors/declined/2
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
 ### Match decline reason.
@@ -90,3 +107,29 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
   "numberOfEmployees": "1-10 employees",
   "fullTimeBusiness": false
 }
+
+### Download matchmaking CSV
+GET http://localhost:3000/matchmaking/download-csv/2?status=interesting
+Content-Type: text/csv
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+
+### Download matchmaking CSV prod
+GET https://capitalconnect-0060e0fb0eb4.herokuapp.com/matchmaking/download-csv/35?status=connected
+Content-Type: text/csv
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+### Search companies based on investor profile criteria and text (investorProfileId, status, query)
+GET http://localhost:3000/matchmaking/search-matches/2?status=interesting&q=kenya
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+### Search companies based on investor profile criteria and text prod (investorProfileId, status, query)
+GET https://capitalconnect-0060e0fb0eb4.herokuapp.com/matchmaking/search-matches/35?status=interesting&q=kenya
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+### Search companies as admin (status, query)
+GET http://localhost:3000/matchmaking/search-matches?status=interesting&q=kenya
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
