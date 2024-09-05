@@ -39,7 +39,9 @@ export class FilesService {
       const createFileDto = new CreateFileDto();
       const key = `${file.fieldname}${Date.now()}`;
       const user = await this.userService.findOne(userId);
+      console.log("User", user);
       const companyFound = await this.companyService.findOneByUser(user);
+      console.log("Company", companyFound);
       if(!companyFound) {
           throw new NotFoundException('Company not found');
       } else {

@@ -102,7 +102,10 @@ export class CompanyService {
   }
 
   async updateLogoUrl(id: number, logoId: number) {
+    console.log('id', id);
+    console.log('logoId', logoId);
     const company = await this.findOne(id);
+    console.log('company', company);
     if (!company) {
       throw new BadRequestException('company not available');
     }

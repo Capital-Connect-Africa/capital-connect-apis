@@ -50,6 +50,7 @@ export class FilesController {
   @Post('upload-logo')
   async uploadCompanyLogo(@Request() req, @UploadedFile() file: Express.Multer.File) {
     try {
+      console.log("File", file);
       return await this.filesService.addCompanyLogo(file, req.user.id);
     } catch (err) {
       throwInternalServer(err);
