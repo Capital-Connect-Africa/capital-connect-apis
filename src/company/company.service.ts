@@ -376,6 +376,10 @@ export class CompanyService {
       businessSubsectors,
       productsAndServices,
       registrationStructures,
+      investmentStructure,
+      useOfFunds,
+      esgFocusAreas,
+      fundsNeeded,
       yearsOfOperation,
       growthStages,
       numberOfEmployees,
@@ -415,6 +419,34 @@ export class CompanyService {
       queryBuilder.orWhere(
         'companies.registrationStructure IN (:...registrationStructures)',
         { registrationStructures },
+      );
+    }
+
+    if (investmentStructure && investmentStructure.length > 0) {
+      queryBuilder.orWhere(
+        'companies.investmentStructure IN (:...investmentStructure)',
+        { investmentStructure },
+      );
+    }
+
+    if (useOfFunds && useOfFunds.length > 0) {
+      queryBuilder.orWhere(
+        'companies.useOfFunds IN (:...useOfFunds)',
+        { useOfFunds },
+      );
+    }
+
+    if (esgFocusAreas && esgFocusAreas.length > 0) {
+      queryBuilder.orWhere(
+        'companies.esgFocusAreas IN (:...esgFocusAreas)',
+        { esgFocusAreas },
+      );
+    }
+
+    if (fundsNeeded) {
+      queryBuilder.orWhere(
+        'companies.fundsNeeded = :fundsNeeded',
+        { fundsNeeded },
       );
     }
 
