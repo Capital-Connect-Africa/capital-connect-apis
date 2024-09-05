@@ -86,7 +86,15 @@ export class MatchmakingService {
     filterDto.countriesOfInvestmentFocus = [companyFound.country];
     filterDto.businessGrowthStages = [companyFound.growthStage];
     filterDto.registrationStructures = [companyFound.registrationStructure];
-    return await this.investorProfileService.filter(filterDto);
+    const companies = await this.investorProfileService.filter(filterDto);
+    const matchingCompanies = await this.getMatchedCompaniesForFiltering(
+      companyFound.id,
+      'company',
+    );
+    const companyIds = matchingCompanies.map((match) => match.company.id);
+    return companies.filter(
+      (company) => companyIds.includes(company.id) === false,
+    );
   }
 
   async markAsInteresting(
@@ -151,12 +159,17 @@ export class MatchmakingService {
   }
 
   async getMatchedCompaniesForFiltering(
-    investorProfileId: number,
+    id: number,
+    role: string = 'investor',
   ): Promise<Matchmaking[]> {
+    const query: any = {};
+    if (role === 'investor') {
+      query['investorProfile'] = { id: id };
+    } else {
+      query['company'] = { id: id };
+    }
     return this.matchmakingRepository.find({
-      where: {
-        investorProfile: { id: investorProfileId },
-      },
+      where: query,
     });
   }
 

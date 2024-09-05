@@ -64,7 +64,14 @@ export class MatchmakingController {
   async getMatchingInvestorProfiles(
     @Request() req,
   ): Promise<InvestorProfile[]> {
-    return this.matchmakingService.getMatchingInvestorProfiles(req.user.id);
+    try {
+      return this.matchmakingService.getMatchingInvestorProfiles(req.user.id);
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
+      throwInternalServer(error);
+    }
   }
 
   @Post('interesting/:investorProfileId/:companyId')
