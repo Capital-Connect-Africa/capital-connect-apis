@@ -80,9 +80,9 @@ export class CompanyService {
     }
   }
 
-  async findOneByUser(user: User) {
+  async findOneByUser(userId: number) {
     const company = await this.companyRepository.findOne({
-      where: { user },
+      where: { user: { id: userId } },
       relations: ['companyLogo', 'user'],
     });
     if (company) {
