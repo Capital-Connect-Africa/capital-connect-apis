@@ -4,9 +4,10 @@ import { StatisticsController } from './statistics.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from '../users/entities/user.entity';
 import { Matchmaking } from "../matchmaking/entities/matchmaking.entity";
+import { SpecialCriterion } from 'src/special-criteria/entities/special-criterion.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User, Matchmaking])],
+  imports: [TypeOrmModule.forFeature([User, Matchmaking, SpecialCriterion])],
   providers: [StatisticsService],
   controllers: [StatisticsController],
 })
