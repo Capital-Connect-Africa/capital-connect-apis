@@ -6,6 +6,7 @@ import { Question } from 'src/question/entities/question.entity';
 import { SubSection } from 'src/subsection/entities/subsection.entity';
 import { UpdateSubmissionDto } from './dto/update-submission.dto';
 import { SpecialCriteriaService } from "../special-criteria/special-criteria.service";
+import { Answer } from "../answer/entities/answer.entity";
 
 @Injectable()
 export class SubmissionService {
@@ -14,6 +15,8 @@ export class SubmissionService {
     private submissionRepository: Repository<Submission>,
     @InjectRepository(Question)
     private questionsRepository: Repository<Question>,
+    @InjectRepository(Answer)
+    private answersRepository: Repository<Answer>,
     @InjectRepository(SubSection)
     private subSectionsRepository: Repository<SubSection>,
     private readonly specialCriteriaService: SpecialCriteriaService,
@@ -64,10 +67,17 @@ export class SubmissionService {
   async update(id: number, updateSubmissionDto: UpdateSubmissionDto) {
     const { answerId, text } = updateSubmissionDto;
     const updates = {};
-    if (answerId) updates['answerId'] = answerId;
     if (text) updates['text'] = text;
-    if (Object.keys(updates).length > 0)
+    if (Object.keys(updates).length > 0 || answerId) {
+      if (answerId) {
+        const answer = await this.answersRepository.findOne({ where: { id: answerId } });
+        if (!answer) {
+          throw new NotFoundException(`Answer with id ${answerId} not found`);
+        }
+        updates['answer'] = answer;
+      }
       await this.submissionRepository.update(id, updates);
+    }
     return this.submissionRepository.findOne({
       where: { id },
       relations: ['user', 'question', 'answer'],
