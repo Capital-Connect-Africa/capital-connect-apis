@@ -7,6 +7,7 @@ import {
   Param,
   Post,
   Put,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
@@ -33,17 +34,21 @@ export class ConnectionRequestController {
 
   @Get()
   @Roles(Role.Admin)
-  async findAll(): Promise<ConnectionRequest[]> {
-    return this.connectionRequestService.findAll();
+  async findAll(@Query('page') page: number, @Query('limit') limit: number): Promise<ConnectionRequest[]> {
+    return this.connectionRequestService.findAll(page, limit);
   }
 
   @Get('investor/:investorProfileId')
   @Roles(Role.Investor, Role.Admin)
   async findAllByInvestorProfileId(
     @Param('investorProfileId') investorProfileId: number,
+    @Query('page') page: number, 
+    @Query('limit') limit: number
   ): Promise<ConnectionRequest[]> {
     return this.connectionRequestService.findAllByInvestorProfileId(
       +investorProfileId,
+      page,
+      limit,
     );
   }
 
@@ -51,8 +56,10 @@ export class ConnectionRequestController {
   @Roles(Role.User, Role.Admin)
   async findAllByCompanyId(
     @Param('companyId') companyId: number,
+    @Query('page') page: number, 
+    @Query('limit') limit: number
   ): Promise<ConnectionRequest[]> {
-    return this.connectionRequestService.findAllByCompanyId(+companyId);
+    return this.connectionRequestService.findAllByCompanyId(+companyId, page, limit);
   }
 
   @Put(':id/approve')
