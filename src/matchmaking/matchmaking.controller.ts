@@ -138,6 +138,20 @@ export class MatchmakingController {
     );
   }
 
+  @Get('requested/:investorProfileId')
+  getRequestedCompanies(
+    @Param('investorProfileId') investorProfileId: number,
+    @Query('page') page: number,
+    @Query('limit') limit: number,
+  ) {
+    return this.matchmakingService.getCompanies(
+      investorProfileId,
+      page,
+      limit,
+      MatchStatus.REQUESTED,
+    );
+  }
+
   @Get('investors/interested/:companyId')
   getInterestedInvestors(
     @Param('companyId') companyId: number,
@@ -177,6 +191,20 @@ export class MatchmakingController {
       page,
       limit,
       MatchStatus.DECLINED,
+    );
+  }
+
+  @Get('investors/requested/:companyId')
+  getRequestedInvestors(
+    @Param('companyId') companyId: number,
+    @Query('page') page: number,
+    @Query('limit') limit: number,
+  ) {
+    return this.matchmakingService.getInvestors(
+      companyId,
+      page,
+      limit,
+      MatchStatus.REQUESTED,
     );
   }
 

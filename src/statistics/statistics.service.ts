@@ -38,6 +38,7 @@ export class StatisticsService {
     interesting: number;
     declined: number;
     connected: number;
+    requested: number;
   }> {
     const interesting = await this.matchMakingRepository.count({
       where: { status: MatchStatus.INTERESTING },
@@ -51,10 +52,15 @@ export class StatisticsService {
       where: { status: MatchStatus.CONNECTED },
     });
 
+    const requested = await this.matchMakingRepository.count({
+      where: { status: MatchStatus.REQUESTED },
+    });
+
     return {
       interesting,
       declined,
       connected,
+      requested,
     };
   }
 
@@ -62,6 +68,7 @@ export class StatisticsService {
     interesting: number;
     declined: number;
     connected: number;
+    requested: number;
   }> {
     const interesting = await this.matchMakingRepository.count({
       where: {
@@ -84,16 +91,25 @@ export class StatisticsService {
       },
     });
 
+    const requested = await this.matchMakingRepository.count({
+      where: {
+        status: MatchStatus.REQUESTED,
+        investorProfile: { id: investorId },
+      },
+    });
+
     return {
       interesting,
       declined,
       connected,
+      requested,
     };
   }
   async getMatchMakingStatisticsPerCompany(companyId: number): Promise<{
     interesting: number;
     declined: number;
     connected: number;
+    requested: number;
   }> {
     const interesting = await this.matchMakingRepository.count({
       where: {
@@ -116,10 +132,18 @@ export class StatisticsService {
       },
     });
 
+    const requested = await this.matchMakingRepository.count({
+      where: {
+        status: MatchStatus.REQUESTED,
+        company: { id: companyId },
+      },
+    });
+
     return {
       interesting,
       declined,
       connected,
+      requested,
     };
   }
 }

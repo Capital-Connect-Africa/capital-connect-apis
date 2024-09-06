@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { ConnectionRequest } from './entities/connectionRequest.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -6,6 +10,8 @@ import { CreateConnectionRequestDto } from './dto/create-connection-request.dto'
 import { UpdateConnectionRequestDto } from './dto/update-connection-request.dto';
 import { InvestorProfile } from 'src/investor-profile/entities/investor-profile.entity';
 import { Company } from 'src/company/entities/company.entity';
+import { MatchmakingService } from './matchmaking.service';
+import throwInternalServer from '../shared/utils/exceptions.util';
 
 @Injectable()
 export class ConnectionRequestService {
@@ -16,6 +22,7 @@ export class ConnectionRequestService {
     private readonly investorProfileRepository: Repository<InvestorProfile>,
     @InjectRepository(Company)
     private readonly companyRepository: Repository<Company>,
+    private matchmakingService: MatchmakingService,
   ) {}
 
   async create(
@@ -43,6 +50,18 @@ export class ConnectionRequestService {
         company: { id: companyId },
       },
     });
+
+    try {
+      await this.matchmakingService.requestToConnectWithCompany(
+        investorProfileId,
+        companyId,
+      );
+    } catch (error) {
+      if (error instanceof BadRequestException) {
+        throw error;
+      }
+      throwInternalServer(error);
+    }
 
     if (existingRequest) {
       return await this.connectionRequestRepository.save(existingRequest);
@@ -98,18 +117,33 @@ export class ConnectionRequestService {
   }
 
   async approveConnectionRequest(id: string) {
-    const approvalRequest = await this.connectionRequestRepository.findOne({ where: { uuid: id } });
+    const approvalRequest = await this.connectionRequestRepository.findOne({
+      where: { uuid: id },
+      relations: ['investorProfile', 'company'],
+    });
     if (!approvalRequest) {
       throw new NotFoundException(`Connection request with ID ${id} not found`);
     }
+    await this.matchmakingService.connectWithCompany(
+      approvalRequest.investorProfile.id,
+      approvalRequest.company.id,
+    );
     return this.update(approvalRequest.id, { isApproved: true });
   }
 
   async declineConnectionRequest(id: string) {
-    const approvalRequest = await this.connectionRequestRepository.findOne({ where: { uuid: id } });
+    const approvalRequest = await this.connectionRequestRepository.findOne({
+      where: { uuid: id },
+      relations: ['investorProfile', 'company'],
+    });
     if (!approvalRequest) {
       throw new NotFoundException(`Connection request with ID ${id} not found`);
     }
+    await this.matchmakingService.markAsDeclined(
+      approvalRequest.investorProfile.id,
+      approvalRequest.company.id,
+      ['Declined by business owner.'],
+    );
     return this.update(approvalRequest.id, { isApproved: false });
   }
 

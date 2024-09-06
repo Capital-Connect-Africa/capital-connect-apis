@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InvestorProfileService } from '../investor-profile/investor-profile.service';
 import { CompanyService } from '../company/company.service';
 import { FilterCompanyDto } from '../company/dto/filter-company.dto';
@@ -138,7 +142,30 @@ export class MatchmakingService {
       return this.matchmakingRepository.save(match);
     }
 
-    throw new Error('Company must be marked as interesting first');
+    throw new BadRequestException(
+      'Company must be marked as interesting first and a connection request be made.',
+    );
+  }
+
+  async requestToConnectWithCompany(
+    investorProfileId: number,
+    companyId: number,
+  ): Promise<Matchmaking> {
+    const match = await this.matchmakingRepository.findOne({
+      where: {
+        investorProfile: { id: investorProfileId },
+        company: { id: companyId },
+      },
+    });
+
+    if (match) {
+      match.status = MatchStatus.REQUESTED;
+      return this.matchmakingRepository.save(match);
+    }
+
+    throw new BadRequestException(
+      'Company must be marked as interesting first.',
+    );
   }
 
   async getCompanies(
@@ -170,21 +197,6 @@ export class MatchmakingService {
     }
     return this.matchmakingRepository.find({
       where: query,
-    });
-  }
-
-  async getMatchedCompanies(
-    investorProfileId: number,
-    page: number = 1,
-    limit: number = 10,
-  ): Promise<Matchmaking[]> {
-    return this.matchmakingRepository.find({
-      where: {
-        investorProfile: { id: investorProfileId },
-      },
-      relations: ['company'],
-      take: limit,
-      skip: (page - 1) * limit,
     });
   }
 
@@ -348,14 +360,14 @@ export class MatchmakingService {
       relations: ['company'],
       take: 50,
     });
-    
+
     const companies = matches.map((match) => match.company);
-    
+
     const filteredCompanies = await this.companyService.searchCompanies(
       companies,
       q,
     );
-    
+
     return matches.filter((match) => filteredCompanies.includes(match.company));
   }
 
