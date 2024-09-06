@@ -1,0 +1,52 @@
+###
+# Create Connection Request
+POST http://localhost:3000/connection-requests
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+{
+    "investorProfileId": 2,
+    "companyId": 2
+}
+
+###
+# Get Connection Request by Id
+GET http://localhost:3000/connection-requests/1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+###
+# Get Connection Request by Id
+GET http://localhost:3000/connection-requests/2/2
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+###
+# Get all Connection Requests
+GET http://localhost:3000/connection-requests
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+###
+# Get all Connection Requests made by investor (investorProfileId)
+GET http://localhost:3000/connection-requests/investor/2
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+###
+# Get all Connection Requests made to a company (companyId)
+GET http://localhost:3000/connection-requests/company/2
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+###
+# Update Connection Request by ID
+PUT http://localhost:3000/connection-requests/1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+{
+    "investorProfileId": 2,
+    "companyId": 2,
+    "isApproved": true
+}
+
+###
+# Delete Connection Request by ID
+DELETE http://localhost:3000/connection-requests/2
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
