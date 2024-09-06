@@ -1,5 +1,4 @@
-###
-# Create Connection Request
+### Create Connection Request
 POST http://localhost:3000/connection-requests
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
@@ -9,33 +8,27 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
     "companyId": 2
 }
 
-###
-# Get Connection Request by Id
+### Get Connection Request by Id
 GET http://localhost:3000/connection-requests/1
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
-###
-# Get Connection Request by Id
+### Get Connection Request by Id
 GET http://localhost:3000/connection-requests/2/2
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
-###
-# Get all Connection Requests
+### Get all Connection Requests
 GET http://localhost:3000/connection-requests
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
-###
-# Get all Connection Requests made by investor (investorProfileId)
+### Get all Connection Requests made by investor (investorProfileId)
 GET http://localhost:3000/connection-requests/investor/2
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
-###
-# Get all Connection Requests made to a company (companyId)
+### Get all Connection Requests made to a company (companyId)
 GET http://localhost:3000/connection-requests/company/2
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
-###
-# Update Connection Request by ID
+### Update Connection Request by ID
 PUT http://localhost:3000/connection-requests/1
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
@@ -46,7 +39,15 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
     "isApproved": true
 }
 
-###
-# Delete Connection Request by ID
-DELETE http://localhost:3000/connection-requests/2
+### Delete Connection Request by ID
+DELETE http://localhost:3000/connection-requests/1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+### Approve Connection Request (uuid)
+PUT http://localhost:3000/connection-requests/e5e63d2c-d1dd-44dc-b1db-03282856c4c4/approve
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+### Decline Connection Request (uuid)
+
+PUT http://localhost:3000/connection-requests/e5e63d2c-d1dd-44dc-b1db-03282856c4c4/decline
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
