@@ -13,8 +13,8 @@ POST http://localhost:3000/auth/signup
 Content-Type: application/json
 
 {
-    "username": "jrdandiabe@gmail.com",
-    "password": "pass123",
+    "username": "jrdandiabeta2@gmail.com",
+    "password": "pass1234",
     "hasAcceptedTerms": true
 }
 
@@ -28,14 +28,14 @@ Content-Type: application/json
     "password": "pass123"
 }
 
-#####
-# Login
+
+### Login
 POST  http://localhost:3000/auth/login
 Content-Type: application/json
 
 {
-    "username": "k@gmail.com",
-    "password": "password"
+    "username": "jrdandiabelta2@gmail.com",
+    "password": "pass1234"
 }
 
 #####
@@ -57,7 +57,7 @@ Content-Type: application/json
 
 {
    "username": "vic@gmail.com",
-    "password": "pass123"
+    "password": "pass1234"
 }
 
 ###

@@ -40,14 +40,13 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 }
 
 ### Delete Connection Request by ID
-DELETE http://localhost:3000/connection-requests/1
+DELETE http://localhost:3000/connection-requests/3
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
 ### Approve Connection Request (uuid)
-PUT http://localhost:3000/connection-requests/e5e63d2c-d1dd-44dc-b1db-03282856c4c4/approve
+PUT http://localhost:3000/connection-requests/f6cb222e-02d1-43d8-a7ed-86df7e37c708/approve
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
 ### Decline Connection Request (uuid)
-
-PUT http://localhost:3000/connection-requests/e5e63d2c-d1dd-44dc-b1db-03282856c4c4/decline
+PUT http://localhost:3000/connection-requests/f6cb222e-02d1-43d8-a7ed-86df7e37c708/decline
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
