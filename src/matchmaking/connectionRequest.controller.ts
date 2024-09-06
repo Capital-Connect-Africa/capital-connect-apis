@@ -17,6 +17,7 @@ import { CreateConnectionRequestDto } from './dto/create-connection-request.dto'
 import { UpdateConnectionRequestDto } from './dto/update-connection-request.dto';
 import { Roles } from 'src/auth/roles.decorator';
 import { Role } from 'src/auth/role.enum';
+import throwInternalServer from '../shared/utils/exceptions.util';
 
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Controller('connection-requests')
@@ -52,6 +53,36 @@ export class ConnectionRequestController {
     @Param('companyId') companyId: number,
   ): Promise<ConnectionRequest[]> {
     return this.connectionRequestService.findAllByCompanyId(+companyId);
+  }
+
+  @Put(':id/approve')
+  @Roles(Role.User, Role.Admin)
+  async approveConnectionRequest(
+    @Param('id') id: string,
+  ): Promise<ConnectionRequest> {
+    try {
+      return this.connectionRequestService.approveConnectionRequest(id);
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw new NotFoundException(error.message);
+      }
+      throwInternalServer(error);
+    }
+  }
+
+  @Put(':id/decline')
+  @Roles(Role.User, Role.Admin)
+  async declineConnectionRequest(
+    @Param('id') id: string,
+  ): Promise<ConnectionRequest> {
+    try {
+      return this.connectionRequestService.declineConnectionRequest(id);
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw new NotFoundException(error.message);
+      }
+      throwInternalServer(error);
+    }
   }
 
   @Get(':id')

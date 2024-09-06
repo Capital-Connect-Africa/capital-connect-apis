@@ -97,6 +97,22 @@ export class ConnectionRequestService {
     });
   }
 
+  async approveConnectionRequest(id: string) {
+    const approvalRequest = await this.connectionRequestRepository.findOne({ where: { uuid: id } });
+    if (!approvalRequest) {
+      throw new NotFoundException(`Connection request with ID ${id} not found`);
+    }
+    return this.update(approvalRequest.id, { isApproved: true });
+  }
+
+  async declineConnectionRequest(id: string) {
+    const approvalRequest = await this.connectionRequestRepository.findOne({ where: { uuid: id } });
+    if (!approvalRequest) {
+      throw new NotFoundException(`Connection request with ID ${id} not found`);
+    }
+    return this.update(approvalRequest.id, { isApproved: false });
+  }
+
   async findOne(id: number): Promise<ConnectionRequest> {
     const connectionRequest = await this.connectionRequestRepository.findOne({
       where: { id },
