@@ -1,4 +1,11 @@
-import { Controller, Request, Post, Body, BadRequestException, NotFoundException } from '@nestjs/common';
+import {
+  Controller,
+  Request,
+  Post,
+  Body,
+  BadRequestException,
+  NotFoundException,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import throwInternalServer from 'src/shared/utils/exceptions.util';
@@ -11,7 +18,7 @@ import { addHours } from 'date-fns';
 export class AuthController {
   constructor(
     private readonly authService: AuthService,
-    private readonly userService: UsersService
+    private readonly userService: UsersService,
   ) {}
 
   @Post('login')
@@ -21,10 +28,10 @@ export class AuthController {
     try {
       return await this.authService.login(username, password);
     } catch (error) {
-        if (error instanceof BadRequestException) {
-            throw new BadRequestException(error.message);
-        }
-        throwInternalServer(error)
+      if (error instanceof BadRequestException) {
+        throw new BadRequestException(error.message);
+      }
+      throwInternalServer(error);
     }
   }
 
@@ -38,27 +45,34 @@ export class AuthController {
       if (error instanceof BadRequestException) {
         throw new BadRequestException(error.message);
       }
-      throwInternalServer(error)
+      throwInternalServer(error);
     }
   }
 
   @Post('resend-verification-email')
-  async requestPasswordReset(@Body() resendVerificationEmailDto: ResendVerificationEmailDto) {
+  async requestPasswordReset(
+    @Body() resendVerificationEmailDto: ResendVerificationEmailDto,
+  ) {
     try {
-      let user = await this.userService.findByUsername(resendVerificationEmailDto.email);
+      let user = await this.userService.findByUsername(
+        resendVerificationEmailDto.email,
+      );
       if (!user) {
         throw new NotFoundException('User not found');
       }
       user.emailVerificationToken = randomBytes(32).toString('hex');
       user.emailVerificationExpires = addHours(new Date(), 24);
-      user = await this.userService.update(user.id, {emailVerificationToken: user.emailVerificationToken, emailVerificationExpires: user.emailVerificationExpires});
+      user = await this.userService.update(user.id, {
+        emailVerificationToken: user.emailVerificationToken,
+        emailVerificationExpires: user.emailVerificationExpires,
+      });
       await this.authService.sendVerificationEmail(user);
       return { message: 'Email verification email sent' };
     } catch (error) {
       if (error instanceof NotFoundException) {
         throw new NotFoundException(error.message);
       }
-      throwInternalServer(error)
+      throwInternalServer(error);
     }
   }
 }
