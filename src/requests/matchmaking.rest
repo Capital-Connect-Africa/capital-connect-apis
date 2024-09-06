@@ -105,7 +105,11 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
   "yearsOfOperation": "0 - 1 years",
   "growthStages": ["Seed", "Series A"],
   "numberOfEmployees": "1-10 employees",
-  "fullTimeBusiness": false
+  "fullTimeBusiness": false,
+  "investmentStructure": ["Top", "Middle"],
+  "useOfFunds": ["Working Capital", "Expansion"],
+  "esgFocusAreas": ["Climate Change Mitigation"],
+  "fundsNeeded": 10000
 }
 
 ### Download matchmaking CSV
