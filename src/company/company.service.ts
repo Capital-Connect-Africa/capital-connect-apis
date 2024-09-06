@@ -80,9 +80,9 @@ export class CompanyService {
     }
   }
 
-  async findOneByUser(user: User) {
+  async findOneByUser(userId: number) {
     const company = await this.companyRepository.findOne({
-      where: { user },
+      where: { user: { id: userId } },
       relations: ['companyLogo', 'user'],
     });
     if (company) {
@@ -102,7 +102,10 @@ export class CompanyService {
   }
 
   async updateLogoUrl(id: number, logoId: number) {
+    console.log('id', id);
+    console.log('logoId', logoId);
     const company = await this.findOne(id);
+    console.log('company', company);
     if (!company) {
       throw new BadRequestException('company not available');
     }
@@ -373,6 +376,10 @@ export class CompanyService {
       businessSubsectors,
       productsAndServices,
       registrationStructures,
+      investmentStructure,
+      useOfFunds,
+      esgFocusAreas,
+      fundsNeeded,
       yearsOfOperation,
       growthStages,
       numberOfEmployees,
@@ -412,6 +419,34 @@ export class CompanyService {
       queryBuilder.orWhere(
         'companies.registrationStructure IN (:...registrationStructures)',
         { registrationStructures },
+      );
+    }
+
+    if (investmentStructure && investmentStructure.length > 0) {
+      queryBuilder.orWhere(
+        'companies.investmentStructure IN (:...investmentStructure)',
+        { investmentStructure },
+      );
+    }
+
+    if (useOfFunds && useOfFunds.length > 0) {
+      queryBuilder.orWhere(
+        'companies.useOfFunds IN (:...useOfFunds)',
+        { useOfFunds },
+      );
+    }
+
+    if (esgFocusAreas && esgFocusAreas.length > 0) {
+      queryBuilder.orWhere(
+        'companies.esgFocusAreas IN (:...esgFocusAreas)',
+        { esgFocusAreas },
+      );
+    }
+
+    if (fundsNeeded) {
+      queryBuilder.orWhere(
+        'companies.fundsNeeded = :fundsNeeded',
+        { fundsNeeded },
       );
     }
 

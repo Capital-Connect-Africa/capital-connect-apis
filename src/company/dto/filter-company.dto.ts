@@ -4,6 +4,7 @@ import {
   IsEnum,
   IsBoolean,
   IsArray,
+  IsNumber,
 } from 'class-validator';
 import { NumberOfEmployees, YearsOfOperation } from '../company.type';
 
@@ -31,6 +32,25 @@ export class FilterCompanyDto {
   @IsArray()
   @IsString({ each: true })
   registrationStructures?: string[];
+
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  investmentStructure?: string[];
+
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  useOfFunds?: string[];
+
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  esgFocusAreas?: string[];
+
+  @IsOptional()
+  @IsNumber()
+  fundsNeeded?: number;
 
   @IsOptional()
   @IsEnum(YearsOfOperation)

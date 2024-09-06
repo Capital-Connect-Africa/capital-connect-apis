@@ -15,7 +15,7 @@ export class UseOfFundsService {
     return await this.useOfFundsRepository.save(createUseOfFundsDto);
   }
 
-  findAll(page: number = 1, limit: number = 10) {
+  findAll(page: number = 1, limit: number = 20) {
     const skip = (page - 1) * limit;
     return this.useOfFundsRepository.find({
       skip,

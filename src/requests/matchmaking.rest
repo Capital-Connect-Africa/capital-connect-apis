@@ -57,12 +57,29 @@ GET http://localhost:3000/matchmaking/connected/1
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
 ### Get investors interested in a company (company id)
-GET http://localhost:3000/matchmaking/investors/interested/3
+GET http://localhost:3000/matchmaking/investors/interested/2
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
 ### Get investors connected to a company (company id)
 GET http://localhost:3000/matchmaking/investors/connected/2
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+### Get investors declined to a company (company id)
+GET http://localhost:3000/matchmaking/investors/declined/2
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+### Get investors interested in a company (company id) prod 
+    GET https://capitalconnect-0060e0fb0eb4.herokuapp.com/matchmaking/investors/interested/2
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+### Get investors connected to a company (company id) prod 
+    GET https://capitalconnect-0060e0fb0eb4.herokuapp.com/matchmaking/investors/connected/2
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+### Get investors declined to a company (company id) prod 
+    GET https://capitalconnect-0060e0fb0eb4.herokuapp.com/matchmaking/investors/declined/2
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
 ### Match decline reason.
@@ -88,7 +105,11 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
   "yearsOfOperation": "0 - 1 years",
   "growthStages": ["Seed", "Series A"],
   "numberOfEmployees": "1-10 employees",
-  "fullTimeBusiness": false
+  "fullTimeBusiness": false,
+  "investmentStructure": ["Top", "Middle"],
+  "useOfFunds": ["Working Capital", "Expansion"],
+  "esgFocusAreas": ["Climate Change Mitigation"],
+  "fundsNeeded": 10000
 }
 
 ### Download matchmaking CSV
@@ -98,7 +119,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
 
 ### Download matchmaking CSV prod
-GET https://capitalconnect-0060e0fb0eb4.herokuapp.com/download-csv/2?status=interesting
+GET https://capitalconnect-0060e0fb0eb4.herokuapp.com/matchmaking/download-csv/35?status=connected
 Content-Type: text/csv
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
