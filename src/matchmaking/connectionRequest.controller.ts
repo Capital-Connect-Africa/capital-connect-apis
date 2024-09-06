@@ -1,19 +1,32 @@
-import { Body, Controller, Delete, Get, NotFoundException, Param, Post, Put, UseGuards } from "@nestjs/common";
-import { JwtAuthGuard } from "src/auth/jwt-auth.guard";
-import { RolesGuard } from "src/auth/roles.guard";
-import { ConnectionRequestService } from "./connectionRequest.service";
-import { ConnectionRequest } from "./entities/connectionRequest.entity";
-import { CreateConnectionRequestDto } from "./dto/create-connection-request.dto";
-import { UpdateConnectionRequestDto } from "./dto/update-connection-request.dto";
-import { Roles } from "src/auth/roles.decorator";
-import { Role } from "src/auth/role.enum";
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  NotFoundException,
+  Param,
+  Post,
+  Put,
+  UseGuards,
+} from '@nestjs/common';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { RolesGuard } from 'src/auth/roles.guard';
+import { ConnectionRequestService } from './connectionRequest.service';
+import { ConnectionRequest } from './entities/connectionRequest.entity';
+import { CreateConnectionRequestDto } from './dto/create-connection-request.dto';
+import { UpdateConnectionRequestDto } from './dto/update-connection-request.dto';
+import { Roles } from 'src/auth/roles.decorator';
+import { Role } from 'src/auth/role.enum';
 
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Controller('connection-requests')
 export class ConnectionRequestController {
   constructor(private connectionRequestService: ConnectionRequestService) {}
   @Post()
-  async create(@Body() createConnectionRequestDto: CreateConnectionRequestDto): Promise<ConnectionRequest> {
+  @Roles(Role.Investor)
+  async create(
+    @Body() createConnectionRequestDto: CreateConnectionRequestDto,
+  ): Promise<ConnectionRequest> {
     return this.connectionRequestService.create(createConnectionRequestDto);
   }
 
@@ -28,7 +41,9 @@ export class ConnectionRequestController {
   async findAllByInvestorProfileId(
     @Param('investorProfileId') investorProfileId: number,
   ): Promise<ConnectionRequest[]> {
-    return this.connectionRequestService.findAllByInvestorProfileId(+investorProfileId);
+    return this.connectionRequestService.findAllByInvestorProfileId(
+      +investorProfileId,
+    );
   }
 
   @Get('company/:companyId')
@@ -49,10 +64,16 @@ export class ConnectionRequestController {
     @Param('investorId') investorId: number,
     @Param('companyId') companyId: number,
   ): Promise<ConnectionRequest> {
-    const connectionRequest = await this.connectionRequestService.findConnectionRequest(investorId, companyId);
+    const connectionRequest =
+      await this.connectionRequestService.findConnectionRequest(
+        investorId,
+        companyId,
+      );
 
     if (!connectionRequest) {
-      throw new NotFoundException(`Connection request not found for investor ID ${investorId} and company ID ${companyId}`);
+      throw new NotFoundException(
+        `Connection request not found for investor ID ${investorId} and company ID ${companyId}`,
+      );
     }
 
     return connectionRequest;

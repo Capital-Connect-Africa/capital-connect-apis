@@ -1,12 +1,9 @@
-import { IsBoolean, IsNumber } from "class-validator";
+import { IsNumber } from 'class-validator';
 
 export class CreateConnectionRequestDto {
-    @IsNumber()
-    investorProfileId: number;
-  
-    @IsNumber()
-    companyId: number;
-  
-    @IsBoolean()
-    isApproved?: boolean;
-  }
+  @IsNumber()
+  investorProfileId: number;
+
+  @IsNumber()
+  companyId: number;
+}

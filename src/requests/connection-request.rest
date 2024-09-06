@@ -3,20 +3,20 @@
 POST http://localhost:3000/connection-requests
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
 {
-    "investorProfileId": 11,
-    "companyId": 15,
-    "isApproved": false
+    "investorProfileId": 2,
+    "companyId": 2
 }
 
 ###
 # Get Connection Request by Id
-GET http://localhost:3000/connection-requests/2
+GET http://localhost:3000/connection-requests/1
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
 ###
 # Get Connection Request by Id
-GET http://localhost:3000/connection-requests/1/1
+GET http://localhost:3000/connection-requests/2/2
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
 ###
@@ -26,12 +26,12 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
 ###
 # Get all Connection Requests made by investor (investorProfileId)
-GET http://localhost:3000/connection-requests/investor/1
+GET http://localhost:3000/connection-requests/investor/2
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
 ###
 # Get all Connection Requests made to a company (companyId)
-GET http://localhost:3000/connection-requests/company/1
+GET http://localhost:3000/connection-requests/company/2
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
 ###
@@ -39,9 +39,10 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 PUT http://localhost:3000/connection-requests/1
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
 {
     "investorProfileId": 2,
-    "companyId": 5,
+    "companyId": 2,
     "isApproved": true
 }
 
