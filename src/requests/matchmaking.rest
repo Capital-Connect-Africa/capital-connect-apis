@@ -21,7 +21,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 ### Mark a company as interesting (investorProfileId/companyId)
 POST http://localhost:3000/matchmaking/interesting/2/2
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmaXJzdE5hbWUiOiJDaHJpcyIsImxhc3ROYW1lIjoiVGhpYWluZSIsInVzZXJuYW1lIjoianJkYW5kaWFiZWx0YTJAZ21haWwuY29tIiwic3ViIjoxMywicm9sZXMiOlsiaW52ZXN0b3IiXSwiaWF0IjoxNzI2MDAzMDQ5LCJleHAiOjE3MjYwODk0NDl9.SmqpAlPmH8xHygn_OVaLDfTWa0Xa-zwz1wyTGYzObTg
 
 ### Mark a company as not interesting (investorProfileId/companyId)
 POST http://localhost:3000/matchmaking/decline/2/2
@@ -35,7 +35,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 ### Connect with a company (investorProfileId/companyId)
 POST http://localhost:3000/matchmaking/connect/2/2
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmaXJzdE5hbWUiOiJDaHJpcyIsImxhc3ROYW1lIjoiVGhpYWluZSIsInVzZXJuYW1lIjoianJkYW5kaWFiZWx0YTJAZ21haWwuY29tIiwic3ViIjoxMywicm9sZXMiOlsiaW52ZXN0b3IiXSwiaWF0IjoxNzI2MDAzMDQ5LCJleHAiOjE3MjYwODk0NDl9.SmqpAlPmH8xHygn_OVaLDfTWa0Xa-zwz1wyTGYzObTg
 
 ### Disconnect from a connected company (investorProfileId/companyId)
 POST http://localhost:3000/matchmaking/disconnect/1/2

@@ -19,11 +19,11 @@ import { Roles } from 'src/auth/roles.decorator';
 import { Role } from 'src/auth/role.enum';
 import throwInternalServer from '../shared/utils/exceptions.util';
 
-@UseGuards(JwtAuthGuard, RolesGuard)
 @Controller('connection-requests')
 export class ConnectionRequestController {
   constructor(private connectionRequestService: ConnectionRequestService) {}
   @Post()
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(Role.Investor)
   async create(
     @Body() createConnectionRequestDto: CreateConnectionRequestDto,
@@ -32,12 +32,14 @@ export class ConnectionRequestController {
   }
 
   @Get()
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(Role.Admin)
   async findAll(): Promise<ConnectionRequest[]> {
     return this.connectionRequestService.findAll();
   }
 
   @Get('investor/:investorProfileId')
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(Role.Investor, Role.Admin)
   async findAllByInvestorProfileId(
     @Param('investorProfileId') investorProfileId: number,
@@ -48,6 +50,7 @@ export class ConnectionRequestController {
   }
 
   @Get('company/:companyId')
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(Role.User, Role.Admin)
   async findAllByCompanyId(
     @Param('companyId') companyId: number,
@@ -56,7 +59,6 @@ export class ConnectionRequestController {
   }
 
   @Put(':id/approve')
-  @Roles(Role.User, Role.Admin)
   async approveConnectionRequest(
     @Param('id') id: string,
   ): Promise<ConnectionRequest> {
@@ -71,7 +73,6 @@ export class ConnectionRequestController {
   }
 
   @Put(':id/decline')
-  @Roles(Role.User, Role.Admin)
   async declineConnectionRequest(
     @Param('id') id: string,
   ): Promise<ConnectionRequest> {
@@ -86,11 +87,13 @@ export class ConnectionRequestController {
   }
 
   @Get(':id')
+  @UseGuards(JwtAuthGuard, RolesGuard)
   async findOne(@Param('id') id: number): Promise<ConnectionRequest> {
     return this.connectionRequestService.findOne(id);
   }
 
   @Get(':investorProfileId/:companyId')
+  @UseGuards(JwtAuthGuard, RolesGuard)
   async getConnectionRequest(
     @Param('investorId') investorId: number,
     @Param('companyId') companyId: number,
@@ -111,6 +114,7 @@ export class ConnectionRequestController {
   }
 
   @Put(':id')
+  @UseGuards(JwtAuthGuard, RolesGuard)
   async update(
     @Param('id') id: number,
     @Body() updateConnectionRequestDto: UpdateConnectionRequestDto,
@@ -119,6 +123,7 @@ export class ConnectionRequestController {
   }
 
   @Delete(':id')
+  @UseGuards(JwtAuthGuard, RolesGuard)
   async remove(@Param('id') id: number): Promise<void> {
     return this.connectionRequestService.remove(id);
   }
