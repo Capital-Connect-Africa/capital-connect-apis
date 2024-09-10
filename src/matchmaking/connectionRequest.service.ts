@@ -79,15 +79,18 @@ export class ConnectionRequestService {
     }
   }
 
-  // ToDo: Implement pagination
-  async findAll(): Promise<ConnectionRequest[]> {
+  async findAll( page: number = 1, limit: number = 10): Promise<ConnectionRequest[]> {
     return this.connectionRequestRepository.find({
       relations: ['investorProfile', 'company'],
+      take: limit,
+      skip: (page - 1) * limit,
     });
   }
 
   async findAllByInvestorProfileId(
     investorProfileId: number,
+    page: number = 1,
+    limit: number = 10,
   ): Promise<ConnectionRequest[]> {
     const investorProfile = await this.investorProfileRepository.findOneBy({
       id: investorProfileId,
@@ -103,10 +106,16 @@ export class ConnectionRequestService {
         investorProfile: { id: investorProfileId },
       },
       relations: ['company'],
+      take: limit,
+      skip: (page - 1) * limit,
     });
   }
 
-  async findAllByCompanyId(companyId: number): Promise<ConnectionRequest[]> {
+  async findAllByCompanyId(
+    companyId: number,
+    page: number = 1,
+    limit: number = 10,
+  ): Promise<ConnectionRequest[]> {
     const company = await this.companyRepository.findOneBy({ id: companyId });
     if (!company) {
       throw new NotFoundException(`Company with ID ${companyId} not found`);
@@ -116,7 +125,9 @@ export class ConnectionRequestService {
       where: {
         company: { id: companyId },
       },
-      relations: ['investorProfile'], // Optionally include relations if needed
+      relations: ['investorProfile'],
+      take: limit,
+      skip: (page - 1) * limit,
     });
   }
 
