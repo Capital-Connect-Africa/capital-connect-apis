@@ -109,7 +109,7 @@ export class QuestionController {
   }
 
   @Put(':id')
-  @Roles(Role.Admin)
+  @Roles(Role.Admin, Role.Investor, Role.Advisor)
   async update(
     @Param('id') id: string,
     @Body() updateQuestionDto: UpdateQuestionDto,
@@ -145,7 +145,7 @@ export class QuestionController {
   }
 
   @Delete(':id')
-  @Roles(Role.Admin)
+  @Roles(Role.Admin, Role.Advisor, Role.Investor)
   @HttpCode(HttpStatus.NO_CONTENT)
   remove(@Param('id') id: string) {
     try {
