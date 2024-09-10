@@ -57,7 +57,7 @@ export class AnswerController {
   }
 
   @Put(':id')
-  @Roles(Role.Admin)
+  @Roles(Role.Admin, Role.Investor, Role.Advisor)
   async update(@Param('id') id: string, @Body() updateAnswerDto: UpdateAnswerDto) {
     try {
       await this.answerService.findOne(+id);
