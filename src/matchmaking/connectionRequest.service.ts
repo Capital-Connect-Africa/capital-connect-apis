@@ -12,6 +12,9 @@ import { InvestorProfile } from 'src/investor-profile/entities/investor-profile.
 import { Company } from 'src/company/entities/company.entity';
 import { MatchmakingService } from './matchmaking.service';
 import throwInternalServer from '../shared/utils/exceptions.util';
+import { BrevoService } from '../shared/brevo.service';
+import { connectionApproval } from '../templates/connection-approval';
+import { connectionRequest } from '../templates/connection-request';
 
 @Injectable()
 export class ConnectionRequestService {
@@ -23,6 +26,7 @@ export class ConnectionRequestService {
     @InjectRepository(Company)
     private readonly companyRepository: Repository<Company>,
     private matchmakingService: MatchmakingService,
+    private readonly brevoService: BrevoService,
   ) {}
 
   async create(
@@ -70,7 +74,7 @@ export class ConnectionRequestService {
         investorProfile,
         company,
       });
-
+      await this.sendConnectionRequestEmail(company.id);
       return await this.connectionRequestRepository.save(newRequest);
     }
   }
@@ -128,6 +132,7 @@ export class ConnectionRequestService {
       approvalRequest.investorProfile.id,
       approvalRequest.company.id,
     );
+    this.sendConnectionApprovalEmail(approvalRequest.company.id);
     return this.update(approvalRequest.id, { isApproved: true });
   }
 
@@ -203,5 +208,63 @@ export class ConnectionRequestService {
 
   async remove(id: number): Promise<void> {
     await this.connectionRequestRepository.delete(id);
+  }
+
+  private async sendConnectionApprovalEmail(id: number) {
+    const investorProfile = await this.investorProfileRepository.findOne({
+      where: { id },
+      relations: ['investor'],
+    });
+
+    if (!investorProfile) return;
+
+    const msg = {
+      from: process.env.FROM_EMAIL, // Use your verified sender
+      subject: 'Connection Request Accepted on www.capitalconnect.africa',
+      html: connectionApproval(
+        `${investorProfile.investor.firstName} ${investorProfile.investor.lastName}`,
+        investorProfile.organizationName,
+      ),
+    };
+    const recipients = [
+      {
+        email: investorProfile.investor.username,
+        name: `${investorProfile.investor.firstName} ${investorProfile.investor.lastName}`,
+      },
+      {
+        email: 'services@capitalconnect.africa',
+        name: `Capital Connect`,
+      },
+    ];
+    await this.brevoService.sendEmailViaBrevo(msg, recipients);
+  }
+
+  private async sendConnectionRequestEmail(id: number) {
+    const company = await this.companyRepository.findOne({
+      where: { id },
+      relations: ['user'],
+    });
+
+    if (!company) return;
+
+    const msg = {
+      from: process.env.FROM_EMAIL, // Use your verified sender
+      subject: 'New Connection Request on www.capitalconnect.africa',
+      html: connectionRequest(
+        `${company.user.firstName} ${company.user.lastName}`,
+        company.name,
+      ),
+    };
+    const recipients = [
+      {
+        email: company.user.username,
+        name: `${company.user.firstName} ${company.user.lastName}`,
+      },
+      {
+        email: 'services@capitalconnect.africa',
+        name: `Capital Connect`,
+      },
+    ];
+    await this.brevoService.sendEmailViaBrevo(msg, recipients);
   }
 }

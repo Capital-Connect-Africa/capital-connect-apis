@@ -20,6 +20,7 @@ import { DeclineController } from './decline.controller';
 import { ConnectionRequestService } from './connectionRequest.service';
 import { ConnectionRequestController } from './connectionRequest.controller';
 import { ConnectionRequest } from './entities/connectionRequest.entity';
+import { BrevoService } from '../shared/brevo.service';
 
 @Module({
   imports: [
@@ -40,7 +41,16 @@ import { ConnectionRequest } from './entities/connectionRequest.entity';
     CompanyModule,
     InvestorProfileModule,
   ],
-  providers: [MatchmakingService, DeclineService, ConnectionRequestService],
-  controllers: [MatchmakingController, DeclineController,ConnectionRequestController],
+  providers: [
+    BrevoService,
+    MatchmakingService,
+    DeclineService,
+    ConnectionRequestService,
+  ],
+  controllers: [
+    MatchmakingController,
+    DeclineController,
+    ConnectionRequestController,
+  ],
 })
 export class MatchmakingModule {}

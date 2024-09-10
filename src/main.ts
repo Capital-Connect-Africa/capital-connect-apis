@@ -7,7 +7,7 @@ import { CustomLogger } from './shared/utils/custom-logger.util';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
-    logger: false, // Disable default logger
+    logger: ['error'], // Disable default logger
   });
   app.useGlobalPipes(new ValidationPipe());
   app.enableCors();
