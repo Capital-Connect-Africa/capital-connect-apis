@@ -1,0 +1,52 @@
+### Create Connection Request
+POST http://localhost:3000/connection-requests
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmaXJzdE5hbWUiOiJDaHJpcyIsImxhc3ROYW1lIjoiVGhpYWluZSIsInVzZXJuYW1lIjoianJkYW5kaWFiZWx0YTJAZ21haWwuY29tIiwic3ViIjoxMywicm9sZXMiOlsiaW52ZXN0b3IiXSwiaWF0IjoxNzI2MDAzMDQ5LCJleHAiOjE3MjYwODk0NDl9.SmqpAlPmH8xHygn_OVaLDfTWa0Xa-zwz1wyTGYzObTg
+
+{
+    "investorProfileId": 2,
+    "companyId": 2
+}
+
+### Get Connection Request by Id
+GET http://localhost:3000/connection-requests/1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+### Get Connection Request by Id
+GET http://localhost:3000/connection-requests/2/2
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+### Get all Connection Requests
+GET http://localhost:3000/connection-requests
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmaXJzdE5hbWUiOiJDaHJpcyIsImxhc3ROYW1lIjoiVGhpYWluZSIsInVzZXJuYW1lIjoianJkYW5kaWFiZWx0YTJAZ21haWwuY29tIiwic3ViIjoxMywicm9sZXMiOlsiaW52ZXN0b3IiXSwiaWF0IjoxNzI2MDAzMDQ5LCJleHAiOjE3MjYwODk0NDl9.SmqpAlPmH8xHygn_OVaLDfTWa0Xa-zwz1wyTGYzObTg
+
+### Get all Connection Requests made by investor (investorProfileId)
+GET http://localhost:3000/connection-requests/investor/2
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmaXJzdE5hbWUiOiJDaHJpcyIsImxhc3ROYW1lIjoiVGhpYWluZSIsInVzZXJuYW1lIjoianJkYW5kaWFiZWx0YTJAZ21haWwuY29tIiwic3ViIjoxMywicm9sZXMiOlsiaW52ZXN0b3IiXSwiaWF0IjoxNzI2MDAzMDQ5LCJleHAiOjE3MjYwODk0NDl9.SmqpAlPmH8xHygn_OVaLDfTWa0Xa-zwz1wyTGYzObTg
+
+### Get all Connection Requests made to a company (companyId)
+GET http://localhost:3000/connection-requests/company/2
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+### Update Connection Request by ID
+PUT http://localhost:3000/connection-requests/1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+{
+    "investorProfileId": 2,
+    "companyId": 2,
+    "isApproved": true
+}
+
+### Delete Connection Request by ID
+DELETE http://localhost:3000/connection-requests/3
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+### Approve Connection Request (uuid)
+PUT http://localhost:3000/connection-requests/f2d670a3-ebe7-4bad-b4f9-56453fbff6f5/approve
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmaXJzdE5hbWUiOiJDaHJpcyIsImxhc3ROYW1lIjoiVGhpYWluZSIsInVzZXJuYW1lIjoianJkYW5kaWFiZWx0YTJAZ21haWwuY29tIiwic3ViIjoxMywicm9sZXMiOlsiaW52ZXN0b3IiXSwiaWF0IjoxNzI2MDAzMDQ5LCJleHAiOjE3MjYwODk0NDl9.SmqpAlPmH8xHygn_OVaLDfTWa0Xa-zwz1wyTGYzObTg
+
+### Decline Connection Request (uuid)
+PUT http://localhost:3000/connection-requests/f6cb222e-02d1-43d8-a7ed-86df7e37c708/decline
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9

@@ -32,19 +32,25 @@ export class UsersService {
 
   async findByUsername(username: string): Promise<User | undefined> {
     return this.usersRepository.findOne({
-      where: { username },
+      where: { username: username.toLowerCase() },
       relations: ['mobileNumbers'],
     });
   }
 
   async isUsernameTaken(username: string): Promise<boolean> {
-    const user = await this.usersRepository.findOne({ where: { username } });
+    const user = await this.usersRepository.findOne({
+      where: { username: username.toLowerCase() },
+    });
     return !!user;
   }
 
   async create(user: Partial<User>): Promise<User> {
-    const usr = await this.usersRepository.create(user);
-    return this.usersRepository.save(usr);
+    const { username, ...rest } = user;
+    const usr = this.usersRepository.create({
+      username: username.toLowerCase(),
+      ...rest,
+    });
+    return await this.usersRepository.save(usr);
   }
 
   async findAll(): Promise<User[]> {
@@ -75,13 +81,13 @@ export class UsersService {
 
   validateEmail(email: string): boolean {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
+    return emailRegex.test(email.toLowerCase());
   }
 
   async requestPasswordReset(email: string): Promise<void> {
     try {
       const user = await this.usersRepository.findOne({
-        where: { username: email },
+        where: { username: email.toLocaleUpperCase() },
       });
 
       if (!user) {

@@ -13,6 +13,7 @@ import { SubSector } from '../../subsector/entities/subsector.entity';
 import { JoinTable } from 'typeorm';
 import { ContactPerson } from '../../contact-person/entities/contact-person.entity';
 import { SpecialCriterion } from 'src/special-criteria/entities/special-criterion.entity';
+import { ConnectionRequest } from 'src/matchmaking/entities/connectionRequest.entity';
 
 @Entity('investor_profiles')
 export class InvestorProfile {
@@ -93,4 +94,7 @@ export class InvestorProfile {
     (specialCriteria) => specialCriteria.investorProfile,
   )
   specialCriteria: SpecialCriterion[];
+
+  @OneToMany(() => ConnectionRequest, (connectionRequest) => connectionRequest.investorProfile)
+  connectionRequests: ConnectionRequest[];
 }

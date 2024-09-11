@@ -41,6 +41,7 @@ export class StatisticsService {
     interesting: number;
     declined: number;
     connected: number;
+    requested: number;
   }> {
     const interesting = await this.matchMakingRepository.count({
       where: { status: MatchStatus.INTERESTING, ...filter },
@@ -54,10 +55,15 @@ export class StatisticsService {
       where: { status: MatchStatus.CONNECTED, ...filter },
     });
 
+    const requested = await this.matchMakingRepository.count({
+      where: { status: MatchStatus.REQUESTED, ...filter },
+    });
+
     return {
       interesting,
       declined,
       connected,
+      requested,
     };
   }
 
@@ -65,35 +71,40 @@ export class StatisticsService {
     interesting: number;
     declined: number;
     connected: number;
+    requested: number;
   }> {
-    return this.getMatchMakingStatistics({
-      investorProfile: { id: investorId },
+    return await this.getMatchMakingStatistics({
+      investor: {id: investorId}
     });
   }
   async getMatchMakingStatisticsPerCompany(companyId: number): Promise<{
     interesting: number;
     declined: number;
     connected: number;
+    requested: number;
   }> {
-    return this.getMatchMakingStatistics({
-      company: { id: companyId },
+    return await this.getMatchMakingStatistics({
+      company: {id: companyId}
     });
   }
 
-  async getSpecialCriteriaStatistics(filter: any = {}): Promise<{
+  async getSpecialCriteriaStatistics(): Promise<{
+    criteria: number;
+  }> {
+    const criteria = await this.specialCriteriaRepository.count();
+    
+    return { criteria };
+  }
+  
+  async getSpecialCriteriaStatisticsInvestor(investorId: number): Promise<{
     criteria: number;
   }> {
     const criteria = await this.specialCriteriaRepository.count({
-      where: filter,
+      where: {
+        investorProfile: {id: investorId}
+      }
     });
     
-    return {criteria};
+    return { criteria };
   }  
-  async getSpecialCriteriaStatisticsInvestor(investorId: number): Promise<{
-    criteria: number;
-  }>{
-    return this.getSpecialCriteriaStatistics({
-      investorProfile: { id: investorId },
-    });
-  }
 }

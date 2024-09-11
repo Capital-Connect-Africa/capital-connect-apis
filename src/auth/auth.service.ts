@@ -88,14 +88,14 @@ export class AuthService {
     };
 
     // await this.sendEmailVerificatioinMailViaSendGrid(msg);
-    await this.sendEmailVerificatioinMailViaBrevo(msg, user);
+    await this.sendEmailVerificationMailViaBrevo(msg, user);
   }
 
   async sendEmailVerificatioinMailViaSendGrid(msg: any) {
     await sgMail.send(msg);
   }
 
-  async sendEmailVerificatioinMailViaBrevo(msg: any, user: User) {
+  async sendEmailVerificationMailViaBrevo(msg: any, user: User) {
     const apiInstance = new brevo.TransactionalEmailsApi();
 
     const apiKey = apiInstance.authentications['apiKey'];

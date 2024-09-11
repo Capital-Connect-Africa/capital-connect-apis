@@ -4,10 +4,12 @@ import {
   Column,
   Entity,
   JoinColumn,
+  OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { NumberOfEmployees, YearsOfOperation } from '../company.type';
+import { ConnectionRequest } from 'src/matchmaking/entities/connectionRequest.entity';
 
 @Entity('companies')
 export class Company {
@@ -67,6 +69,9 @@ export class Company {
   @OneToOne(() => User)
   @JoinColumn()
   user: User;
+
+  @OneToMany(() => ConnectionRequest, (connectionRequest) => connectionRequest.company)
+  connectionRequests: ConnectionRequest[];
 
   @OneToOne(() => File)
   @JoinColumn()
