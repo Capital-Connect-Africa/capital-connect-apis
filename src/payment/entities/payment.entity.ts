@@ -31,6 +31,6 @@ export class Payment {
   @ManyToOne(() => Booking, booking => booking.payments)
   booking: Booking;
 
-  @ManyToOne(() => User, user => user.payments)
+  @ManyToOne(() => User, user => user.payments, { onDelete: 'CASCADE' })
   user: User;
 }

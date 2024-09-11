@@ -235,4 +235,11 @@ export class UsersService {
       await this.usersRepository.save(user);
     }
   }
+
+  async remove(id: number) {
+    const user = await this.usersRepository.findOne({ where: { id } });
+    if (user) {
+      await this.usersRepository.remove(user);
+    }
+  }
 }

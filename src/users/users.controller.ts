@@ -1,4 +1,18 @@
-import { BadRequestException, Body, Controller, Get, NotFoundException, Param, Post, Put, Query, Request, UnauthorizedException, UseGuards } from '@nestjs/common';
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  Delete,
+  Get,
+  NotFoundException,
+  Param,
+  Post,
+  Put,
+  Query,
+  Request,
+  UnauthorizedException,
+  UseGuards
+} from "@nestjs/common";
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { UsersService } from './users.service';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -137,6 +151,18 @@ export class UsersController {
     try {
       await this.userService.acceptTerms(id);
       return { message: 'Terms and conditions accepted' };
+    } catch (error) {
+      throwInternalServer(error)
+    }
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Roles(Role.Admin)
+  @Delete(':id')
+  async deleteUser(@Param('id') id: string) {
+    try {
+      await this.userService.remove(+id);
+      return { message: 'User deleted successfully' };
     } catch (error) {
       throwInternalServer(error)
     }

@@ -20,7 +20,7 @@ export class Matchmaking {
   @JoinColumn({ name: 'investorProfileId' })
   investorProfile: InvestorProfile;
 
-  @ManyToOne(() => Company, { eager: true })
+  @ManyToOne(() => Company, { eager: true, onDelete: 'CASCADE' })
   @JoinColumn({ name: 'companyId' })
   company: Company;
 

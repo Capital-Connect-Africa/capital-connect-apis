@@ -16,7 +16,7 @@ export class Booking {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  @ManyToOne(() => User, user => user.bookings)
+  @ManyToOne(() => User, user => user.bookings, { onDelete: 'CASCADE' })
   user: User;
 
   @OneToMany(() => Payment, payment => payment.booking)

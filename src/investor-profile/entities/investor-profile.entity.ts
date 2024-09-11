@@ -71,7 +71,7 @@ export class InvestorProfile {
   @Column('text', { array: true })
   registrationStructures: string[];
 
-  @OneToOne(() => User)
+  @OneToOne(() => User, { onDelete: 'CASCADE' })
   @JoinColumn()
   investor: User;
 

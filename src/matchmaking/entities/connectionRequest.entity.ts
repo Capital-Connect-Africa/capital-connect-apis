@@ -21,11 +21,11 @@ export class ConnectionRequest {
 
   @ManyToOne(
     () => InvestorProfile,
-    (investorProfile) => investorProfile.connectionRequests,
+    (investorProfile) => investorProfile.connectionRequests, { onDelete: 'CASCADE' }
   )
   investorProfile: InvestorProfile;
 
-  @ManyToOne(() => Company, (company) => company.connectionRequests)
+  @ManyToOne(() => Company, (company) => company.connectionRequests, { onDelete: 'CASCADE' })
   company: Company;
 
   @Column()
