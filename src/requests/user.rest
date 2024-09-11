@@ -89,5 +89,5 @@ DELETE http://localhost:3000/users/13
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
 ### Delete user prod
-DELETE http://api.capitalconnect.africa/users/13
+DELETE http://api.capitalconnect.africa/users/38
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9

@@ -22,7 +22,6 @@ export class AddCascadesToDeletions1726042343362 implements MigrationInterface {
         await queryRunner.query(`ALTER TABLE "companies" ALTER COLUMN "useOfFunds" DROP DEFAULT`);
         await queryRunner.query(`ALTER TABLE "companies" ALTER COLUMN "esgFocusAreas" DROP DEFAULT`);
         await queryRunner.query(`ALTER TABLE "companies" ALTER COLUMN "fundsNeeded" DROP DEFAULT`);
-        await queryRunner.query(`ALTER TABLE "connection_requests" ALTER COLUMN "isApproved" SET NOT NULL`);
         await queryRunner.query(`CREATE INDEX "IDX_2b261fc54cc414ed7d328f31c0" ON "special_criteria_questions" ("specialCriteriaId") `);
         await queryRunner.query(`CREATE INDEX "IDX_6a857e7976ba7d94b215425fa7" ON "special_criteria_questions" ("questionsId") `);
         await queryRunner.query(`ALTER TABLE "companies" ADD CONSTRAINT "FK_6d64e8c7527a9e4af83cc66cbf7" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE NO ACTION`);
@@ -54,7 +53,6 @@ export class AddCascadesToDeletions1726042343362 implements MigrationInterface {
         await queryRunner.query(`ALTER TABLE "companies" DROP CONSTRAINT "FK_6d64e8c7527a9e4af83cc66cbf7"`);
         await queryRunner.query(`DROP INDEX "public"."IDX_6a857e7976ba7d94b215425fa7"`);
         await queryRunner.query(`DROP INDEX "public"."IDX_2b261fc54cc414ed7d328f31c0"`);
-        await queryRunner.query(`ALTER TABLE "connection_requests" ALTER COLUMN "isApproved" DROP NOT NULL`);
         await queryRunner.query(`ALTER TABLE "companies" ALTER COLUMN "fundsNeeded" SET DEFAULT '0'`);
         await queryRunner.query(`ALTER TABLE "companies" ALTER COLUMN "esgFocusAreas" SET DEFAULT ''`);
         await queryRunner.query(`ALTER TABLE "companies" ALTER COLUMN "useOfFunds" SET DEFAULT ''`);
