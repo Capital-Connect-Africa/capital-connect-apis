@@ -28,6 +28,6 @@ export class MobileNumber {
   @UpdateDateColumn({ type: 'timestamptz' })
   updatedAt: Date;
 
-  @ManyToOne(() => User, (user) => user.mobileNumbers)
+  @ManyToOne(() => User, (user) => user.mobileNumbers, { onDelete: 'CASCADE' })
   user: User;
 }

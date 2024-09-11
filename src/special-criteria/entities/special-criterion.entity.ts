@@ -17,6 +17,6 @@ export class SpecialCriterion {
     @JoinTable({ name: 'special_criteria_questions' })
     questions: Question[];
 
-    @ManyToOne(() => InvestorProfile, (investorProfile) => investorProfile.specialCriteria)
+    @ManyToOne(() => InvestorProfile, (investorProfile) => investorProfile.specialCriteria, { onDelete: 'CASCADE' })
     investorProfile: InvestorProfile;
 }
