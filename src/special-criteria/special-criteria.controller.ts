@@ -91,6 +91,15 @@ export class SpecialCriteriaController {
     return this.specialCriteriaService.findByCompanyId(companyId, page, limit);
   }
 
+  @Get('criteria/:specialCriteriaId')
+  async getCompaniesByCriteria(
+    @Param('specialCriteriaId') specialCriteriaId: number,
+    @Query('page') page: number,
+    @Query('limit') limit: number,
+  ) {
+    return this.specialCriteriaService.findCompaniesThatAnsweredCriteria(specialCriteriaId, page, limit);
+  }
+
   @Put(':id')
   @Roles(Role.Admin, Role.Advisor, Role.Investor)
   async update(

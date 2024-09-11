@@ -18,6 +18,8 @@ import { SpecialCriteriaService } from '../special-criteria/special-criteria.ser
 import { SpecialCriterion } from '../special-criteria/entities/special-criterion.entity';
 import { SpecialCriterionQuestion } from '../special-criteria/entities/special-criterion-questions.entity';
 import { Matchmaking } from '../matchmaking/entities/matchmaking.entity';
+import { User } from 'src/users/entities/user.entity';
+import { Company } from 'src/company/entities/company.entity';
 
 @Module({
   imports: [
@@ -31,6 +33,8 @@ import { Matchmaking } from '../matchmaking/entities/matchmaking.entity';
       Question,
       SpecialCriterionQuestion,
       Matchmaking,
+      User,
+      Company,
     ]),
   ],
   providers: [

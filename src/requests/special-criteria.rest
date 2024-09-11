@@ -54,6 +54,10 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 GET https://capitalconnect-0060e0fb0eb4.herokuapp.com/special-criteria/company/35
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
+### Get all companies that have interacted with a special criteria by SpecialCriteriaId
+GET http://localhost:3000/special-criteria/criteria/10
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
 ### Update Special criteria
 PUT http://localhost:3000/special-criteria/2
 Content-Type: application/json
