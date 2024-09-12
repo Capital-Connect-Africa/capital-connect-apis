@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Query, UseGuards } from '@nestjs/common';
+import { Controller, Get, NotFoundException, Param, Query, UseGuards } from '@nestjs/common';
 import { StatisticsService } from './statistics.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { Roles } from '../auth/roles.decorator';
@@ -22,14 +22,16 @@ export class StatisticsController {
   }
 
   @Get('matchmaking/:id')
-  async getMatchMakingStatisticsPerInvestor(
+  async getMatchMakingStatisticsPerCompany(
     @Param('id') id: number,
-    @Query('role') role: string,
+    @Query('role') role: 'company' | 'investor',
   ) {
     if (role === 'company') {
       return this.statisticsService.getMatchMakingStatisticsPerCompany(id);
-    } else {
+    } else if (role === 'investor') {
       return this.statisticsService.getMatchMakingStatisticsPerInvestor(id);
+    } else {
+      throw new NotFoundException('Role not found or not valid');
     }
   }
 

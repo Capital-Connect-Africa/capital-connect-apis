@@ -10,7 +10,7 @@ import { InvestorProfile } from '../investor-profile/entities/investor-profile.e
 import { Company } from '../company/entities/company.entity';
 
 interface StatsFilter {
-  investor?: InvestorProfile;
+  investorProfile?: InvestorProfile;
   company?: Company;
 }
 
@@ -82,9 +82,8 @@ export class StatisticsService {
     connected: number;
     requested: number;
   }> {
-    const investor = { id: investorId } as InvestorProfile;
     return await this.getMatchMakingStatistics({
-      investor,
+      investorProfile: { id: investorId } as InvestorProfile,
     });
   }
   async getMatchMakingStatisticsPerCompany(companyId: number): Promise<{
