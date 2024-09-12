@@ -5,6 +5,14 @@ import { Repository } from 'typeorm';
 import { Role } from '../auth/role.enum';
 import { Matchmaking } from '../matchmaking/entities/matchmaking.entity';
 import { MatchStatus } from '../matchmaking/MatchStatus.enum';
+import { SpecialCriterion } from 'src/special-criteria/entities/special-criterion.entity';
+import { InvestorProfile } from '../investor-profile/entities/investor-profile.entity';
+import { Company } from '../company/entities/company.entity';
+
+interface StatsFilter {
+  investor?: InvestorProfile;
+  company?: Company;
+}
 
 @Injectable()
 export class StatisticsService {
@@ -13,6 +21,8 @@ export class StatisticsService {
     private readonly userRepository: Repository<User>,
     @InjectRepository(Matchmaking)
     private readonly matchMakingRepository: Repository<Matchmaking>,
+    @InjectRepository(SpecialCriterion)
+    private readonly specialCriteriaRepository: Repository<SpecialCriterion>,
   ) {}
 
   async getUserStatistics(): Promise<{ [key in Role]: number }> {
@@ -34,26 +44,28 @@ export class StatisticsService {
     return stats;
   }
 
-  async getMatchMakingStatistics(): Promise<{
+  async getMatchMakingStatistics(
+    filter: StatsFilter = {} as StatsFilter,
+  ): Promise<{
     interesting: number;
     declined: number;
     connected: number;
     requested: number;
   }> {
     const interesting = await this.matchMakingRepository.count({
-      where: { status: MatchStatus.INTERESTING },
+      where: { status: MatchStatus.INTERESTING, ...filter },
     });
 
     const declined = await this.matchMakingRepository.count({
-      where: { status: MatchStatus.DECLINED },
+      where: { status: MatchStatus.DECLINED, ...filter },
     });
 
     const connected = await this.matchMakingRepository.count({
-      where: { status: MatchStatus.CONNECTED },
+      where: { status: MatchStatus.CONNECTED, ...filter },
     });
 
     const requested = await this.matchMakingRepository.count({
-      where: { status: MatchStatus.REQUESTED },
+      where: { status: MatchStatus.REQUESTED, ...filter },
     });
 
     return {
@@ -70,40 +82,10 @@ export class StatisticsService {
     connected: number;
     requested: number;
   }> {
-    const interesting = await this.matchMakingRepository.count({
-      where: {
-        status: MatchStatus.INTERESTING,
-        investorProfile: { id: investorId },
-      },
+    const investor = { id: investorId } as InvestorProfile;
+    return await this.getMatchMakingStatistics({
+      investor,
     });
-
-    const declined = await this.matchMakingRepository.count({
-      where: {
-        status: MatchStatus.DECLINED,
-        investorProfile: { id: investorId },
-      },
-    });
-
-    const connected = await this.matchMakingRepository.count({
-      where: {
-        status: MatchStatus.CONNECTED,
-        investorProfile: { id: investorId },
-      },
-    });
-
-    const requested = await this.matchMakingRepository.count({
-      where: {
-        status: MatchStatus.REQUESTED,
-        investorProfile: { id: investorId },
-      },
-    });
-
-    return {
-      interesting,
-      declined,
-      connected,
-      requested,
-    };
   }
   async getMatchMakingStatisticsPerCompany(companyId: number): Promise<{
     interesting: number;
@@ -111,39 +93,28 @@ export class StatisticsService {
     connected: number;
     requested: number;
   }> {
-    const interesting = await this.matchMakingRepository.count({
+    return await this.getMatchMakingStatistics({
+      company: { id: companyId } as Company,
+    });
+  }
+
+  async getSpecialCriteriaStatistics(): Promise<{
+    criteria: number;
+  }> {
+    const criteria = await this.specialCriteriaRepository.count();
+
+    return { criteria };
+  }
+
+  async getSpecialCriteriaStatisticsInvestor(investorId: number): Promise<{
+    criteria: number;
+  }> {
+    const criteria = await this.specialCriteriaRepository.count({
       where: {
-        status: MatchStatus.INTERESTING,
-        company: { id: companyId },
+        investorProfile: { id: investorId },
       },
     });
 
-    const declined = await this.matchMakingRepository.count({
-      where: {
-        status: MatchStatus.DECLINED,
-        company: { id: companyId },
-      },
-    });
-
-    const connected = await this.matchMakingRepository.count({
-      where: {
-        status: MatchStatus.CONNECTED,
-        company: { id: companyId },
-      },
-    });
-
-    const requested = await this.matchMakingRepository.count({
-      where: {
-        status: MatchStatus.REQUESTED,
-        company: { id: companyId },
-      },
-    });
-
-    return {
-      interesting,
-      declined,
-      connected,
-      requested,
-    };
+    return { criteria };
   }
 }

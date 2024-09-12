@@ -160,6 +160,7 @@ export class SpecialCriteriaService {
     page: number = 1,
     limit: number = 10,
   ) {
+    // Find the special criteria with questions
     const specialCriteria = await this.specialCriteriaRepository.findOne({
       where: { id: specialCriteriaId },
       relations: ['questions'],
@@ -169,8 +170,10 @@ export class SpecialCriteriaService {
       throw new NotFoundException(`Special criteria with id ${specialCriteriaId} not found`);
     }
 
+    // Extract question IDs from the special criteria
     const questionIds = specialCriteria.questions.map(question => question.id);
-  
+
+    // Fetch submissions related to the questions
     const submissions = await this.submissionRepository.find({
       where: {
         question: { id: In(questionIds) }
@@ -178,10 +181,12 @@ export class SpecialCriteriaService {
       relations: ['user'],
     });
   
+    // Extract unique user IDs from submissions
     const userIds = [...new Set(submissions.map(submission => submission.user.id))];
   
     const skip = (page - 1) * limit;
   
+    // Fetch users with pagination
     const users = await this.userRepository.find({
       where: {
         id: In(userIds)
@@ -190,8 +195,10 @@ export class SpecialCriteriaService {
       take: limit,
     });
 
+    // Extract user IDs for fetching companies
     const userIdsForCompanies = users.map(user => user.id);
 
+    // Fetch companies associated with the users
     const companies = await this.companyRepository.find({
       where: {
         user: { id: In(userIdsForCompanies) }

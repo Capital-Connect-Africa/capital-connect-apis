@@ -19,9 +19,9 @@ Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
 ### Mark a company as interesting (investorProfileId/companyId)
-POST http://localhost:3000/matchmaking/interesting/2/2
+POST http://localhost:3000/matchmaking/interesting/3/4
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmaXJzdE5hbWUiOiJDaHJpcyIsImxhc3ROYW1lIjoiVGhpYWluZSIsInVzZXJuYW1lIjoianJkYW5kaWFiZWx0YTJAZ21haWwuY29tIiwic3ViIjoxMywicm9sZXMiOlsiaW52ZXN0b3IiXSwiaWF0IjoxNzI2MDAzMDQ5LCJleHAiOjE3MjYwODk0NDl9.SmqpAlPmH8xHygn_OVaLDfTWa0Xa-zwz1wyTGYzObTg
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmaXJzdE5hbWUiOm51bGwsImxhc3ROYW1lIjpudWxsLCJ1c2VybmFtZSI6ImpyZGFuZGlhYmV5dUBnbWFpbC5jb20iLCJzdWIiOjExLCJyb2xlcyI6WyJ1c2VyIl0sImlhdCI6MTcyNjA4MTkzNywiZXhwIjoxNzI2MTY4MzM3fQ.FeXXnmt3OP16PVYwiY4Fzo7k8bBJUJh4WWQ-RjlcPnc
 
 ### Mark a company as not interesting (investorProfileId/companyId)
 POST http://localhost:3000/matchmaking/decline/2/2

@@ -79,7 +79,10 @@ export class ConnectionRequestService {
     }
   }
 
-  async findAll( page: number = 1, limit: number = 10): Promise<ConnectionRequest[]> {
+  async findAll(
+    page: number = 1,
+    limit: number = 10,
+  ): Promise<ConnectionRequest[]> {
     return this.connectionRequestRepository.find({
       relations: ['investorProfile', 'company'],
       take: limit,
@@ -166,7 +169,7 @@ export class ConnectionRequestService {
   async findOne(id: number): Promise<ConnectionRequest> {
     const connectionRequest = await this.connectionRequestRepository.findOne({
       where: { id },
-      relations: ['investorProfile', 'company'],
+      relations: ['investorProfile', 'company', 'company.user'],
     });
 
     if (!connectionRequest) {

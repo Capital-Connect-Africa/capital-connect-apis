@@ -35,7 +35,10 @@ export class ConnectionRequestController {
   @Get()
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(Role.Admin)
-  async findAll(@Query('page') page: number, @Query('limit') limit: number): Promise<ConnectionRequest[]> {
+  async findAll(
+    @Query('page') page: number,
+    @Query('limit') limit: number,
+  ): Promise<ConnectionRequest[]> {
     return this.connectionRequestService.findAll(page, limit);
   }
 
@@ -44,8 +47,8 @@ export class ConnectionRequestController {
   @Roles(Role.Investor, Role.Admin)
   async findAllByInvestorProfileId(
     @Param('investorProfileId') investorProfileId: number,
-    @Query('page') page: number, 
-    @Query('limit') limit: number
+    @Query('page') page: number,
+    @Query('limit') limit: number,
   ): Promise<ConnectionRequest[]> {
     return this.connectionRequestService.findAllByInvestorProfileId(
       +investorProfileId,
@@ -59,10 +62,14 @@ export class ConnectionRequestController {
   @Roles(Role.User, Role.Admin)
   async findAllByCompanyId(
     @Param('companyId') companyId: number,
-    @Query('page') page: number, 
-    @Query('limit') limit: number
+    @Query('page') page: number,
+    @Query('limit') limit: number,
   ): Promise<ConnectionRequest[]> {
-    return this.connectionRequestService.findAllByCompanyId(+companyId, page, limit);
+    return this.connectionRequestService.findAllByCompanyId(
+      +companyId,
+      page,
+      limit,
+    );
   }
 
   @Put(':id/approve')
