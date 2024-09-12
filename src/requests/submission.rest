@@ -48,6 +48,10 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 GET http://localhost:3000/submissions/by-question/1?userId=2
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
+### Get Users who have done submissions by Question IDs
+GET http://localhost:3000/submissions/find-users?questionIds=1,3,4,15
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
 ### Get Submission by Question ID and User ID
 GET http://localhost:3000/submissions/by-question-ids?questionIds=1,2,3&userId=2
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9

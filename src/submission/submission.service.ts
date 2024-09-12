@@ -7,6 +7,7 @@ import { SubSection } from 'src/subsection/entities/subsection.entity';
 import { UpdateSubmissionDto } from './dto/update-submission.dto';
 import { SpecialCriteriaService } from "../special-criteria/special-criteria.service";
 import { Answer } from "../answer/entities/answer.entity";
+import { User } from 'src/users/entities/user.entity';
 
 @Injectable()
 export class SubmissionService {
@@ -17,6 +18,8 @@ export class SubmissionService {
     private questionsRepository: Repository<Question>,
     @InjectRepository(Answer)
     private answersRepository: Repository<Answer>,
+    @InjectRepository(User)
+    private userRepository: Repository<User>,
     @InjectRepository(SubSection)
     private subSectionsRepository: Repository<SubSection>,
     private readonly specialCriteriaService: SpecialCriteriaService,
@@ -114,6 +117,33 @@ export class SubmissionService {
         questionIds.includes(submission.question.id),
       ),
     );
+  }
+
+  async findUsersByQuestionIds(
+    questionIds: number[],
+    page: number = 1,
+    limit: number = 10
+  ): Promise<User[]> {
+    const submissions = await this.submissionRepository.find({
+      where: { question: { id: In(questionIds) } },
+      relations: ['user'],
+    });
+  
+    const userIds = Array.from(new Set(submissions.map(submission => submission.user.id)));
+  
+    const skip = (page - 1) * limit;
+    const take = limit;
+  
+    const users = await this.userRepository.find({
+      where: {
+        id: In(userIds),
+        roles: 'user',
+      },
+      skip,
+      take,
+    });
+  
+    return users;
   }
 
   async findOneByQuestionId(
