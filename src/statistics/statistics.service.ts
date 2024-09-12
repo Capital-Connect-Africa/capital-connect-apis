@@ -6,6 +6,13 @@ import { Role } from '../auth/role.enum';
 import { Matchmaking } from '../matchmaking/entities/matchmaking.entity';
 import { MatchStatus } from '../matchmaking/MatchStatus.enum';
 import { SpecialCriterion } from 'src/special-criteria/entities/special-criterion.entity';
+import { InvestorProfile } from '../investor-profile/entities/investor-profile.entity';
+import { Company } from '../company/entities/company.entity';
+
+interface StatsFilter {
+  investor?: InvestorProfile;
+  company?: Company;
+}
 
 @Injectable()
 export class StatisticsService {
@@ -37,7 +44,9 @@ export class StatisticsService {
     return stats;
   }
 
-  async getMatchMakingStatistics(filter: any = {}): Promise<{
+  async getMatchMakingStatistics(
+    filter: StatsFilter = {} as StatsFilter,
+  ): Promise<{
     interesting: number;
     declined: number;
     connected: number;
@@ -73,8 +82,9 @@ export class StatisticsService {
     connected: number;
     requested: number;
   }> {
+    const investor = { id: investorId } as InvestorProfile;
     return await this.getMatchMakingStatistics({
-      investor: {id: investorId}
+      investor,
     });
   }
   async getMatchMakingStatisticsPerCompany(companyId: number): Promise<{
@@ -84,7 +94,7 @@ export class StatisticsService {
     requested: number;
   }> {
     return await this.getMatchMakingStatistics({
-      company: {id: companyId}
+      company: { id: companyId } as Company,
     });
   }
 
@@ -92,19 +102,19 @@ export class StatisticsService {
     criteria: number;
   }> {
     const criteria = await this.specialCriteriaRepository.count();
-    
+
     return { criteria };
   }
-  
+
   async getSpecialCriteriaStatisticsInvestor(investorId: number): Promise<{
     criteria: number;
   }> {
     const criteria = await this.specialCriteriaRepository.count({
       where: {
-        investorProfile: {id: investorId}
-      }
+        investorProfile: { id: investorId },
+      },
     });
-    
+
     return { criteria };
-  }  
+  }
 }
