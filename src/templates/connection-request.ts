@@ -1,6 +1,7 @@
 export const connectionRequest = (
   contactPersonName: string,
   companyName: string,
+  uuid: string,
 ) => `
 
 <!DOCTYPE html>
@@ -57,7 +58,8 @@ export const connectionRequest = (
         <p>We wanted to inform you that an investor has expressed interest and requested a connection with ${companyName} through <a href="www.capitalconnect.africa">www.capitalconnect.africa</a>. They are keen to explore potential opportunities, including the possibility of investment.</p> 
         
         <p>This is an invitation for an exploratory discussion rather than a commitment. If you’re open to a follow-up conversation, please accept the request on our platform. </p>
-        
+        <a href="${process.env.FRONTEND_URL}/connection-requests/${uuid}/approve" class="button">Approve Connection Request</a>
+        <a href="${process.env.FRONTEND_URL}/connection-requests/${uuid}/decline" class="button">Decline Connection Request</a>
         <p>Feel free to reach out if you have any questions or need assistance.</p>
         
         <p>Best regards, <br> Capital Connect Team</p>

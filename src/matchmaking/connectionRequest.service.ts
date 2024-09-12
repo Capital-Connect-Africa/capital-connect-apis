@@ -74,7 +74,7 @@ export class ConnectionRequestService {
         investorProfile,
         company,
       });
-      await this.sendConnectionRequestEmail(company.id);
+      await this.sendConnectionRequestEmail(company.id, newRequest.uuid);
       return await this.connectionRequestRepository.save(newRequest);
     }
   }
@@ -253,7 +253,7 @@ export class ConnectionRequestService {
     await this.brevoService.sendEmailViaBrevo(msg, recipients);
   }
 
-  private async sendConnectionRequestEmail(id: number) {
+  private async sendConnectionRequestEmail(id: number, uuid: string) {
     const company = await this.companyRepository.findOne({
       where: { id },
       relations: ['user'],
@@ -267,6 +267,7 @@ export class ConnectionRequestService {
       html: connectionRequest(
         `${company.user.firstName} ${company.user.lastName}`,
         company.name,
+        uuid,
       ),
     };
     const recipients = [
