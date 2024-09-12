@@ -167,6 +167,20 @@ export class SubmissionController {
     );
   }
 
+  @Get('find-users')
+  async findUsersByQuestionIds(
+    @Query('questionIds') questionIds: string,
+    @Query('page') page: number,
+    @Query('limit') limit: number,
+  ): Promise<User[]> {
+    const questionIdsArray = questionIds.split(',').map(Number);
+    return this.submissionService.findUsersByQuestionIds(
+      questionIdsArray,
+      page,
+      limit,
+    );
+  }
+
   @Get('by-special-criteria/:specialCriteriaId')
   async getSubmissionsBySpecialCriteria(
     @Param('specialCriteriaId') specialCriteriaId: number,
