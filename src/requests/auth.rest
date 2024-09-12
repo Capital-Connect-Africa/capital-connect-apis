@@ -13,8 +13,8 @@ POST http://localhost:3000/auth/signup
 Content-Type: application/json
 
 {
-    "username": "jrdandiabe@gmail.com",
-    "password": "pass123",
+    "username": "jrdandiabeta2@gmail.com",
+    "password": "pass1234",
     "hasAcceptedTerms": true
 }
 

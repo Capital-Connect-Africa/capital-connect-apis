@@ -4,7 +4,7 @@ Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
 {
-  "userId": 13,
+  "userId": 12,
   "organizationName": "Investor Profile 1",
   "countriesOfInvestmentFocus": ["Kenya", "Uganda"],
   "headOfficeLocation": "Nairobi",
