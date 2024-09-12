@@ -83,3 +83,11 @@ GET http://localhost:3000/users/verify-email?token=2add75ad5928458cf5209
 POST http://localhost:3000/users/1/accept-terms
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 Content-Type: application/json
+
+### Delete user
+DELETE http://localhost:3000/users/13
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+### Delete user prod
+DELETE http://api.capitalconnect.africa/users/38
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9

@@ -66,11 +66,15 @@ export class Company {
   @Column()
   fullTimeBusiness: boolean;
 
-  @OneToOne(() => User)
+  @OneToOne(() => User, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn()
   user: User;
 
-  @OneToMany(() => ConnectionRequest, (connectionRequest) => connectionRequest.company)
+  @OneToMany(() => ConnectionRequest, (connectionRequest) => connectionRequest.company, {
+    onDelete: 'CASCADE',
+  })
   connectionRequests: ConnectionRequest[];
 
   @OneToOne(() => File)
