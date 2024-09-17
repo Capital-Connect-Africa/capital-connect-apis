@@ -50,56 +50,13 @@ export class StatisticsController {
   }
 
   @Get('businesses')
-  async getTotalBusinesses(){
-    return await this.statisticsService.getBusinessesStatistics();
-  }
-
-  @Get('businesses-stage')
-  async getBusinessesPerStage(@Query('stage') stage?: string) {
-    if(stage){
-      const businesses = await this.statisticsService.getBusinessesPerStage(stage);
-      return businesses;
-    } else{
-      const businesses = await this.statisticsService.getBusinessesStatistics();
-      return businesses;
-    }
-  }
-
-  @Get('businesses-country')
-  async getBusinessesPerCountry(@Query('country') country?: string) {
-    if (country) {
-      const businesses = await this.statisticsService.getBusinessesPerCountry(country);
-      return businesses;
-    } else {
-      const businesses = await this.statisticsService.getBusinessesStatistics();
-      return businesses;
-    }
-  }
-
-  @Get('businesses-sector')
-  async getBusinessesPerSector(@Query('sector') sector?: string) {
-    if (sector) {
-      const businesses = await this.statisticsService.getBusinessesPerSector(sector);
-      return businesses;
-    } else {
-      const businesses = await this.statisticsService.getBusinessesStatistics();
-      return businesses;
-    }
-  }
-
-  @Get('businesses-funds')
-  async getBusinessesPerFunds(@Query('funds') funds?: string) {
-    if (funds) {
-      const fundsNumber = parseFloat(funds);
-      if (isNaN(fundsNumber)) {
-        throw new BadRequestException('Invalid funds parameter');
-      }
-      const businesses = await this.statisticsService.getBusinessesPerFundsNeeded(fundsNumber);
-      return businesses;
-    } else {
-      const businesses = await this.statisticsService.getBusinessesStatistics();
-      return businesses;
-    }
+  async getBusinessesStatistics(
+    @Query('stage') stage?: string,
+    @Query('country') country?: string,
+    @Query('sector') sector?: string,
+    @Query('funds') funds?: number,
+  ): Promise<{ totalBusinesses: number }> {
+    return this.statisticsService.getBusinessesStatistics(stage, country, sector, funds);
   }
 
   @Get('investors')

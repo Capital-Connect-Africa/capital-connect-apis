@@ -45,19 +45,19 @@ GET http://localhost:3000/statistics/businesses
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
 ### Get Total number of businesses per stage.(Using search query.)
-GET http://localhost:3000/statistics/businesses-stage?stage=Mature
+GET http://localhost:3000/statistics/businesses?stage=Mature
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
 ### Get Total number of businesses per country.(Using search query)
-GET http://localhost:3000/statistics/businesses-country?country=Kenya
+GET http://localhost:3000/statistics/businesses?country=Kenya
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
 ### Get Total number of businesses per sector.(Using search query)
-GET http://localhost:3000/statistics/businesses-sector?sector=Healthcare
+GET http://localhost:3000/statistics/businesses?sector=Technology
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
 ### Get Total number of businesses per funds needed.(Using search query)
-GET http://localhost:3000/statistics/businesses-funds?funds=50000
+GET http://localhost:3000/statistics/businesses?funds=50000
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
 ### Get Total number of Investors registered
@@ -65,7 +65,7 @@ GET http://localhost:3000/statistics/investors
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
 ### Get Total number of Investors registered per sector.(Using search query)
-GET http://localhost:3000/statistics/investors-sector?sector=Technology
+GET http://localhost:3000/statistics/investors-sector?sector=Healthcare
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
 ### Get Total number of Investors registered per minimum funding.(Using search query)

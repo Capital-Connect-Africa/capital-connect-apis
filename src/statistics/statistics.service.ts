@@ -124,44 +124,36 @@ export class StatisticsService {
     return { criteria };
   }
 
-  async getBusinessesStatistics (): Promise<{totalBusinesses: number}>{
-    const stats = {
-      totalBusinesses: await this.companyRepository.count()
+  async getBusinessesStatistics(
+    stage?: string, 
+    country?: string, 
+    sector?: string, 
+    funds?: number
+  ): Promise<{ totalBusinesses: number }> {
+    const query: any = {};
+  
+    if (stage) {
+      query.growthStage = stage;
     }
-    return stats;
-  }
-
-  async getBusinessesPerStage(stage: string): Promise<{ totalBusinesses: number }> {
+  
+    if (country) {
+      query.country = country;
+    }
+  
+    if (sector) {
+      query.businessSector = sector;
+    }
+  
+    if (funds !== undefined) {
+      query.fundsNeeded = funds;
+    }
+  
     const totalBusinesses = await this.companyRepository.count({
-      where: { growthStage: stage },
+      where: query,
     });
   
     return { totalBusinesses };
-  } 
-  
-  async getBusinessesPerCountry(country: string): Promise<{ totalBusinesses: number }> {
-    const totalBusinesses = await this.companyRepository.count({
-      where: { country: country },
-    });
-  
-    return { totalBusinesses };
-  } 
-  
-  async getBusinessesPerSector(sector: string): Promise<{ totalBusinesses: number }> {
-    const totalBusinesses = await this.companyRepository.count({
-      where: { businessSector: sector },
-    });
-  
-    return { totalBusinesses };
-  }
-
-  async getBusinessesPerFundsNeeded(funds: number): Promise<{ totalBusinesses: number }> {
-    const totalBusinesses = await this.companyRepository.count({
-      where: { fundsNeeded: funds },
-    });
-  
-    return { totalBusinesses };
-  }
+  }  
 /*
   async getBusinessesPerFundRaise(): Promise<{ 
     Idea: number; 
@@ -174,7 +166,7 @@ export class StatisticsService {
       Idea,
    };
   } */
-   async getInvestorsStatistics (): Promise<{totalInvestors: number}>{
+  async getInvestorsStatistics (): Promise<{totalInvestors: number}>{
     const stats = {
       totalInvestors: await this.investorProfileRepository.count()
     }
