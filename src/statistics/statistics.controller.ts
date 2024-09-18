@@ -1,4 +1,4 @@
-import { Controller, Get, NotFoundException, Param, Query, UseGuards } from '@nestjs/common';
+import { BadRequestException, Controller, Get, NotFoundException, Param, Query, UseGuards } from '@nestjs/common';
 import { StatisticsService } from './statistics.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { Roles } from '../auth/roles.decorator';
@@ -47,5 +47,72 @@ export class StatisticsController {
   ) {
     const statistics = await this.statisticsService.getSpecialCriteriaStatisticsInvestor(id);
     return statistics;  
+  }
+
+  @Get('businesses')
+  async getBusinessesStatistics(
+    @Query('stage') stage?: string,
+    @Query('country') country?: string,
+    @Query('sector') sector?: string,
+    @Query('funds') funds?: number,
+  ): Promise<{ totalBusinesses: number }> {
+    return this.statisticsService.getBusinessesStatistics(stage, country, sector, funds);
+  }
+
+  @Get('investors')
+  async getTotalInvestors(){
+    return await this.statisticsService.getInvestorsStatistics();
+  }
+
+  @Get('investors-sector')
+  async getInvestorsPerSector(@Query('sector') sector?: string) {
+    if (sector) {
+      const businesses = await this.statisticsService.getInvestorsPerSector(sector);
+      return businesses;
+    } else {
+      const businesses = await this.statisticsService.getInvestorsStatistics();
+      return businesses;
+    }
+  }
+
+  @Get('investors-minfunds')
+  async getInvestorsPerMinFunds(@Query('minFunds') minFunds?: string) {
+    if (minFunds) {
+      const fundsNumber = parseFloat(minFunds);
+      if (isNaN(fundsNumber)) {
+        throw new BadRequestException('Invalid funds parameter');
+      }
+      const businesses = await this.statisticsService.getInvestorsPerMinimumFunding(fundsNumber);
+      return businesses;
+    } else {
+      const businesses = await this.statisticsService.getInvestorsStatistics();
+      return businesses;
+    }
+  }
+
+  @Get('investors-maxfunds')
+  async getInvestorsPerMaxFunds(@Query('maxFunds') maxFunds?: string) {
+    if (maxFunds) {
+      const fundsNumber = parseFloat(maxFunds);
+      if (isNaN(fundsNumber)) {
+        throw new BadRequestException('Invalid funds parameter');
+      }
+      const businesses = await this.statisticsService.getInvestorsPerMaximumFunding(fundsNumber);
+      return businesses;
+    } else {
+      const businesses = await this.statisticsService.getInvestorsStatistics();
+      return businesses;
+    }
+  }
+
+  @Get('investors-funding')
+  async getInvestorsPerFunding(@Query('fundType') fundType?: string) {
+    if (fundType) {
+      const businesses = await this.statisticsService.getInvestorsPerFundingType(fundType);
+      return businesses;
+    } else {
+      const businesses = await this.statisticsService.getInvestorsStatistics();
+      return businesses;
+    }
   }
 }

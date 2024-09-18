@@ -21,7 +21,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
 ### Get matchmaking statistics per investor/company (investorId/companyId)
 GET https://capitalconnect-0060e0fb0eb4.herokuapp.com/statistics/matchmaking/35?role=investor
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmaXJzdE5hbWUiOiJJYW4iLCJsYXN0TmFtZSI6IkdhdHVtYSIsInVzZXJuYW1lIjoiZ2F0dW1haWFuQGdtYWlsLmNvbSIsInN1YiI6NDY0LCJyb2xlcyI6WyJhZG1pbiJdLCJpYXQiOjE3MjY1NTg2NjAsImV4cCI6MTcyNjY0NTA2MH0.UZabtABdVzeDfjfiPb-tmFB0annfjK_J9tiAUr-nOI8
 
 ### Get special criteria statistics
 GET http://localhost:3000/statistics/special-criteria
@@ -38,4 +38,44 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
 ### Get special criteria statistics per investor (investorId) prod
 GET https://capitalconnect-0060e0fb0eb4.herokuapp.com/statistics/special-criteria/1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+### Get Total number of businesses registered.
+GET http://localhost:3000/statistics/businesses
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+### Get Total number of businesses per stage.(Using search query.)
+GET http://localhost:3000/statistics/businesses?stage=Mature
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+### Get Total number of businesses per country.(Using search query)
+GET http://localhost:3000/statistics/businesses?country=Kenya
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+### Get Total number of businesses per sector.(Using search query)
+GET http://localhost:3000/statistics/businesses?sector=Technology
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+### Get Total number of businesses per funds needed.(Using search query)
+GET http://localhost:3000/statistics/businesses?funds=50000
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+### Get Total number of Investors registered
+GET http://localhost:3000/statistics/investors
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+### Get Total number of Investors registered per sector.(Using search query)
+GET http://localhost:3000/statistics/investors-sector?sector=Healthcare
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+### Get Total number of Investors registered per minimum funding.(Using search query)
+GET http://localhost:3000/statistics/investors-minfunds?minFunds=1000000
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+### Get Total number of Investors registered per maximum funding.(Using search query)
+GET http://localhost:3000/statistics/investors-maxfunds?maxFunds=1000000000
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+### Get Total number of Investors registered per different funding vehicles.(Using search query)
+GET http://localhost:3000/statistics/investors-funding?fundType=Debt
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9

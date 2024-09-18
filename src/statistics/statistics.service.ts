@@ -8,6 +8,7 @@ import { MatchStatus } from '../matchmaking/MatchStatus.enum';
 import { SpecialCriterion } from 'src/special-criteria/entities/special-criterion.entity';
 import { InvestorProfile } from '../investor-profile/entities/investor-profile.entity';
 import { Company } from '../company/entities/company.entity';
+import { Sector } from 'src/sector/entities/sector.entity';
 
 interface StatsFilter {
   investorProfile?: InvestorProfile;
@@ -23,6 +24,12 @@ export class StatisticsService {
     private readonly matchMakingRepository: Repository<Matchmaking>,
     @InjectRepository(SpecialCriterion)
     private readonly specialCriteriaRepository: Repository<SpecialCriterion>,
+    @InjectRepository(Company)
+    private readonly companyRepository: Repository<Company>,
+    @InjectRepository(InvestorProfile)
+    private readonly investorProfileRepository: Repository<InvestorProfile>,
+    @InjectRepository(Sector)
+    private readonly sectorRepository: Repository<Sector>,
   ) {}
 
   async getUserStatistics(): Promise<{ [key in Role]: number }> {
@@ -115,5 +122,93 @@ export class StatisticsService {
     });
 
     return { criteria };
+  }
+
+  async getBusinessesStatistics(
+    stage?: string, 
+    country?: string, 
+    sector?: string, 
+    funds?: number
+  ): Promise<{ totalBusinesses: number }> {
+    const query: any = {};
+  
+    if (stage) {
+      query.growthStage = stage;
+    }
+  
+    if (country) {
+      query.country = country;
+    }
+  
+    if (sector) {
+      query.businessSector = sector;
+    }
+  
+    if (funds !== undefined) {
+      query.fundsNeeded = funds;
+    }
+  
+    const totalBusinesses = await this.companyRepository.count({
+      where: query,
+    });
+  
+    return { totalBusinesses };
+  }  
+/*
+  async getBusinessesPerFundRaise(): Promise<{ 
+    Idea: number; 
+  }> {
+    const Idea = await this.companyRepository.count({
+      where: { fund: 'Idea' },
+    });
+  
+    return { 
+      Idea,
+   };
+  } */
+  async getInvestorsStatistics (): Promise<{totalInvestors: number}>{
+    const stats = {
+      totalInvestors: await this.investorProfileRepository.count()
+    }
+    return stats;
+  }
+
+  async getInvestorsPerSector(sectorName: string): Promise<{ totalInvestors: number }> {
+    const sector = await this.sectorRepository.findOne({
+        where: { name: sectorName },
+    });
+
+    if (!sector) {
+        return { totalInvestors: 0 };
+    }
+    const totalInvestors = await this.investorProfileRepository.count({
+        where: { sectors: sector },
+    });
+
+    return { totalInvestors };
+  }
+
+  async getInvestorsPerMinimumFunding(minFunds: number): Promise<{ totalInvestors: number }> {
+    const totalInvestors = await this.investorProfileRepository.count({
+      where: { minimumFunding: minFunds },
+    });
+  
+    return { totalInvestors };
+  }
+
+  async getInvestorsPerMaximumFunding(maxFunds: number): Promise<{ totalInvestors: number }> {
+    const totalInvestors = await this.investorProfileRepository.count({
+      where: { maximumFunding: maxFunds },
+    });
+  
+    return { totalInvestors };
+  }
+
+  async getInvestorsPerFundingType(fundType: string): Promise<{ totalInvestors: number }> {
+    const totalInvestors = await this.investorProfileRepository.count({
+      where: { differentFundingVehicles: fundType },
+    });
+  
+    return { totalInvestors };
   }
 }
