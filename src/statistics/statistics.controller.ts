@@ -59,6 +59,11 @@ export class StatisticsController {
     return await this.statisticsService.getBusinessesPerStage();
   }
 
+  @Get('businesses-fund')
+  async getBusinessesPerFunds() {
+    return await this.statisticsService.getBusinessesPerFundRaise();
+  }
+
   @Get('businesses-country')
   async getBusinessesPerCountry() {
     return await this.statisticsService.getCompaniesPerCountry();

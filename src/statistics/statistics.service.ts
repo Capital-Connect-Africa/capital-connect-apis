@@ -12,6 +12,7 @@ import { Sector } from 'src/sector/entities/sector.entity';
 import { UseOfFunds } from 'src/use-of-funds/entities/use-of-funds.entity';
 import { Stage } from 'src/stage/entities/stage.entity';
 import { Country } from 'src/country/entities/country.entity';
+import { fundBands } from './stats.type';
 
 interface StatsFilter {
   investorProfile?: InvestorProfile;
@@ -177,18 +178,51 @@ export class StatisticsService {
     return result;
 }
 
-/*
   async getBusinessesPerFundRaise(): Promise<{ 
-    Idea: number; 
+    Seed: number;
+    PreSeries: number;
+    SeriesA: number;
+    SeriesB: number;
+    SeriesC: number;
+    GrowthStage: number;
+    LateGrowthStage: number;
+    ExpansionStage: number;
   }> {
-    const Idea = await this.companyRepository.count({
-      where: { fund: 'Idea' },
+    const Seed = await this.companyRepository.count({
+      where: { fundsNeeded: Between(fundBands.Seed[0], fundBands.Seed[1]) },
     });
-  
-    return { 
-      Idea,
-   };
-  } */
+
+    const PreSeries = await this.companyRepository.count({
+      where: { fundsNeeded: Between(fundBands.PreSeries[0], fundBands.PreSeries[1]) },
+    });
+
+    const SeriesA = await this.companyRepository.count({
+      where: { fundsNeeded: Between(fundBands.SeriesA[0], fundBands.SeriesA[1]) },
+    });
+
+    const SeriesB = await this.companyRepository.count({
+      where: { fundsNeeded: Between(fundBands.SeriesB[0], fundBands.SeriesB[1]) },
+    });
+
+    const SeriesC = await this.companyRepository.count({
+      where: { fundsNeeded: Between(fundBands.SeriesC[0], fundBands.SeriesC[1]) },
+    });
+
+    const GrowthStage = await this.companyRepository.count({
+      where: { fundsNeeded: Between(fundBands.GrowthStage[0], fundBands.GrowthStage[1]) },
+    });
+
+    const LateGrowthStage = await this.companyRepository.count({
+      where: { fundsNeeded: Between(fundBands.LateGrowthStage[0], fundBands.LateGrowthStage[1]) },
+    });
+
+    const ExpansionStage = await this.companyRepository.count({
+      where: { fundsNeeded: MoreThan(fundBands.ExpansionStage[0]) },
+    });
+
+    return { Seed, PreSeries, SeriesA, SeriesB, SeriesC, GrowthStage, LateGrowthStage, ExpansionStage };
+  }
+
 
   async getInvestorsStatistics (): Promise<{totalInvestors: number}>{
     const stats = {
@@ -223,37 +257,58 @@ export class StatisticsService {
   }
 
   async getInvestorsPerFunding(fundingType: 'minimumFunding' | 'maximumFunding'): Promise<{
-    low: number;
-    mid: number;
-    upper: number;
-    top: number;
+    seed: number;
+    preSeries: number;
+    seriesA: number;
+    seriesB: number;
+    seriesC: number;
+    growthStage: number;
+    lateGrowthStage: number;
+    expansionStage: number;
   }> {
-    const low = await this.investorProfileRepository.count({
+    const seed = await this.investorProfileRepository.count({
       where: {
-        [fundingType]: LessThan(10001),
-      },
+        [fundingType]: Between(fundBands.Seed[0], fundBands.Seed[1]) },
     });
-
-    const mid = await this.investorProfileRepository.count({
+  
+    const preSeries = await this.investorProfileRepository.count({
       where: {
-        [fundingType]: Between(10001, 100000),
-      },
+        [fundingType]: Between(fundBands.PreSeries[0], fundBands.PreSeries[1]) },
     });
-
-    const upper = await this.investorProfileRepository.count({
+  
+    const seriesA = await this.investorProfileRepository.count({
       where: {
-        [fundingType]: Between(100001, 10000000),
-      },
+        [fundingType]: Between(fundBands.SeriesA[0], fundBands.SeriesA[1]) },
     });
-
-    const top = await this.investorProfileRepository.count({
+  
+    const seriesB = await this.investorProfileRepository.count({
       where: {
-        [fundingType]: MoreThan(10000001),
-      },
+        [fundingType]: Between(fundBands.SeriesB[0], fundBands.SeriesB[1]) },
     });
-
-    return { low, mid, upper, top };
+  
+    const seriesC = await this.investorProfileRepository.count({
+      where: {
+        [fundingType]: Between(fundBands.SeriesC[0], fundBands.SeriesC[1]) },
+    });
+  
+    const growthStage = await this.investorProfileRepository.count({
+      where: {
+        [fundingType]: Between(fundBands.GrowthStage[0], fundBands.GrowthStage[1]) },
+    });
+  
+    const lateGrowthStage = await this.investorProfileRepository.count({
+      where: {
+        [fundingType]: Between(fundBands.LateGrowthStage[0], fundBands.LateGrowthStage[1]) },
+    });
+  
+    const expansionStage = await this.investorProfileRepository.count({
+      where: {
+        [fundingType]: MoreThan(fundBands.ExpansionStage[0]) },
+    });
+  
+    return { seed, preSeries, seriesA, seriesB, seriesC, growthStage, lateGrowthStage, expansionStage };
   }
+  
 
   async getInvestorsAndCompaniesByFunding(): Promise<{ [fundingType: string]: { investors: number; companies: number } }> {
     const useOfFunds = await this.useOfFundsRepository.find();

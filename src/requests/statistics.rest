@@ -48,6 +48,10 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 GET http://localhost:3000/statistics/businesses-stage
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
+### Get Total number of businesses per fund raise.
+GET http://localhost:3000/statistics/businesses-fund
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
 ### Get Total number of businesses per country.
 GET http://localhost:3000/statistics/businesses-country
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
@@ -61,7 +65,7 @@ GET http://localhost:3000/statistics/sectors-stats
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
 ### Get number of Investors by minimum or maximum funding.(minimumFunding / maximumFunding)
-GET http://localhost:3000/statistics/investors-funds?type=minimumFunding
+GET http://localhost:3000/statistics/investors-funds?type=maximumFunding
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
 ### Get Total number of Investors and companies by use of funds.
