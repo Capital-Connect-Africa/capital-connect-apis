@@ -50,13 +50,18 @@ export class StatisticsController {
   }
 
   @Get('businesses')
-  async getBusinessesStatistics(
-    @Query('stage') stage?: string,
-    @Query('country') country?: string,
-    @Query('sector') sector?: string,
-    @Query('funds') funds?: number,
-  ): Promise<{ totalBusinesses: number }> {
-    return this.statisticsService.getBusinessesStatistics(stage, country, sector, funds);
+  async getTotalBusinesses(){
+    return await this.statisticsService.getBusinessesStatistics();
+  }
+
+  @Get('businesses-stage')
+  async getBusinessesPerStage() {
+    return await this.statisticsService.getBusinessesPerStage();
+  }
+
+  @Get('businesses-country')
+  async getBusinessesPerCountry() {
+    return await this.statisticsService.getCompaniesPerCountry();
   }
 
   @Get('investors')
@@ -64,55 +69,24 @@ export class StatisticsController {
     return await this.statisticsService.getInvestorsStatistics();
   }
 
-  @Get('investors-sector')
-  async getInvestorsPerSector(@Query('sector') sector?: string) {
-    if (sector) {
-      const businesses = await this.statisticsService.getInvestorsPerSector(sector);
-      return businesses;
-    } else {
-      const businesses = await this.statisticsService.getInvestorsStatistics();
-      return businesses;
-    }
+  @Get('sectors-stats')
+  async getStatsPerSector() {
+    return await this.statisticsService.getInvestorsAndCompaniesPerSector();
   }
 
-  @Get('investors-minfunds')
-  async getInvestorsPerMinFunds(@Query('minFunds') minFunds?: string) {
-    if (minFunds) {
-      const fundsNumber = parseFloat(minFunds);
-      if (isNaN(fundsNumber)) {
-        throw new BadRequestException('Invalid funds parameter');
-      }
-      const businesses = await this.statisticsService.getInvestorsPerMinimumFunding(fundsNumber);
-      return businesses;
-    } else {
-      const businesses = await this.statisticsService.getInvestorsStatistics();
-      return businesses;
-    }
+  @Get('funding-stats')
+  async getStatsByFunding() {
+    return await this.statisticsService.getInvestorsAndCompaniesByFunding();
   }
 
-  @Get('investors-maxfunds')
-  async getInvestorsPerMaxFunds(@Query('maxFunds') maxFunds?: string) {
-    if (maxFunds) {
-      const fundsNumber = parseFloat(maxFunds);
-      if (isNaN(fundsNumber)) {
-        throw new BadRequestException('Invalid funds parameter');
-      }
-      const businesses = await this.statisticsService.getInvestorsPerMaximumFunding(fundsNumber);
-      return businesses;
-    } else {
-      const businesses = await this.statisticsService.getInvestorsStatistics();
-      return businesses;
+  @Get('investors-funds')
+  async getInvestorsPerFunding(
+    @Query('type') type: 'minimumFunding' | 'maximumFunding'
+  ) {
+    if (type !== 'minimumFunding' && type !== 'maximumFunding') {
+      throw new Error('Invalid funding type. Must be "minimumFunding" or "maximumFunding".');
     }
-  }
 
-  @Get('investors-funding')
-  async getInvestorsPerFunding(@Query('fundType') fundType?: string) {
-    if (fundType) {
-      const businesses = await this.statisticsService.getInvestorsPerFundingType(fundType);
-      return businesses;
-    } else {
-      const businesses = await this.statisticsService.getInvestorsStatistics();
-      return businesses;
-    }
+    return this.statisticsService.getInvestorsPerFunding(type);
   }
 }
