@@ -26,14 +26,14 @@ export class UsersService {
   async findOne(id: number): Promise<User | undefined> {
     return this.usersRepository.findOne({
       where: { id },
-      relations: ['mobileNumbers'],
+      relations: ['mobileNumbers', 'subscriptionTier'],
     });
   }
 
   async findByUsername(username: string): Promise<User | undefined> {
     return this.usersRepository.findOne({
       where: { username: username.toLowerCase() },
-      relations: ['mobileNumbers'],
+      relations: ['mobileNumbers', 'subscriptionTier'],
     });
   }
 
@@ -54,7 +54,7 @@ export class UsersService {
   }
 
   async findAll(): Promise<User[]> {
-    return this.usersRepository.find({ relations: ['mobileNumbers'] });
+    return this.usersRepository.find({ relations: ['mobileNumbers', 'subscriptionTier'] });
   }
 
   async update(id: number, updateUserDto: Partial<User>): Promise<User> {

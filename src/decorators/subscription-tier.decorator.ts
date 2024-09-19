@@ -1,5 +1,5 @@
 import { SetMetadata } from '@nestjs/common';
-import { SubscriptionTier } from '../subscription/subscription-tier.enum';
+import { SubscriptionTierEnum } from '../subscription/subscription-tier.enum';
 
-export const SubscriptionTierRequired = (tier: SubscriptionTier) =>
+export const SubscriptionTierRequired = (tier: SubscriptionTierEnum) =>
   SetMetadata('subscriptionTier', tier);

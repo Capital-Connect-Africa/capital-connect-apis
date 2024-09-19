@@ -1,0 +1,7 @@
+### Assign Subscription to a User (userId, subscriptionId)
+POST http://localhost:3000/subscription/19/2
+Content-Type: application/json
+
+### Validate User Subscription (userId)
+GET http://localhost:3000/subscription/validate/4
+Content-Type: application/json

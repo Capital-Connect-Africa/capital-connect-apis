@@ -2,7 +2,7 @@
 # Profile
 
 GET http://localhost:3000/users/profile
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmaXJzdE5hbWUiOiJNa3V1IiwibGFzdE5hbWUiOm51bGwsInVzZXJuYW1lIjoidGVzdEBnbWFpbC5jb20iLCJzdWIiOjE5LCJyb2xlcyI6WyJ1c2VyIl0sImhhc0FjY2VwdGVkVGVybXMiOnRydWUsInN1YnNjcmlwdGlvblRpZXIiOiJiYXNpYyIsImlhdCI6MTcyNjc2NzEwMiwiZXhwIjoxNzI2ODUzNTAyfQ.oZrQUWmEtEqA7MWpH76psWV7DfWy9SdWEYEU9gf_c8c
 
 ###
 # Get user by id

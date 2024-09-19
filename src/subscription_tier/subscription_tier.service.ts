@@ -1,15 +1,18 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { SubscriptionTierEntity } from './entities/subscription_tier.entity';
+import { SubscriptionTier } from './entities/subscription_tier.entity';
 import { CreateSubscriptionTierDto } from './dto/create-subscription_tier.dto';
 import { UpdateSubscriptionTierDto } from './dto/update-subscription_tier.dto';
+import { User } from "../users/entities/user.entity";
 
 @Injectable()
 export class SubscriptionTierService {
   constructor(
-    @InjectRepository(SubscriptionTierEntity)
-    private subscriptionTierRepository: Repository<SubscriptionTierEntity>,
+    @InjectRepository(SubscriptionTier)
+    private subscriptionTierRepository: Repository<SubscriptionTier>,
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
   ) {}
 
   create(createSubscriptionTierDto: CreateSubscriptionTierDto) {

@@ -8,7 +8,7 @@ import * as sgMail from '@sendgrid/mail';
 import { randomBytes } from 'crypto';
 import { addHours } from 'date-fns';
 import { welcomeEmailTemplate } from '../templates/welcome-reset';
-import { SubscriptionTier } from "../subscription/subscription-tier.enum";
+import { SubscriptionTierEnum } from "../subscription/subscription-tier.enum";
 const brevo = require('@getbrevo/brevo');
 
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
@@ -50,7 +50,7 @@ export class AuthService {
         sub: user.id,
         roles: userRoles || [Role.User],
         hasAcceptedTerms: user.hasAcceptedTerms,
-        subscriptionTier: SubscriptionTier.BASIC,
+        subscriptionTier: user.subscriptionTier?.name || SubscriptionTierEnum.BASIC,
       };
 
       const token = this.jwtService.sign(payload);

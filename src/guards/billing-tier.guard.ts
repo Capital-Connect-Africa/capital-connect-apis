@@ -5,7 +5,7 @@ import {
   ForbiddenException,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { SubscriptionTier } from '../subscription/subscription-tier.enum';
+import { SubscriptionTierEnum } from '../subscription/subscription-tier.enum';
 import { Observable } from 'rxjs';
 
 @Injectable()
@@ -15,7 +15,7 @@ export class BillingTierGuard implements CanActivate {
   canActivate(
     context: ExecutionContext,
   ): boolean | Promise<boolean> | Observable<boolean> {
-    const requiredTier = this.reflector.get<SubscriptionTier>(
+    const requiredTier = this.reflector.get<SubscriptionTierEnum>(
       'subscriptionTier',
       context.getHandler(),
     );
@@ -31,14 +31,14 @@ export class BillingTierGuard implements CanActivate {
       throw new ForbiddenException('Subscription tier is missing.');
     }
 
-    const userTier = user.subscriptionTier as SubscriptionTier;
+    const userTier = user.subscriptionTier as SubscriptionTierEnum;
 
     // You might want to define an order of precedence to compare tiers
     const tierOrder = [
-      SubscriptionTier.BASIC,
-      SubscriptionTier.PLUS,
-      SubscriptionTier.PRO,
-      SubscriptionTier.ELITE,
+      SubscriptionTierEnum.BASIC,
+      SubscriptionTierEnum.PLUS,
+      SubscriptionTierEnum.PRO,
+      SubscriptionTierEnum.ELITE,
     ];
 
     const userTierIndex = tierOrder.indexOf(userTier);

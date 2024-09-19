@@ -1,7 +1,8 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from "typeorm";
+import { User } from "../../users/entities/user.entity";
 
 @Entity('subscription_tiers')
-export class SubscriptionTierEntity {
+export class SubscriptionTier {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -16,4 +17,7 @@ export class SubscriptionTierEntity {
 
   @Column({ type: 'boolean', default: true })
   isActive: boolean;
+
+  @OneToMany(() => User, (user) => user.subscriptionTier)
+  users: User[];
 }

@@ -5,8 +5,8 @@ import {
   Body,
   Patch,
   Param,
-  Delete,
-} from '@nestjs/common';
+  Delete, ParseIntPipe
+} from "@nestjs/common";
 import { SubscriptionTierService } from './subscription_tier.service';
 import { CreateSubscriptionTierDto } from './dto/create-subscription_tier.dto';
 import { UpdateSubscriptionTierDto } from './dto/update-subscription_tier.dto';
