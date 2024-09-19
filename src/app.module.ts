@@ -36,6 +36,7 @@ import { RegistrationStructuresModule } from './registration-structures/registra
 import { InvestorTypesModule } from './investor-types/investor-types.module';
 import { StatisticsModule } from './statistics/statistics.module';
 import { SpecialCriteriaModule } from './special-criteria/special-criteria.module';
+import { SubscriptionTierModule } from './subscription_tier/subscription_tier.module';
 
 @Module({
   imports: [
@@ -78,6 +79,7 @@ import { SpecialCriteriaModule } from './special-criteria/special-criteria.modul
     InvestorTypesModule,
     StatisticsModule,
     SpecialCriteriaModule,
+    SubscriptionTierModule,
   ],
   providers: [
     AppService,

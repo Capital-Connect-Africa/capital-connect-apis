@@ -1,0 +1,27 @@
+### Create a new subscription tier
+POST http://localhost:3000/subscription-tiers
+Content-Type: application/json
+
+{
+  "name": "Basic",
+  "description": "Access to premium features",
+  "price": 9.99,
+  "isActive": true
+}
+
+### Get all subscription tiers
+GET http://localhost:3000/subscription-tiers
+
+### Get a single subscription tier
+GET http://localhost:3000/subscription-tiers/1
+
+### Update a subscription tier
+PATCH http://localhost:3000/subscription-tiers/1
+Content-Type: application/json
+
+{
+  "price": 59.98
+}
+
+### Delete a subscription tier
+DELETE http://localhost:3000/subscription-tiers/1
