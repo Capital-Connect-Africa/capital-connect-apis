@@ -24,8 +24,7 @@ export class BillingTierGuard implements CanActivate {
       return true; // If no tier is required, allow access
     }
 
-    const request = context.switchToHttp().getRequest();
-    const user = request.user;
+    const { user } = context.switchToHttp().getRequest();
 
     // Assuming the user's subscription tier is stored in the user object
     if (!user || !user.subscriptionTier) {
