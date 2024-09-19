@@ -77,7 +77,7 @@ Content-Type: application/json
 ###
 # Verify email
 
-GET http://localhost:3000/users/verify-email?token=2add75ad5928458cf5209
+GET http://localhost:3000/users/verify-email?token=7b381172e429cb6d024d5f4cdac7efa065b3c3a9e9c47eeeef95a6fb291b7565
 
 ### Accept terms and conditions for a user
 POST http://localhost:3000/users/1/accept-terms

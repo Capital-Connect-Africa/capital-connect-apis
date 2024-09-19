@@ -48,24 +48,16 @@ export class AuthService {
         username: user.username,
         sub: user.id,
         roles: userRoles || [Role.User],
+        hasAcceptedTerms: user.hasAcceptedTerms,
       };
 
       const token = this.jwtService.sign(payload);
 
-      // Check if the user has accepted the terms
-      if (!user.hasAcceptedTerms) {
-        return {
-          access_token: token,
-          message: 'You have successfully logged in, but you need to accept the terms and conditions.',
-          requiresTermsAcceptance: true,
-        };
-      }
-  
       return {
         access_token: token,
       };
     }
-  
+
     throw new BadRequestException('Invalid username or password');
   }
 
@@ -89,7 +81,9 @@ export class AuthService {
     }
     // Check if user has accepted terms
     if (!user.hasAcceptedTerms) {
-      throw new BadRequestException('You must accept the terms and conditions before signing up.');
+      throw new BadRequestException(
+        'You must accept the terms and conditions before signing up.',
+      );
     }
 
     user.emailVerificationToken = randomBytes(32).toString('hex');

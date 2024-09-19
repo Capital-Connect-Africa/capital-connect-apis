@@ -18,8 +18,7 @@ Content-Type: application/json
     "hasAcceptedTerms": true
 }
 
-#####
-# Sign up prod
+### Sign up prod
 POST https://capitalconnect-0060e0fb0eb4.herokuapp.com/auth/signup
 Content-Type: application/json
 
@@ -28,25 +27,24 @@ Content-Type: application/json
     "password": "pass123"
 }
 
-#####
-# Login
+### Login
 POST  http://localhost:3000/auth/login
 Content-Type: application/json
 
 {
-    "username": "k@gmail.com",
-    "password": "password"
+    "username": "test@gmail.com",
+    "password": "pass1234"
 }
 
-#####
-# Sign up with name
+### Sign up with name
 POST http://localhost:3000/auth/signup
 Content-Type: application/json
 
 {
-    "username": "Absalom",
-    "password": "pass123",
-    "firstName": "Mkuu"
+    "username": "test@gmail.com",
+    "password": "pass1234",
+    "firstName": "Mkuu",
+    "hasAcceptedTerms": true
 }
 
 ### Login
@@ -76,8 +74,8 @@ POST https://capitalconnect-0060e0fb0eb4.herokuapp.com/auth/login
 Content-Type: application/json
 
 {
-   "username": "vic@gmail.com",
-    "password": "pass12"
+   "username": "vickyjr88@gmail.com",
+    "password": "kanyambude#KE02"
 }
 
 ###
