@@ -8,9 +8,14 @@ import { SpecialCriterion } from 'src/special-criteria/entities/special-criterio
 import { Company } from 'src/company/entities/company.entity';
 import { InvestorProfile } from 'src/investor-profile/entities/investor-profile.entity';
 import { Sector } from 'src/sector/entities/sector.entity';
+import { UseOfFunds } from 'src/use-of-funds/entities/use-of-funds.entity';
+import { Stage } from 'src/stage/entities/stage.entity';
+import { Country } from 'src/country/entities/country.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User, Matchmaking, SpecialCriterion, Company, InvestorProfile, Sector])],
+  imports: [TypeOrmModule.forFeature([
+    User, Matchmaking, SpecialCriterion, Company, InvestorProfile, Sector, UseOfFunds, Stage, Country,
+  ])],
   providers: [StatisticsService],
   controllers: [StatisticsController],
 })
