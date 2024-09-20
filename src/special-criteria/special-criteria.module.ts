@@ -9,6 +9,7 @@ import { Matchmaking } from '../matchmaking/entities/matchmaking.entity';
 import { Submission } from 'src/submission/entities/submission.entity';
 import { User } from 'src/users/entities/user.entity';
 import { Company } from 'src/company/entities/company.entity';
+import { Answer } from 'src/answer/entities/answer.entity';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { Company } from 'src/company/entities/company.entity';
       Submission,
       User,
       Company,
+      Answer,
     ]),
   ],
   controllers: [SpecialCriteriaController],
