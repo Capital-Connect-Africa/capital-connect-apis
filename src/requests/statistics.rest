@@ -44,38 +44,30 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 GET http://localhost:3000/statistics/businesses
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
-### Get Total number of businesses per stage.(Using search query.)
-GET http://localhost:3000/statistics/businesses?stage=Mature
+### Get Total number of businesses per stage.
+GET http://localhost:3000/statistics/businesses-stage
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
-### Get Total number of businesses per country.(Using search query)
-GET http://localhost:3000/statistics/businesses?country=Kenya
+### Get Total number of businesses per fund raise.
+GET http://localhost:3000/statistics/businesses-fund
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
-### Get Total number of businesses per sector.(Using search query)
-GET http://localhost:3000/statistics/businesses?sector=Technology
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
-
-### Get Total number of businesses per funds needed.(Using search query)
-GET http://localhost:3000/statistics/businesses?funds=50000
+### Get Total number of businesses per country.
+GET http://localhost:3000/statistics/businesses-country
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
 ### Get Total number of Investors registered
 GET http://localhost:3000/statistics/investors
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
-### Get Total number of Investors registered per sector.(Using search query)
-GET http://localhost:3000/statistics/investors-sector?sector=Healthcare
+### Get Total number of Investors and companies per sector.
+GET http://localhost:3000/statistics/sectors-stats
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
-### Get Total number of Investors registered per minimum funding.(Using search query)
-GET http://localhost:3000/statistics/investors-minfunds?minFunds=1000000
+### Get number of Investors by minimum or maximum funding.(minimumFunding / maximumFunding)
+GET http://localhost:3000/statistics/investors-funds?type=maximumFunding
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
-### Get Total number of Investors registered per maximum funding.(Using search query)
-GET http://localhost:3000/statistics/investors-maxfunds?maxFunds=1000000000
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
-
-### Get Total number of Investors registered per different funding vehicles.(Using search query)
-GET http://localhost:3000/statistics/investors-funding?fundType=Debt
+### Get Total number of Investors and companies by use of funds.
+GET http://localhost:3000/statistics/funding-stats
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
