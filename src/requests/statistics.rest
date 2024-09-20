@@ -21,7 +21,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
 ### Get matchmaking statistics per investor/company (investorId/companyId)
 GET https://capitalconnect-0060e0fb0eb4.herokuapp.com/statistics/matchmaking/35?role=investor
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmaXJzdE5hbWUiOiJJYW4iLCJsYXN0TmFtZSI6IkdhdHVtYSIsInVzZXJuYW1lIjoiZ2F0dW1haWFuQGdtYWlsLmNvbSIsInN1YiI6NDY0LCJyb2xlcyI6WyJhZG1pbiJdLCJpYXQiOjE3MjY1NTg2NjAsImV4cCI6MTcyNjY0NTA2MH0.UZabtABdVzeDfjfiPb-tmFB0annfjK_J9tiAUr-nOI8
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
 ### Get special criteria statistics
 GET http://localhost:3000/statistics/special-criteria

@@ -40,6 +40,7 @@ export class AuthService {
           'Your email is not verified. Check your email for verification link and click on it to verify your email. If you did not receive the email, click on the resend verification email link below.',
         );
       }
+
       const userRoles = user.roles?.split(',').map((role) => role.trim());
       const payload = {
         firstName: user.firstName,
@@ -47,11 +48,16 @@ export class AuthService {
         username: user.username,
         sub: user.id,
         roles: userRoles || [Role.User],
+        hasAcceptedTerms: user.hasAcceptedTerms,
       };
+
+      const token = this.jwtService.sign(payload);
+
       return {
-        access_token: this.jwtService.sign(payload),
+        access_token: token,
       };
     }
+
     throw new BadRequestException('Invalid username or password');
   }
 
@@ -73,6 +79,13 @@ export class AuthService {
     ) {
       throw new BadRequestException('Invalid role');
     }
+    // Check if user has accepted terms
+    if (!user.hasAcceptedTerms) {
+      throw new BadRequestException(
+        'You must accept the terms and conditions before signing up.',
+      );
+    }
+
     user.emailVerificationToken = randomBytes(32).toString('hex');
     user.emailVerificationExpires = addHours(new Date(), 24);
     return this.usersService.create(user);
