@@ -28,7 +28,7 @@ export class ConnectionRequest {
   @ManyToOne(() => Company, (company) => company.connectionRequests, { onDelete: 'CASCADE' })
   company: Company;
 
-  @Column()
+  @Column({ nullable: true })
   isApproved: boolean;
 
   @CreateDateColumn()

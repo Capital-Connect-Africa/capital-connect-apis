@@ -13,8 +13,7 @@ import { Booking } from 'src/booking/entities/booking.entity';
 import { Payment } from 'src/payment/entities/payment.entity';
 import { MobileNumber } from 'src/mobile/entities/mobile-number.entity';
 import { InvestorProfile } from '../../investor-profile/entities/investor-profile.entity';
-import { SubscriptionTierEnum } from "../../subscription/subscription-tier.enum";
-import { SubscriptionTier } from "../../subscription_tier/entities/subscription_tier.entity";
+import { UserSubscription } from "../../subscription_tier/entities/userSubscription.entity";
 
 @Entity('users')
 export class User {
@@ -77,6 +76,6 @@ export class User {
     this.password = await bcrypt.hash(this.password, 10);
   }
 
-  @ManyToOne(() => SubscriptionTier, (subscriptionTier) => subscriptionTier.users, { nullable: true })
-  subscriptionTier: SubscriptionTier;
+  @OneToMany(() => UserSubscription, (userSubscription) => userSubscription.user, { onDelete: 'CASCADE' })
+  subscriptions: UserSubscription[];
 }

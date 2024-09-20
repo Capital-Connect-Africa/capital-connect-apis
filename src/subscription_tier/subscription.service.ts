@@ -4,49 +4,55 @@ import { Repository } from 'typeorm';
 import { SubscriptionTier } from "./entities/subscription_tier.entity";
 import { User } from "../users/entities/user.entity";
 import { SubscriptionTierEnum } from "../subscription/subscription-tier.enum";
+import { UserSubscription } from "./entities/userSubscription.entity";
 
 @Injectable()
 export class SubscriptionService {
   constructor(
+    @InjectRepository(UserSubscription)
+    private readonly userSubscriptionRepository: Repository<UserSubscription>,
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
     @InjectRepository(SubscriptionTier)
     private readonly subscriptionTierRepository: Repository<SubscriptionTier>,
   ) {}
 
-  async assignSubscription(userId: number, subscriptionId: number): Promise<User> {
-    const user = await this.userRepository.findOneBy({ id: userId });
-    const subscriptionTier = await this.subscriptionTierRepository.findOneBy({ id: subscriptionId });
+  async assignSubscription(userId: number, subscriptionTierId: number): Promise<UserSubscription> {
+    const user = await this.userRepository.findOne({ where: { id: userId } });
+    const subscriptionTier = await this.subscriptionTierRepository.findOne({ where: { id: subscriptionTierId } });
 
     if (!user || !subscriptionTier) {
       throw new Error('User or subscription tier not found');
     }
 
-    user.subscriptionTier = subscriptionTier;
-    return this.userRepository.save(user);
+    const currentDate = new Date();
+    const expiryDate = new Date(currentDate);
+    expiryDate.setFullYear(currentDate.getFullYear() + 1); // Set expiry to one year from the current date
+
+    const userSubscription = this.userSubscriptionRepository.create({
+      user,
+      subscriptionTier,
+      subscriptionDate: currentDate,
+      expiryDate,
+      isActive: true, // Set subscription to active
+    });
+
+    return await this.userSubscriptionRepository.save(userSubscription);
   }
 
   async validateSubscription(userId: number): Promise<boolean> {
-    const user = await this.userRepository.findOne({
-      where: { id: userId },
-      relations: ['subscriptionTier'],
+    const userSubscription = await this.userSubscriptionRepository.findOne({
+      where: {
+        user: { id: userId },
+        isActive: true,
+      },
     });
 
-    if (!user || !user.subscriptionTier) {
+    if (!userSubscription) {
       return false;
     }
-    return true;
-  }
 
-  async fetchSubscription(userId: number): Promise<SubscriptionTierEnum> {
-    const user = await this.userRepository.findOne({
-      where: { id: userId },
-      relations: ['subscriptionTier'],
-    });
-
-    if (!user || !user.subscriptionTier) {
-      return SubscriptionTierEnum.BASIC;
-    }
-    return user.subscriptionTier.name as SubscriptionTierEnum;
+    const currentDate = new Date();
+    return currentDate < userSubscription.expiryDate;
   }
 }

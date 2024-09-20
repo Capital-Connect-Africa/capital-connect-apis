@@ -1,5 +1,6 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from "typeorm";
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany, ManyToOne } from "typeorm";
 import { User } from "../../users/entities/user.entity";
+import { UserSubscription } from "./userSubscription.entity";
 
 @Entity('subscription_tiers')
 export class SubscriptionTier {
@@ -18,6 +19,6 @@ export class SubscriptionTier {
   @Column({ type: 'boolean', default: true })
   isActive: boolean;
 
-  @OneToMany(() => User, (user) => user.subscriptionTier)
-  users: User[];
+  @OneToMany(() => UserSubscription, (userSubscription) => userSubscription.subscriptionTier, { onDelete: 'CASCADE' })
+  subscriptions: UserSubscription[];
 }
