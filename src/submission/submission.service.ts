@@ -321,4 +321,26 @@ export class SubmissionService {
     console.log(max);
     return max;
   }
+
+  async calculateCompletenessPerSection(
+    userId: number,
+    sectionId: number,
+  ): Promise<any> {
+    const subSections = await this.findSubsections(sectionId);
+    const sectionQuestionIds = subSections
+      .map((subSection) => subSection.questions.map((question) => question.id))
+      .flat();
+    const submissions = await this.findAllByQuestionIds(
+      sectionQuestionIds,
+      userId,
+    );
+  
+    const totalQuestions = sectionQuestionIds.length;
+    const answeredQuestions = submissions.length;
+    let completenessPercentage = (answeredQuestions / totalQuestions) * 100;
+
+    completenessPercentage = Math.min(completenessPercentage, 100);
+
+    return { completenessPercentage };
+  }  
 }
