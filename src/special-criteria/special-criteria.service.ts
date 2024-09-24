@@ -163,41 +163,42 @@ export class SpecialCriteriaService {
     // Find the special criteria with its related questions
     const specialCriteria = await this.specialCriteriaRepository.findOne({
       where: { id: specialCriteriaId },
-      relations: ['questions'],
+      relations: ['questions', 'questions.answers'], // Load answers too
     });
   
     if (!specialCriteria) {
       throw new NotFoundException(`Special criteria with id ${specialCriteriaId} not found`);
     }
-
+  
     const questionIds = specialCriteria.questions.map(question => question.id);
+  
+    // Calculate the total weight for the special criteria
+    const totalWeight = specialCriteria.questions.reduce((sum, question) => {
+      const highestWeight = Math.max(...question.answers.map(answer => answer.weight));
+      return sum + highestWeight;
+    }, 0);
   
     // Fetch submissions related to the questions, including answers
     const submissions = await this.submissionRepository.find({
       where: { question: { id: In(questionIds) } },
-      relations: ['user', 'answer'], 
+      relations: ['user', 'answer'],
     });
   
-    // Create a map to store the highest weight score for each user
+    // Create a map to store the total score for each user
     const userScores: { [key: number]: number } = {};
   
     for (const submission of submissions) {
       const userId = submission.user.id;
-      const answerWeight = submission.answer.weight; 
-
-      if (!userScores[userId] || answerWeight > userScores[userId]) {
-        userScores[userId] = answerWeight;
-      }
-    }
+      const answerWeight = submission.answer.weight;
   
-    // Calculate total scores for users
-    const totalScores = Object.values(userScores);
-    const totalWeight = totalScores.reduce((sum, weight) => sum + weight, 0) || 1; 
+      // Add the weight of the answer to the user's score
+      userScores[userId] = (userScores[userId] || 0) + answerWeight;
+    }
   
     // Calculate percentage scores for users
     const userPercentageScores = Object.entries(userScores).map(([userId, score]) => ({
       userId: Number(userId),
-      percentageScore: (score / totalWeight) * 100,
+      percentageScore: Math.min(Math.round((score / totalWeight) * 100), 100),
     }));
   
     // Apply pagination
@@ -210,23 +211,31 @@ export class SpecialCriteriaService {
       take: limit,
     });
   
-    // Fetch companies associated with these users
+    // Fetch companies associated with these users in a single query
     const userIdsForCompanies = users.map(user => user.id);
-  
     const companies = await this.companyRepository.find({
       where: {
         user: { id: In(userIdsForCompanies) },
       },
+      relations: ['user'], // Assuming companies are linked to users
     });
   
-    const result = users.map(user => {
-      const userScore = userPercentageScores.find(score => score.userId === user.id);
+    // Build the result object with percentageScore per company
+    const companiesWithScores = companies.map(company => {
+      const userScore = userPercentageScores.find(score => score.userId === company.user.id);
+      const percentageScore = userScore ? userScore.percentageScore : 0;
+      const { user, ...companyWithoutUser } = company;
+  
       return {
-        companies: companies,
-        percentageScore: userScore ? userScore.percentageScore : 0,
+        ...companyWithoutUser,
+        percentageScore,
       };
     });
   
+    const result = {
+      companies: companiesWithScores,
+    };
+  
     return result;
-  }   
+  }  
 }
