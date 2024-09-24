@@ -43,6 +43,8 @@ export class AuthService {
       }
 
       const userRoles = user.roles?.split(',').map((role) => role.trim());
+      const subscriptions = user.subscriptions;
+      const subscriptionTier = subscriptions?.find((subscription) => subscription.isActive)?.subscriptionTier?.name;
       const payload = {
         firstName: user.firstName,
         lastName: user.lastName,
@@ -50,7 +52,7 @@ export class AuthService {
         sub: user.id,
         roles: userRoles || [Role.User],
         hasAcceptedTerms: user.hasAcceptedTerms,
-        subscriptionTier: user.subscriptionTier?.name || SubscriptionTierEnum.BASIC,
+        subscriptionTier: subscriptionTier || SubscriptionTierEnum.BASIC,
       };
 
       const token = this.jwtService.sign(payload);

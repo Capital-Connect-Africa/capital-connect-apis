@@ -1,6 +1,7 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, UpdateDateColumn, OneToMany } from "typeorm";
 import { User } from "../../users/entities/user.entity";
 import { SubscriptionTier } from "./subscription_tier.entity";
+import { Payment } from "../../payment/entities/payment.entity";
 
 
 @Entity('user_subscriptions')
@@ -22,4 +23,10 @@ export class UserSubscription {
 
   @Column({ default: false })
   isActive: boolean;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
+
+  @OneToMany(() => Payment, payment => payment.booking)
+  payments: Payment[];
 }

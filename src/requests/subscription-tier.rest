@@ -1,27 +1,65 @@
 ### Create a new subscription tier
 POST http://localhost:3000/subscription-tiers
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
 {
-  "name": "Basic",
-  "description": "Access to premium features",
-  "price": 9.99,
+  "name": "basic",
+  "description": "Access to basic features",
+  "price": 10,
   "isActive": true
 }
 
 ### Get all subscription tiers
 GET http://localhost:3000/subscription-tiers
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
 ### Get a single subscription tier
 GET http://localhost:3000/subscription-tiers/1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
 ### Update a subscription tier
-PATCH http://localhost:3000/subscription-tiers/1
+PATCH http://localhost:3000/subscription-tiers/4
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 Content-Type: application/json
 
 {
-  "price": 59.98
+  "price": 9
 }
 
 ### Delete a subscription tier
-DELETE http://localhost:3000/subscription-tiers/1
+DELETE http://localhost:3000/subscription-tiers/4
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+### Create a new subscription tier
+POST https://capitalconnect-0060e0fb0eb4.herokuapp.com/subscription-tiers
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+{
+  "name": "basic",
+  "description": "Access to basic features",
+  "price": 10,
+  "isActive": true
+}
+
+### Get all subscription tiers
+GET https://capitalconnect-0060e0fb0eb4.herokuapp.com/subscription-tiers
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+### Get a single subscription tier
+GET https://capitalconnect-0060e0fb0eb4.herokuapp.com/subscription-tiers/1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+### Update a subscription tier
+PATCH https://capitalconnect-0060e0fb0eb4.herokuapp.com/subscription-tiers/4
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+Content-Type: application/json
+
+{
+  "price": 9
+}
+
+### Delete a subscription tier
+DELETE https://capitalconnect-0060e0fb0eb4.herokuapp.com/subscription-tiers/4
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9

@@ -1,14 +1,14 @@
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany, ManyToOne } from "typeorm";
-import { User } from "../../users/entities/user.entity";
 import { UserSubscription } from "./userSubscription.entity";
+import { SubscriptionTierEnum } from "../../subscription/subscription-tier.enum";
 
 @Entity('subscription_tiers')
 export class SubscriptionTier {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ unique: true })
-  name: string;
+  @Column({ type: 'enum', enum: SubscriptionTierEnum, default: SubscriptionTierEnum.BASIC })
+  name: SubscriptionTierEnum;
 
   @Column('text', { nullable: true })
   description: string;

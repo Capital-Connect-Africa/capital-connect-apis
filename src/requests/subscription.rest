@@ -1,7 +1,27 @@
-### Assign Subscription to a User (userId, subscriptionId)
-POST http://localhost:3000/subscription/19/2
+### Assign subscription to a User (userId, subscriptionId)
+POST http://localhost:3000/subscriptions/19/2
 Content-Type: application/json
 
-### Validate User Subscription (userId)
-GET http://localhost:3000/subscription/validate/4
+### Validate User subscription (userId)
+GET http://localhost:3000/subscriptions/validate/4
 Content-Type: application/json
+
+### Create booking
+
+POST http://localhost:3000/subscriptions/subscribe
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmaXJzdE5hbWUiOiJNa3V1IiwibGFzdE5hbWUiOm51bGwsInVzZXJuYW1lIjoidGVzdEBnbWFpbC5jb20iLCJzdWIiOjE5LCJyb2xlcyI6WyJ1c2VyIl0sImhhc0FjY2VwdGVkVGVybXMiOnRydWUsInN1YnNjcmlwdGlvblRpZXIiOiJiYXNpYyIsImlhdCI6MTcyNzE5MDYxNiwiZXhwIjoxNzI3Mjc3MDE2fQ.nq4aqreEZpvepgxAH6EuS69naACbJLou8Tpkvd3oOlw
+
+{
+  "subscriptionId": 1
+}
+
+### Create booking prod
+
+POST http://api.capitalconnect.africa/subscriptions
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+{
+  "subscriptionId": 1
+}

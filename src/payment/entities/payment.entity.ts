@@ -1,6 +1,7 @@
 import { Booking } from "src/booking/entities/booking.entity";
 import { User } from "src/users/entities/user.entity";
 import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { UserSubscription } from "../../subscription_tier/entities/userSubscription.entity";
 
 @Entity("payments")
 export class Payment {
@@ -27,6 +28,9 @@ export class Payment {
 
   @UpdateDateColumn({ type: 'timestamptz' })
   updatedAt: Date;
+
+  @ManyToOne(() => UserSubscription, userSubscription => userSubscription.payments)
+  userSubscription: UserSubscription;
 
   @ManyToOne(() => Booking, booking => booking.payments)
   booking: Booking;

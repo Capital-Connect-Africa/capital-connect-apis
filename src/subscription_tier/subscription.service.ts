@@ -3,7 +3,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { SubscriptionTier } from "./entities/subscription_tier.entity";
 import { User } from "../users/entities/user.entity";
-import { SubscriptionTierEnum } from "../subscription/subscription-tier.enum";
 import { UserSubscription } from "./entities/userSubscription.entity";
 
 @Injectable()
@@ -34,7 +33,7 @@ export class SubscriptionService {
       subscriptionTier,
       subscriptionDate: currentDate,
       expiryDate,
-      isActive: true, // Set subscription to active
+      isActive: false,
     });
 
     return await this.userSubscriptionRepository.save(userSubscription);
