@@ -1,13 +1,16 @@
-import { Inject, Injectable, LoggerService, NestMiddleware } from '@nestjs/common';
+import {
+  Inject,
+  Injectable,
+  LoggerService,
+  NestMiddleware,
+} from '@nestjs/common';
 import { Request, Response, NextFunction } from 'express';
 
 @Injectable()
 export class LoggingMiddleware implements NestMiddleware {
-    constructor(
-        @Inject('CustomLogger') private readonly logger: LoggerService
-    ) {}
-  
-    use(req: Request, res: Response, next: NextFunction) {
+  constructor(@Inject('CustomLogger') private readonly logger: LoggerService) {}
+
+  use(req: Request, res: Response, next: NextFunction) {
     const { method, originalUrl } = req;
     const startTime = Date.now();
 
@@ -27,18 +30,20 @@ export class LoggingMiddleware implements NestMiddleware {
 
       if (statusCode === 500) {
         this.logger.error(
-            `${method} ${originalUrl} ${statusCode} - ${responseTime}ms`,
+          `${method} ${originalUrl} ${statusCode} - ${responseTime}ms`,
         );
-    } else {
+      } else {
         this.logger.log(
-            `${method} ${originalUrl} ${statusCode} - ${responseTime}ms`,
-          );
-    }
-
-        if (method === 'POST' || method === 'PUT' || method === 'PATCH') {
+          `${method} ${originalUrl} ${statusCode} - ${responseTime}ms`,
+        );
+      }
+      if (method === 'POST' || method === 'PUT' || method === 'PATCH') {
         this.logger.log(`Request Body: ${JSON.stringify(req.body)}`);
-        }
-      this.logger.log(`Response Body: ${JSON.stringify(res.locals.responseBody)}`);
+      }
+      if (process.env.LOG_RESPONSE_BODY === 'on')
+        this.logger.log(
+          `Response Body: ${JSON.stringify(res.locals.responseBody)}`,
+        );
     });
 
     next();
