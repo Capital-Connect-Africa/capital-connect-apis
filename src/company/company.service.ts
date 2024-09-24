@@ -1,8 +1,4 @@
-import {
-  BadRequestException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateCompanyDto } from './dto/create-company.dto';
 import { UpdateCompanyDto } from './dto/update-company.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -496,4 +492,25 @@ export class CompanyService {
       ),
     );
   }
+
+  async profileCompleteness(companyId: number): Promise<{completeness: number}> {
+    const company = await this.companyRepository.findOne({ where: { id: companyId } });
+  
+    if (!company) {
+      throw new Error('Company not found');
+    }
+  
+    const totalFields = Object.keys(company).length;
+    let filledFields = 0;
+  
+    for (const key in company) {
+      if (company[key] !== null && company[key] !== '') {
+        filledFields++;
+      }
+    }
+  
+    const completeness = (filledFields / totalFields) * 100;
+  
+    return {completeness};
+  }  
 }

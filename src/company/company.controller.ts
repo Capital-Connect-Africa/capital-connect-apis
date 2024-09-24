@@ -160,4 +160,15 @@ export class CompanyController {
   ): Promise<Company[]> {
     return this.companyService.filterCompaniesByOr(filterDto);
   }
+
+  @Get('complete/:id')
+  async getProfileCompleteness(@Param('id') id: number): Promise<{ completeness: number }> {
+    const completeness = await this.companyService.profileCompleteness(id);
+    
+    if (completeness === null) {
+      throw new NotFoundException('Company not found');
+    }
+
+    return completeness ;
+  }
 }
