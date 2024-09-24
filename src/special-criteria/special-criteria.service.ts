@@ -160,7 +160,7 @@ export class SpecialCriteriaService {
     page: number = 1,
     limit: number = 10,
   ) {
-    // Find the special criteria with questions
+    // Find the special criteria with its related questions
     const specialCriteria = await this.specialCriteriaRepository.findOne({
       where: { id: specialCriteriaId },
       relations: ['questions'],
@@ -170,41 +170,63 @@ export class SpecialCriteriaService {
       throw new NotFoundException(`Special criteria with id ${specialCriteriaId} not found`);
     }
 
-    // Extract question IDs from the special criteria
     const questionIds = specialCriteria.questions.map(question => question.id);
-
-    // Fetch submissions related to the questions
+  
+    // Fetch submissions related to the questions, including answers
     const submissions = await this.submissionRepository.find({
-      where: {
-        question: { id: In(questionIds) }
-      },
-      relations: ['user'],
+      where: { question: { id: In(questionIds) } },
+      relations: ['user', 'answer'], 
     });
   
-    // Extract unique user IDs from submissions
-    const userIds = [...new Set(submissions.map(submission => submission.user.id))];
+    // Create a map to store the highest weight score for each user
+    const userScores: { [key: number]: number } = {};
   
+    for (const submission of submissions) {
+      const userId = submission.user.id;
+      const answerWeight = submission.answer.weight; 
+
+      if (!userScores[userId] || answerWeight > userScores[userId]) {
+        userScores[userId] = answerWeight;
+      }
+    }
+  
+    // Calculate total scores for users
+    const totalScores = Object.values(userScores);
+    const totalWeight = totalScores.reduce((sum, weight) => sum + weight, 0) || 1; 
+  
+    // Calculate percentage scores for users
+    const userPercentageScores = Object.entries(userScores).map(([userId, score]) => ({
+      userId: Number(userId),
+      percentageScore: (score / totalWeight) * 100,
+    }));
+  
+    // Apply pagination
     const skip = (page - 1) * limit;
-  
-    // Fetch users with pagination
     const users = await this.userRepository.find({
       where: {
-        id: In(userIds)
+        id: In(Object.keys(userScores).map(Number)),
       },
       skip,
       take: limit,
     });
-
-    // Extract user IDs for fetching companies
+  
+    // Fetch companies associated with these users
     const userIdsForCompanies = users.map(user => user.id);
-
-    // Fetch companies associated with the users
+  
     const companies = await this.companyRepository.find({
       where: {
-        user: { id: In(userIdsForCompanies) }
+        user: { id: In(userIdsForCompanies) },
       },
     });
-
-    return companies;
-  }
+  
+    const result = users.map(user => {
+      const userScore = userPercentageScores.find(score => score.userId === user.id);
+      return {
+        companies: companies,
+        percentageScore: userScore ? userScore.percentageScore : 0,
+      };
+    });
+  
+    return result;
+  }   
 }

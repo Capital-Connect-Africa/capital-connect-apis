@@ -295,6 +295,15 @@ export class SubmissionController {
     }
   }
 
+  @Get('complete/:userId/:sectionId')
+  async getCompletenessPerSection(
+    @Param('userId') userId: number,
+    @Param('sectionId') sectionId: number,
+  ) {
+    const completeness = await this.submissionService.calculateCompletenessPerSection(userId, sectionId);
+    return completeness;
+  }
+
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   async remove(@Request() req, @Param('id') id: string) {

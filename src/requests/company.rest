@@ -141,8 +141,6 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 GET http://localhost:3000/company/invesetor-matches/4
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
-
-
 ####
 # Fetch business matched investors by id
 
@@ -152,4 +150,8 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 ###
 # Search companies
 GET http://localhost:3000/company/search?query=kenya
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+### Business profile completeness.
+GET http://localhost:3000/company/complete/1
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9

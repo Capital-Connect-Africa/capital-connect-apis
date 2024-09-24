@@ -74,8 +74,9 @@ export class ConnectionRequestService {
         investorProfile,
         company,
       });
-      await this.sendConnectionRequestEmail(company.id, newRequest.uuid);
-      return await this.connectionRequestRepository.save(newRequest);
+      const connectionRequest = await this.connectionRequestRepository.save(newRequest);
+      this.sendConnectionRequestEmail(company.id, connectionRequest.uuid);
+      return connectionRequest;
     }
   }
 

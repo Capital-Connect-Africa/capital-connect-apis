@@ -14,12 +14,27 @@ export class MobileNumberService {
   ) {}
 
   async create(createMobileNumberDto: CreateMobileNumberDto) {
-    const mobileNo = await this.mobileNumbersRepository.create({
-      ...createMobileNumberDto,
+    const { phoneNo, userId } = createMobileNumberDto;
+
+    const existingMobileNumber = await this.mobileNumbersRepository.findOne({
+      where: {
+        phoneNo,
+        user: { id: userId },
+      },
     });
-    mobileNo.user = { id: createMobileNumberDto.userId } as User;
-    return await this.mobileNumbersRepository.save(mobileNo);
+  
+    if (existingMobileNumber) {
+      throw new Error('Mobile number already taken for this user, please add a new one');
+    }
+  
+    const newMobileNumber = this.mobileNumbersRepository.create({
+      ...createMobileNumberDto,
+      user: { id: userId } as User, 
+    });
+  
+    return await this.mobileNumbersRepository.save(newMobileNumber);
   }
+      
 
   findAll(page: number = 1, limit: number = 10) {
     const skip = (page - 1) * limit;
