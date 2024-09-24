@@ -8,6 +8,7 @@ import { Booking } from 'src/booking/entities/booking.entity';
 import { User } from 'src/users/entities/user.entity';
 import { HttpService } from '@nestjs/axios';
 import { CallbackPaymentDto } from './dto/callback-payment.dto';
+import { UserSubscription } from "../subscription_tier/entities/userSubscription.entity";
 
 @Injectable()
 export class PaymentService {
@@ -25,7 +26,8 @@ export class PaymentService {
     if (!payment) throw new NotFoundException(`Payment with order tracking id ${OrderMerchantReference} not found`);
     payment.status = pesapalPayment.payment_status_description;
     console.log("Payment status:", payment.status);
-    this.paymentsRepository.save(payment);
+    const updatedPayment = await this.paymentsRepository.save(payment);
+    if (updatedPayment.userSubscription) // Update user subscription status
     return { message: "Payment processed successfully" };
   }
 
@@ -42,16 +44,32 @@ export class PaymentService {
     return response.data;
   }
 
-  async createPayment(createPaymentDto: CreatePaymentDto) {
-    const { orderTrackingId, bookingId, userId } = createPaymentDto;
+  async createBookingPayment(createPaymentDto: CreatePaymentDto) {
+    const { orderTrackingId, bookingId, userSubscriptionId, userId } = createPaymentDto;
     const paymentObj = new Payment();
     paymentObj.currency = process.env.CURRENCY || "KES";
     paymentObj.amount = Number(process.env.ADVISORY_SESSIONS_COST) || 10000;
     paymentObj.status = "initiated";
-    paymentObj.description = "Advisory sessesion payment";
+    paymentObj.description = "Advisory session payment";
     paymentObj.orderTrackingId = orderTrackingId;
     paymentObj.user = { id: userId } as User;
     if (bookingId) paymentObj.booking = { id: bookingId } as Booking;
+    if (userSubscriptionId) paymentObj.userSubscription = { id: bookingId } as UserSubscription;
+    const payment = await this.paymentsRepository.save(paymentObj);
+    return payment;
+  }
+
+  async createPayment(createPaymentDto: CreatePaymentDto, amount: number, description: string) {
+    const { orderTrackingId, bookingId, userSubscriptionId, userId } = createPaymentDto;
+    const paymentObj = new Payment();
+    paymentObj.currency = process.env.CURRENCY || "KES";
+    paymentObj.amount = amount;
+    paymentObj.status = "initiated";
+    paymentObj.description = description;
+    paymentObj.orderTrackingId = orderTrackingId;
+    paymentObj.user = { id: userId } as User;
+    if (bookingId) paymentObj.booking = { id: bookingId } as Booking;
+    if (userSubscriptionId) paymentObj.userSubscription = { id: bookingId } as UserSubscription;
     const payment = await this.paymentsRepository.save(paymentObj);
     return payment;
   }

@@ -41,8 +41,6 @@ export class BookingController {
       user.id,
     );
 
-    console.log('User', user);
-
     const bookingResponse = {} as any;
     bookingResponse.bookingId = booking.id;
 
@@ -93,7 +91,7 @@ export class BookingController {
         );
       bookingResponse.orderTrackingId = res.order_tracking_id;
       bookingResponse.redirectUrl = res.redirect_url;
-      const payment = await this.paymentService.createPayment({
+      const payment = await this.paymentService.createBookingPayment({
         bookingId: booking.id,
         orderTrackingId: res.order_tracking_id,
         userId: user.id,

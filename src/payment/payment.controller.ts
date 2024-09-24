@@ -42,7 +42,7 @@ export class PaymentController {
   @Roles(Role.Admin)
   create(@Body() createPaymentDto: CreatePaymentDto) {  
     try {
-      return this.paymentsService.createPayment(createPaymentDto);
+      return this.paymentsService.createBookingPayment(createPaymentDto);
     } catch (error) {
       throwInternalServer(error)
     }  

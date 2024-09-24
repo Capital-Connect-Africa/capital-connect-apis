@@ -21,7 +21,12 @@ export class CreatePaymentDto {
     orderTrackingId: string;
 
     @IsNumber()
-    bookingId: number;
+    @IsOptional()
+    bookingId?: number;
+
+    @IsNumber()
+    @IsOptional()
+    userSubscriptionId?: number;
 
     @IsNumber()
     userId: number;

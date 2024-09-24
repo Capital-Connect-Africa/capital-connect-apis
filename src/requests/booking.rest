@@ -1,5 +1,4 @@
-###
-#Create booking
+### Create booking
 
 POST http://localhost:3000/bookings
 Content-Type: application/json
@@ -19,27 +18,23 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
     "calendlyEventId": "82348"
 }
 
-###
-# Get booking
+### Get booking
 
 GET http://localhost:3000/bookings/4
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
 
-###
-# Get bookings
+### Get bookings
 
 GET http://localhost:3000/bookings
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
-###
-# Get bookings paginated
+### Get bookings paginated
 
 GET http://localhost:3000/bookings?page=8&limit=1
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
-###
-# Update booking
+### Update booking
 
 PUT http://localhost:3000/bookings/4
 Content-Type: application/json
@@ -49,8 +44,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
     "calendlyEventId": "76098"
 }
 
-###
-# Delete booking
+### Delete booking
 
 DELETE http://localhost:3000/bookings/4
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9

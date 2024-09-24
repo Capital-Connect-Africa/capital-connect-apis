@@ -1,0 +1,15 @@
+### Accessing Open Feature
+GET http://localhost:3000/billing/open-feature
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+### Accessing Basic Feature
+GET http://localhost:3000/billing/basic-feature
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+### Accessing Pro Feature
+GET http://localhost:3000/billing/pro-feature
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+### Accessing Elite Feature
+GET http://localhost:3000/billing/elite-feature
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9

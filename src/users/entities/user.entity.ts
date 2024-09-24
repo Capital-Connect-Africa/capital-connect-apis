@@ -5,14 +5,15 @@ import {
   PrimaryGeneratedColumn,
   BeforeInsert,
   OneToMany,
-  OneToOne,
-} from 'typeorm';
+  OneToOne, ManyToOne
+} from "typeorm";
 import * as bcrypt from 'bcryptjs';
 import { Submission } from 'src/submission/entities/submission.entity';
 import { Booking } from 'src/booking/entities/booking.entity';
 import { Payment } from 'src/payment/entities/payment.entity';
 import { MobileNumber } from 'src/mobile/entities/mobile-number.entity';
 import { InvestorProfile } from '../../investor-profile/entities/investor-profile.entity';
+import { UserSubscription } from "../../subscription_tier/entities/userSubscription.entity";
 
 @Entity('users')
 export class User {
@@ -74,4 +75,7 @@ export class User {
   async hashPassword() {
     this.password = await bcrypt.hash(this.password, 10);
   }
+
+  @OneToMany(() => UserSubscription, (userSubscription) => userSubscription.user, { onDelete: 'CASCADE' })
+  subscriptions: UserSubscription[];
 }
