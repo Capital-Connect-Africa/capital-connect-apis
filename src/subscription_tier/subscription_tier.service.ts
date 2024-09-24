@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { SubscriptionTier } from './entities/subscription_tier.entity';
@@ -26,8 +26,13 @@ export class SubscriptionTierService {
     return this.subscriptionTierRepository.find();
   }
 
-  findOne(id: number) {
-    return this.subscriptionTierRepository.findOne({ where: { id } });
+  async findOne(id: number) {
+      const subscriptionTier = await this.subscriptionTierRepository.findOne({ where: { id } });
+      
+      if (!subscriptionTier) {
+        throw new NotFoundException(`Subscription tier with ID ${id} not found`);
+       }
+      return subscriptionTier;
   }
 
   update(id: number, updateSubscriptionTierDto: UpdateSubscriptionTierDto) {
@@ -37,7 +42,13 @@ export class SubscriptionTierService {
     );
   }
 
-  remove(id: number) {
-    return this.subscriptionTierRepository.delete(id);
+  async remove(id: number) {
+    const result = await this.subscriptionTierRepository.delete(id);
+    
+    if (result.affected === 0) {
+      throw new NotFoundException(`Subscription tier with ID ${id} not found`);
+    }
+    
+    return { message: `Subscription tier with ID ${id} successfully deleted` };
   }
 }
