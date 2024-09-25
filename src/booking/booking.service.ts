@@ -13,7 +13,10 @@ export class BookingService {
     private readonly bookingRepository: Repository<Booking>,
   ) {}
 
-  async createBooking(calendlyEventId: string, userId: number): Promise<Booking> {
+  async createBooking(
+    calendlyEventId: string,
+    userId: number,
+  ): Promise<Booking> {
     const bookingObj = new Booking();
     bookingObj.calendlyEventId = calendlyEventId;
     bookingObj.user = { id: userId } as User;
@@ -25,10 +28,11 @@ export class BookingService {
     const query = {
       skip,
       take: limit,
-      relations: ['payments']
+      relations: ['payments'],
     };
 
-    if (!user.roles.includes('admin')) query['where'] = { user: { id: user.id } };
+    if (!user.roles.includes('admin'))
+      query['where'] = { user: { id: user.id } };
     return this.bookingRepository.find(query);
   }
 
@@ -36,7 +40,7 @@ export class BookingService {
     const booking = await this.bookingRepository.findOneBy({ id });
     if (!booking) {
       throw new NotFoundException(`Booking with id ${id} not found`);
-    } 
+    }
     return booking;
   }
 
@@ -44,7 +48,8 @@ export class BookingService {
     const { calendlyEventId } = updateBookingDto;
     const updates = {};
     if (calendlyEventId) updates['calendlyEventId'] = calendlyEventId;
-    if (Object.keys(updates).length > 0) await this.bookingRepository.update(id, updateBookingDto);
+    if (Object.keys(updates).length > 0)
+      await this.bookingRepository.update(id, updateBookingDto);
     return this.bookingRepository.findOneBy({ id });
   }
 
