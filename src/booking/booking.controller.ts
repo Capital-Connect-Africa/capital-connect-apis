@@ -30,7 +30,7 @@ export class BookingController {
 
   @Post()
   async createBooking(
-    @HeadersToken() pesapalToken: string,
+    @HeadersToken('pesapal_authorization') pesapalToken: string,
     @Body() createBookingDto: CreateBookingDto,
     @Req() req,
   ) {
