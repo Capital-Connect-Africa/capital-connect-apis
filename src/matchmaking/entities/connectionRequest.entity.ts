@@ -28,8 +28,8 @@ export class ConnectionRequest {
   @ManyToOne(() => Company, (company) => company.connectionRequests, { onDelete: 'CASCADE' })
   company: Company;
 
-  @Column({ nullable: true })
-  isApproved: boolean;
+  @Column({ nullable: true, default: null })
+  isApproved: boolean | null;
 
   @CreateDateColumn()
   createdAt: Date;

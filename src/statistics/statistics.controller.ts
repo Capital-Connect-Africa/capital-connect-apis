@@ -94,4 +94,12 @@ export class StatisticsController {
 
     return this.statisticsService.getInvestorsPerFunding(type);
   }
+
+  @Get('requests/:id')
+  async getConnectionRequestStatistics(
+    @Param('id') id: number,
+  ) {
+    const stats = await this.statisticsService.getConnectionRequestStatistics(id);
+    return stats
+  }
 }
