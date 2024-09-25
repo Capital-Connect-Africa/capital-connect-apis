@@ -7,32 +7,22 @@ GET http://localhost:3000/subscriptions/validate/1
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 Content-Type: application/json
 
-### Create booking
+### Subscribe
 
 POST http://localhost:3000/subscriptions/subscribe
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
 {
-  "subscriptionId": 6
+  "subscriptionTierId": 6
 }
 
-### Create booking prod
-
-GET http://api.capitalconnect.africa/subscriptions
-Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
-
-{
-  "subscriptionId": 1
-}
-
-### Create booking
+### Subscribe prod
 
 POST http://api.capitalconnect.africa/subscriptions/subscribe
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
 {
-  "subscriptionId": 2
+  "subscriptionTierId": 2
 }

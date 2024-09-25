@@ -19,9 +19,9 @@ import { HttpService } from '@nestjs/axios';
 import { IsNumber } from 'class-validator';
 import { PaymentService } from '../payment/payment.service';
 
-class SubscribrDto {
+class SubscribeDto {
   @IsNumber()
-  subscriptionId: number;
+  subscriptionTierId: number;
 }
 
 @UseGuards(JwtAuthGuard, RolesGuard)
@@ -52,13 +52,13 @@ export class SubscriptionController {
   @Post('subscribe')
   async subscribe(
     @HeadersToken('pesapal_authorization') pesapalToken: string,
-    @Body() subscribrDto: SubscribrDto,
+    @Body() subscribrDto: SubscribeDto,
     @Req() req,
   ) {
     const user = req.user;
     const userSubscription = await this.subscriptionService.assignSubscription(
       user.id,
-      subscribrDto.subscriptionId,
+      subscribrDto.subscriptionTierId,
     );
     const description = `Subscription ${userSubscription.subscriptionTier.name} payment`;
     const subscriptionResponse = {} as any;
