@@ -13,6 +13,7 @@ import { UseOfFunds } from 'src/use-of-funds/entities/use-of-funds.entity';
 import { Stage } from 'src/stage/entities/stage.entity';
 import { Country } from 'src/country/entities/country.entity';
 import { fundBands } from './stats.type';
+import { ConnectionRequest } from 'src/matchmaking/entities/connectionRequest.entity';
 
 interface StatsFilter {
   investorProfile?: InvestorProfile;
@@ -40,6 +41,8 @@ export class StatisticsService {
     private readonly stagesRepository: Repository<Stage>,
     @InjectRepository(Country)
     private readonly countriesRepository: Repository<Country>,
+    @InjectRepository(ConnectionRequest)
+    private readonly connectionRequestRepository: Repository<ConnectionRequest>,
   ) {}
 
   async getUserStatistics(): Promise<{ [key in Role]: number }> {
@@ -334,4 +337,28 @@ export class StatisticsService {
 
     return result;
   }
+
+  async getConnectionRequestStatistics(investorId: number): Promise<{
+    requested: number;
+    declined: number;
+    approved: number;
+  }> {
+    const requested = await this.matchMakingRepository.count({
+      where: { status: MatchStatus.REQUESTED, investorProfile: { id: investorId } },
+    });
+
+    const approved = await this.connectionRequestRepository.count({
+      where: { isApproved: true, investorProfile: { id: investorId } },
+    });
+  
+    const declined = await this.connectionRequestRepository.count({
+      where: { isApproved: false, investorProfile: { id: investorId } },
+    });  
+    return {
+      requested,
+      approved,
+      declined,
+    };
+  }
+   
 }
