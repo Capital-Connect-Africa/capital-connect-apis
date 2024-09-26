@@ -7,9 +7,13 @@ import { HttpModule } from '@nestjs/axios';
 import { AuthMiddleware } from '../shared/auth.middleware';
 import { TokenService } from '../shared/token.service';
 import { UserSubscription } from '../subscription_tier/entities/userSubscription.entity';
+import { SubscriptionTier } from '../subscription_tier/entities/subscription_tier.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Payment, UserSubscription]), HttpModule],
+  imports: [
+    TypeOrmModule.forFeature([Payment, SubscriptionTier, UserSubscription]),
+    HttpModule,
+  ],
   controllers: [PaymentController],
   providers: [PaymentService, TokenService],
 })
