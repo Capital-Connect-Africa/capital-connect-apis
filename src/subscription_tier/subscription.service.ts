@@ -1,9 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { SubscriptionTier } from "./entities/subscription_tier.entity";
-import { User } from "../users/entities/user.entity";
-import { UserSubscription } from "./entities/userSubscription.entity";
+import { SubscriptionTier } from './entities/subscription_tier.entity';
+import { User } from '../users/entities/user.entity';
+import { UserSubscription } from './entities/userSubscription.entity';
 
 @Injectable()
 export class SubscriptionService {
@@ -16,9 +16,14 @@ export class SubscriptionService {
     private readonly subscriptionTierRepository: Repository<SubscriptionTier>,
   ) {}
 
-  async assignSubscription(userId: number, subscriptionTierId: number): Promise<UserSubscription> {
+  async assignSubscription(
+    userId: number,
+    subscriptionTierId: number,
+  ): Promise<UserSubscription> {
     const user = await this.userRepository.findOne({ where: { id: userId } });
-    const subscriptionTier = await this.subscriptionTierRepository.findOne({ where: { id: subscriptionTierId } });
+    const subscriptionTier = await this.subscriptionTierRepository.findOne({
+      where: { id: subscriptionTierId },
+    });
 
     if (!user || !subscriptionTier) {
       throw new Error('User or subscription tier not found');
@@ -53,5 +58,21 @@ export class SubscriptionService {
 
     const currentDate = new Date();
     return currentDate < userSubscription.expiryDate;
+  }
+
+  async fetchSubscription(userId: number): Promise<UserSubscription> {
+    const userSubscription = await this.userSubscriptionRepository.findOne({
+      where: {
+        user: { id: userId },
+        isActive: true,
+      },
+      relations: ['subscriptionTier'],
+    });
+
+    if (!userSubscription) {
+      throw new NotFoundException('User has no active subscription');
+    } else {
+      return userSubscription;
+    }
   }
 }

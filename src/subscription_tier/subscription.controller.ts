@@ -1,13 +1,13 @@
 import {
+  Body,
   Controller,
-  Post,
+  Get,
+  HttpException,
   Param,
   ParseIntPipe,
-  Get,
-  UseGuards,
-  Body,
+  Post,
   Req,
-  HttpException,
+  UseGuards,
 } from '@nestjs/common';
 import { SubscriptionService } from './subscription.service';
 import { RolesGuard } from 'src/auth/roles.guard';
@@ -47,6 +47,11 @@ export class SubscriptionController {
     const hasSubscription =
       await this.subscriptionService.validateSubscription(userId);
     return { hasSubscription };
+  }
+
+  @Get(':userId')
+  async fetchSubscription(@Param('userId', ParseIntPipe) userId: number) {
+    return await this.subscriptionService.fetchSubscription(userId);
   }
 
   @Post('subscribe')
