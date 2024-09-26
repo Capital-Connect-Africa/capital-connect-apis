@@ -16,7 +16,7 @@ import { BookingService } from './booking.service';
 import { PaymentService } from 'src/payment/payment.service';
 import { CreateBookingDto } from './dto/create-booking.dto';
 import { UpdateBookingDto } from './dto/update-booking.dto';
-import { HeadersToken } from 'src/shared/headers.decorators';
+import { PesapalToken } from 'src/shared/headers.decorators';
 import { HttpService } from '@nestjs/axios';
 
 @Controller('bookings')
@@ -30,7 +30,7 @@ export class BookingController {
 
   @Post()
   async createBooking(
-    @HeadersToken('pesapal_authorization') pesapalToken: string,
+    @PesapalToken() pesapalToken: string,
     @Body() createBookingDto: CreateBookingDto,
     @Req() req,
   ) {

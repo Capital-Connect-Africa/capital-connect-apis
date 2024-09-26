@@ -1,8 +1,22 @@
-import { Controller, Get, Post, Body, Param, Delete, UseGuards, Query, NotFoundException, BadRequestException, Put, HttpCode, HttpStatus } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  Delete,
+  UseGuards,
+  Query,
+  NotFoundException,
+  BadRequestException,
+  Put,
+  HttpCode,
+  HttpStatus,
+} from '@nestjs/common';
 import { PaymentService } from './payment.service';
 import { CreatePaymentDto } from './dto/create-payment.dto';
 import { UpdatePaymentDto } from './dto/update-payment.dto';
-import { HeadersToken } from '../shared/headers.decorators';
+import { PesapalToken } from '../shared/headers.decorators';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { RolesGuard } from 'src/auth/roles.guard';
 import { Role } from 'src/auth/role.enum';
@@ -16,36 +30,48 @@ export class PaymentController {
 
   @Post('callback')
   callback(
-    @HeadersToken() pesapalToken: string,
-    @Body() callbackPaymentDto: CallbackPaymentDto
+    @PesapalToken() pesapalToken: string,
+    @Body() callbackPaymentDto: CallbackPaymentDto,
   ) {
     try {
-      return this.paymentsService.processPaymentCallback(pesapalToken, callbackPaymentDto);
+      return this.paymentsService.processPaymentCallback(
+        pesapalToken,
+        callbackPaymentDto,
+      );
     } catch (error) {
-      throwInternalServer(error)
+      throwInternalServer(error);
     }
   }
 
   @Get('status')
   @UseGuards(JwtAuthGuard)
-  async checkPaymentStatus(@HeadersToken() pesapalToken: string, @Query('orderTrackingId') orderTrackingId: string) {
+  async checkPaymentStatus(
+    @PesapalToken() pesapalToken: string,
+    @Query('orderTrackingId') orderTrackingId: string,
+  ) {
     try {
-      const response = await this.paymentsService.checkPaymentStatus(pesapalToken, orderTrackingId);
-      return { redirectUrl: `https://pay.pesapal.com/iframe/PesapalIframe3/Index?OrderTrackingId=${orderTrackingId}`, ...response };
+      const response = await this.paymentsService.checkPaymentStatus(
+        pesapalToken,
+        orderTrackingId,
+      );
+      return {
+        redirectUrl: `https://pay.pesapal.com/iframe/PesapalIframe3/Index?OrderTrackingId=${orderTrackingId}`,
+        ...response,
+      };
     } catch (error) {
-      throwInternalServer(error)
+      throwInternalServer(error);
     }
   }
 
   @Post()
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(Role.Admin)
-  create(@Body() createPaymentDto: CreatePaymentDto) {  
+  create(@Body() createPaymentDto: CreatePaymentDto) {
     try {
       return this.paymentsService.createBookingPayment(createPaymentDto);
     } catch (error) {
-      throwInternalServer(error)
-    }  
+      throwInternalServer(error);
+    }
   }
 
   @Get()
@@ -60,14 +86,17 @@ export class PaymentController {
     try {
       return this.paymentsService.findOne(+id);
     } catch (error) {
-      throwInternalServer(error)
+      throwInternalServer(error);
     }
   }
 
   @Put(':id')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(Role.Admin)
-  async update(@Param('id') id: string, @Body() updatePaymentDto: UpdatePaymentDto) {
+  async update(
+    @Param('id') id: string,
+    @Body() updatePaymentDto: UpdatePaymentDto,
+  ) {
     try {
       await this.paymentsService.findOne(+id);
       const payments = await this.paymentsService.update(+id, updatePaymentDto);
@@ -76,7 +105,7 @@ export class PaymentController {
       if (error instanceof NotFoundException) {
         throw new BadRequestException(`Payment with id ${id} not found`);
       }
-      throwInternalServer(error)
+      throwInternalServer(error);
     }
   }
 
@@ -88,7 +117,7 @@ export class PaymentController {
     try {
       await this.paymentsService.remove(+id);
     } catch (error) {
-      throwInternalServer(error)
+      throwInternalServer(error);
     }
   }
 }

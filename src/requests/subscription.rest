@@ -7,12 +7,12 @@ GET http://localhost:3000/subscriptions/validate/1
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 Content-Type: application/json
 
-### Fetcj User subscription (userId)
+### Fetch User subscription (userId)
 GET http://localhost:3000/subscriptions/19
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 Content-Type: application/json
 
-### Fetcj User subscription (userId) prod
+### Fetch User subscription (userId) prod
 GET http://api.capitalconnect.africa/subscriptions/19
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 Content-Type: application/json
