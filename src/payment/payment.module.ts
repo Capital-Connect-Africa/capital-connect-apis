@@ -6,9 +6,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { HttpModule } from '@nestjs/axios';
 import { AuthMiddleware } from '../shared/auth.middleware';
 import { TokenService } from '../shared/token.service';
+import { UserSubscription } from '../subscription_tier/entities/userSubscription.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Payment]), HttpModule],
+  imports: [TypeOrmModule.forFeature([Payment, UserSubscription]), HttpModule],
   controllers: [PaymentController],
   providers: [PaymentService, TokenService],
 })

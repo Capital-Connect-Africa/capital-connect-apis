@@ -14,7 +14,7 @@ import { RolesGuard } from 'src/auth/roles.guard';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { Roles } from 'src/auth/roles.decorator';
 import { Role } from 'src/auth/role.enum';
-import { HeadersToken } from '../shared/headers.decorators';
+import { PesapalToken } from '../shared/headers.decorators';
 import { HttpService } from '@nestjs/axios';
 import { IsNumber } from 'class-validator';
 import { PaymentService } from '../payment/payment.service';
@@ -56,11 +56,16 @@ export class SubscriptionController {
 
   @Post('subscribe')
   async subscribe(
-    @HeadersToken('pesapal_authorization') pesapalToken: string,
+    @PesapalToken() pesapalToken: string,
     @Body() subscribrDto: SubscribeDto,
     @Req() req,
   ) {
     const user = req.user;
+    const subscriptionStatus =
+      await this.subscriptionService.validateSubscription(user.id);
+    if (subscriptionStatus) {
+      throw new HttpException('User already has an active subscription', 400);
+    }
     const userSubscription = await this.subscriptionService.assignSubscription(
       user.id,
       subscribrDto.subscriptionTierId,
