@@ -14,6 +14,8 @@ import { Stage } from 'src/stage/entities/stage.entity';
 import { Country } from 'src/country/entities/country.entity';
 import { fundBands } from './stats.type';
 import { ConnectionRequest } from 'src/matchmaking/entities/connectionRequest.entity';
+import { UserSubscription } from 'src/subscription_tier/entities/userSubscription.entity';
+import { SubscriptionTierEnum } from 'src/subscription/subscription-tier.enum';
 
 interface StatsFilter {
   investorProfile?: InvestorProfile;
@@ -43,6 +45,8 @@ export class StatisticsService {
     private readonly countriesRepository: Repository<Country>,
     @InjectRepository(ConnectionRequest)
     private readonly connectionRequestRepository: Repository<ConnectionRequest>,
+    @InjectRepository(UserSubscription)
+    private readonly subscriptionRepository: Repository<UserSubscription>,
   ) {}
 
   async getUserStatistics(): Promise<{ [key in Role]: number }> {
@@ -360,5 +364,33 @@ export class StatisticsService {
       declined,
     };
   }
-   
+
+  async getSubscriptionStatistics(): Promise<{
+    subscription: number;
+    basic: number;
+    plus: number;
+    pro: number;
+    elite: number;
+  }> {
+    const subscription = await this.subscriptionRepository.count({
+      where: { isActive: true },
+    });
+
+    const basic = await this.subscriptionRepository.count({
+      where: { isActive: true, subscriptionTier: { name: SubscriptionTierEnum.BASIC } },
+    });
+  
+    const plus = await this.subscriptionRepository.count({
+      where: { isActive: true, subscriptionTier: { name: SubscriptionTierEnum.PLUS } },
+    });  
+
+    const pro = await this.subscriptionRepository.count({
+      where: { isActive: true, subscriptionTier: { name: SubscriptionTierEnum.PRO } },
+    }); 
+
+    const elite = await this.subscriptionRepository.count({
+      where: { isActive: true, subscriptionTier: { name: SubscriptionTierEnum.ELITE } },
+    }); 
+    return { subscription, basic, plus, pro, elite };
+  }   
 }

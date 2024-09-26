@@ -12,10 +12,12 @@ import { UseOfFunds } from 'src/use-of-funds/entities/use-of-funds.entity';
 import { Stage } from 'src/stage/entities/stage.entity';
 import { Country } from 'src/country/entities/country.entity';
 import { ConnectionRequest } from 'src/matchmaking/entities/connectionRequest.entity';
+import { UserSubscription } from 'src/subscription_tier/entities/userSubscription.entity';
 
 @Module({
   imports: [TypeOrmModule.forFeature([
-    User, Matchmaking, SpecialCriterion, Company, InvestorProfile, Sector, UseOfFunds, Stage, Country, ConnectionRequest,
+    User, Matchmaking, SpecialCriterion, Company, InvestorProfile, Sector, UseOfFunds, Stage, Country,
+    ConnectionRequest, UserSubscription,
   ])],
   providers: [StatisticsService],
   controllers: [StatisticsController],

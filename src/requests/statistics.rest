@@ -57,7 +57,7 @@ GET http://localhost:3000/statistics/businesses-country
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
 ### Get Total number of Investors registered
-GET http://localhost:3000/statistics/investors
+GET https://capitalconnect-0060e0fb0eb4.herokuapp.com/statistics/investors
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
 ### Get Total number of Investors and companies per sector.
@@ -73,5 +73,9 @@ GET http://localhost:3000/statistics/funding-stats
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
 ### Get statistics for all connection requests by investorId.
-GET http://localhost:3000/statistics/requests/2
+GET https://capitalconnect-0060e0fb0eb4.herokuapp.com/statistics/requests/35
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+### Get subscription statistics.
+GET http://localhost:3000/statistics/subscription
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
