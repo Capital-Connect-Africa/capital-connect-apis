@@ -84,6 +84,11 @@ export class StatisticsController {
     return await this.statisticsService.getInvestorsAndCompaniesByFunding();
   }
 
+  @Get('subscription')
+  async getSubscriptionStats() {
+    return await this.statisticsService.getSubscriptionStatistics();
+  }
+
   @Get('investors-funds')
   async getInvestorsPerFunding(
     @Query('type') type: 'minimumFunding' | 'maximumFunding'
