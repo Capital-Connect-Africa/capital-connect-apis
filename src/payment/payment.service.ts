@@ -103,10 +103,12 @@ export class PaymentService {
     paymentObj.orderTrackingId = orderTrackingId;
     paymentObj.user = { id: userId } as User;
     if (bookingId) paymentObj.booking = { id: bookingId } as Booking;
-    if (userSubscriptionId)
-      paymentObj.userSubscription = { id: bookingId } as UserSubscription;
-    const payment = await this.paymentsRepository.save(paymentObj);
-    return payment;
+    if (userSubscriptionId) {
+      paymentObj.userSubscription = {
+        id: userSubscriptionId,
+      } as UserSubscription;
+    }
+    return await this.paymentsRepository.save(paymentObj);
   }
 
   findAll(page: number = 1, limit: number = 10) {
