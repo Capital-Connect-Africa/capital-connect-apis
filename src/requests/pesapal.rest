@@ -1,5 +1,5 @@
-###
-# PesaPal API Authentication
+### PesaPal API Authentication
+
 POST https://pay.pesapal.com/v3/api/Auth/RequestToken
 Content-Type: application/json
 
@@ -9,7 +9,6 @@ Content-Type: application/json
 }
 
 ###
-#
 
 POST https://pay.pesapal.com/v3/api/PostPesapalDirectOrderV4
 Content-Type: application/json
@@ -25,8 +24,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
     "email": ""
     }
 
-###
-# PesaPal Callback URL local
+### PesaPal Callback URL local
 
 POST http://localhost:3000/payments/callback
 Content-Type: application/json
@@ -36,8 +34,7 @@ Content-Type: application/json
     "pesapal_transaction_tracking_id": "QWERTY123456"
 }
 
-###
-# PesaPal Callback URL
+### PesaPal Callback URL
 
 POST http://api.capitalconnect.africa/payments/callback
 Content-Type: application/json
@@ -47,8 +44,7 @@ Content-Type: application/json
     "pesapal_transaction_tracking_id": "QWERTY123456"
 }
 
-###
-# Register IPN
+### Register IPN
 
 POST https://pay.pesapal.com/v3/api/URLSetup/RegisterIPN
 Content-Type: application/json
@@ -59,14 +55,12 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
     "ipn_notification_type": "POST"
 }
 
-###
-# Get IPN List
+### Get IPN List
 
 GET https://pay.pesapal.com/v3/api/URLSetup/GetIpnList
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
-###
-# Submit order request
+### Submit order request
 
 POST https://pay.pesapal.com/v3/api/Transactions/SubmitOrderRequest
 Content-Type: application/json
@@ -97,8 +91,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
     }
 }  
 
-###
-# Get transaction status
+### Get transaction status
 
 GET https://pay.pesapal.com/v3/api/Transactions/GetTransactionStatus?orderTrackingId=8b409fc7-c24a-4e21-ab3c-dd01e92be2b6
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3VzZXJkYXRhIjoiZTk5NjJhNGUtYzkwZS00ZGY4LWJkYTUtZGQwMWE5ZTQyYmQ0IiwidWlkIjoibCsyNWg5Z01FaWRVeFRnTi9MUzlUVEtUemZlL1VxMzQiLCJuYmYiOjE3MjA3ODE1NTcsImV4cCI6MTcyMDc4MTg1NywiaWF0IjoxNzIwNzgxNTU3LCJpc3MiOiJodHRwOi8vcGF5LnBlc2FwYWwuY29tLyIsImF1ZCI6Imh0dHA6Ly9wYXkucGVzYXBhbC5jb20vIn0.JzqeDBhwE0Pw3cCG_Ypoxu2jVkyMpQQ_WeRYq6NyPyo
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
