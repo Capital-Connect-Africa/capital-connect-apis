@@ -41,6 +41,15 @@ export const connectionRequest = (
             border-radius: 5px;
         }
 
+        .decline-button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #fc4943;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+
         .footer {
             margin-top: 20px;
             font-size: 12px;
@@ -59,7 +68,7 @@ export const connectionRequest = (
         
         <p>This is an invitation for an exploratory discussion rather than a commitment. If you’re open to a follow-up conversation, please accept the request on our platform. </p>
         <a href="${process.env.FRONTEND_URL}/connection-requests/${uuid}/approve" class="button">Approve Connection Request</a>
-        <a href="${process.env.FRONTEND_URL}/connection-requests/${uuid}/decline" class="button">Decline Connection Request</a>
+        <a href="${process.env.FRONTEND_URL}/connection-requests/${uuid}/decline" class="decline-button">Decline Connection Request</a>
         <p>Feel free to reach out if you have any questions or need assistance.</p>
         
         <p>Best regards, <br> Capital Connect Team</p>
