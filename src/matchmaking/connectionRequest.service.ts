@@ -4,7 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { ConnectionRequest } from './entities/connectionRequest.entity';
-import { Repository } from 'typeorm';
+import { IsNull, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateConnectionRequestDto } from './dto/create-connection-request.dto';
 import { UpdateConnectionRequestDto } from './dto/update-connection-request.dto';
@@ -137,11 +137,11 @@ export class ConnectionRequestService {
 
   async approveConnectionRequest(id: string) {
     const approvalRequest = await this.connectionRequestRepository.findOne({
-      where: { uuid: id },
+      where: { uuid: id, isApproved: IsNull() },
       relations: ['investorProfile', 'company'],
     });
     if (!approvalRequest) {
-      throw new NotFoundException(`Connection request with ID ${id} not found`);
+      throw new NotFoundException(`Valid connection request with ID ${id} not found`);
     }
     await this.matchmakingService.connectWithCompany(
       approvalRequest.investorProfile.id,
@@ -153,11 +153,11 @@ export class ConnectionRequestService {
 
   async declineConnectionRequest(id: string) {
     const approvalRequest = await this.connectionRequestRepository.findOne({
-      where: { uuid: id },
+      where: { uuid: id, isApproved: IsNull()  },
       relations: ['investorProfile', 'company'],
     });
     if (!approvalRequest) {
-      throw new NotFoundException(`Connection request with ID ${id} not found`);
+      throw new NotFoundException(`Valid connection request with ID ${id} not found`);
     }
     await this.matchmakingService.markAsDeclined(
       approvalRequest.investorProfile.id,
@@ -174,7 +174,7 @@ export class ConnectionRequestService {
     });
 
     if (!connectionRequest) {
-      throw new NotFoundException(`ConnectionRequest with ID ${id} not found`);
+      throw new NotFoundException(`Connection request with ID ${id} not found`);
     }
 
     return connectionRequest;
