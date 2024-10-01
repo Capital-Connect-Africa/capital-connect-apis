@@ -31,17 +31,24 @@ export class PaymentService {
       pesapalToken,
       OrderTrackingId,
     );
-    const payment = await this.paymentsRepository.findOneBy({
-      orderTrackingId: OrderTrackingId,
+    const payment = await this.paymentsRepository.findOne({
+      where: {
+        orderTrackingId: OrderTrackingId,
+      },
+      relations: ['userSubscription'],
     });
     if (!payment)
       throw new NotFoundException(
-        `Payment with order tracking id ${OrderMerchantReference} not found`,
+        `Payment with order tracking id ${OrderTrackingId} not found`,
       );
     payment.status = pesapalPayment.payment_status_description;
     console.log('Payment status:', payment.status);
     const updatedPayment = await this.paymentsRepository.save(payment);
-    if (updatedPayment.userSubscription) {
+    console.log('Updated payment:', updatedPayment);
+    if (
+      updatedPayment.userSubscription &&
+      updatedPayment.status === 'Completed'
+    ) {
       const userSubscription = await this.userSubscriptionRepository.findOneBy({
         id: updatedPayment.userSubscription.id,
       });

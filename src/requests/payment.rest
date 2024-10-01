@@ -1,5 +1,4 @@
-###
-# Create payment
+### Create payment
 POST http://localhost:3000/payments
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
@@ -14,8 +13,17 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
     "userId": 4
 }
 
-###
-# Create payment prod
+### Payment callback
+POST http://localhost:3000/payments/callback
+Content-Type: application/json
+
+{
+  "OrderTrackingId":"15e2d303-0d9a-4b78-b04f-dcb603c1eca5",
+  "OrderNotificationType":"IPNCHANGE",
+  "OrderMerchantReference":"47"
+}
+
+### Create payment prod
 POST http://api.capitalconnect.africa/payments
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
@@ -28,8 +36,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
     "OrderTrackingId": 0
 }
 
-###
-# Get payment
+### Get payment
 GET http://localhost:3000/payments/b
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
