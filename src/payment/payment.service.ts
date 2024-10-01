@@ -32,7 +32,7 @@ export class PaymentService {
       OrderTrackingId,
     );
     const payment = await this.paymentsRepository.findOneBy({
-      id: +OrderMerchantReference,
+      orderTrackingId: OrderTrackingId,
     });
     if (!payment)
       throw new NotFoundException(
