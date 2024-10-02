@@ -168,22 +168,20 @@ export class StatisticsService {
   }
 
   async getCompaniesPerCountry(): Promise<{ [country: string]: number }> {
-    const countries = await this.countriesRepository.find(); 
+    const companiesPerCountry = await this.companyRepository
+        .createQueryBuilder('company')
+        .select('company.country', 'country')
+        .addSelect('COUNT(company.id)', 'total')
+        .groupBy('company.country')
+        .getRawMany();
 
     const result: { [country: string]: number } = {};
-
-    await Promise.all(
-      countries.map(async (country) => {
-            const totalCompanies = await this.companyRepository.count({
-                where: { country: country.name }, 
-            });
-
-            result[country.name] = totalCompanies;
-        })
-    );
+    companiesPerCountry.forEach(({ country, total }) => {
+        result[country] = Number(total);
+    });
 
     return result;
-}
+  }
 
   async getBusinessesPerFundRaise(): Promise<{ 
     Seed: number;
