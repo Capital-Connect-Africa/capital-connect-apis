@@ -3,7 +3,7 @@ import { CreatePaymentDto } from './dto/create-payment.dto';
 import { UpdatePaymentDto } from './dto/update-payment.dto';
 import { Payment } from './entities/payment.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { MoreThan, Repository } from 'typeorm';
 import { Booking } from 'src/booking/entities/booking.entity';
 import { User } from 'src/users/entities/user.entity';
 import { HttpService } from '@nestjs/axios';
@@ -153,5 +153,31 @@ export class PaymentService {
 
   remove(id: number) {
     this.paymentsRepository.delete(id);
+  }
+
+  findPaymentsByUserId(userId: number, page: number = 1, limit: number = 10) {
+    const skip = (page - 1) * limit;
+    return this.paymentsRepository.find({
+      where: { user: { id: userId } },
+      skip,
+      take: limit,
+      relations: ['booking', 'userSubscription'],
+    });
+  }
+
+  findPaymentsByUserIdPastWeek(
+    userId: number,
+    page: number = 1,
+    limit: number = 10,
+  ) {
+    const weekAgo = new Date();
+    weekAgo.setDate(weekAgo.getDate() - 7);
+    const skip = (page - 1) * limit;
+    return this.paymentsRepository.find({
+      where: { user: { id: userId }, createdAt: MoreThan(weekAgo) },
+      skip,
+      take: limit,
+      relations: ['booking', 'userSubscription'],
+    });
   }
 }

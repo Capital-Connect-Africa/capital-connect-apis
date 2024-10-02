@@ -41,7 +41,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
   "subscriptionTierId": 6
 }
 
-### Fetch subscriptions
+### Fetch subscriptions prod
 GET http://api.capitalconnect.africa/subscriptions?limit=2&page=1
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
