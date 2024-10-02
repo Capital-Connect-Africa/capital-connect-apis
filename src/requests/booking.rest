@@ -8,16 +8,6 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
     "calendlyEventId": "82348"
 }
 
-### Create booking prod
-
-POST http://api.capitalconnect.africa/bookings
-Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
-
-{
-    "calendlyEventId": "82348"
-}
-
 ### Get booking
 
 GET http://localhost:3000/bookings/4
@@ -47,4 +37,45 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 ### Delete booking
 
 DELETE http://localhost:3000/bookings/4
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+### Create booking prod
+
+POST http://api.capitalconnect.africa/bookings
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+{
+  "calendlyEventId": "82348"
+}
+
+### Get booking prod
+
+GET http://api.capitalconnect.africa/bookings/4
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+
+### Get bookings prod
+
+GET http://api.capitalconnect.africa/bookings
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+### Get bookings paginated prod
+
+GET http://api.capitalconnect.africa/bookings?page=8&limit=1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+### Update booking prod
+
+PUT http://api.capitalconnect.africa/bookings/4
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+{
+    "calendlyEventId": "76098"
+}
+
+### Delete booking prod
+
+DELETE http://api.capitalconnect.africa/bookings/4
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9

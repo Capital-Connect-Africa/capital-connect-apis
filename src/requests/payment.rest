@@ -40,33 +40,27 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 GET http://localhost:3000/payments/7
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
-###
-# Get payment prod
+### Get payment prod
 GET https://capitalconnect-0060e0fb0eb4.herokuapp.com/payments/129
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
-###
-# Get payments
+### Get payments
 GET http://localhost:3000/payments
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
-###
-# Get payments prod
+### Get payments prod
 GET https://capitalconnect-0060e0fb0eb4.herokuapp.com/payments
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
-###
-# Get payments paginated
+### Get payments paginated
 GET http://localhost:3000/payments?page=3&limit=1
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
-###
-# Get payments paginated prod
+### Get payments paginated prod
 GET http://api.capitalconnect.africa/payments?page=1&limit=2
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
-###
-# Update payment
+### Update payment
 PUT http://localhost:3000/payments/14
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
@@ -79,8 +73,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
     "OrderTrackingId": 0
 }
 
-###
-# Update payment prod
+### Update payment prod
 PUT http://api.capitalconnect.africa/payments/129
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
@@ -93,18 +86,19 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
     "OrderTrackingId": 0
 }
 
-###
-# Delete payment
+### Delete payment
 DELETE http://localhost:3000/payments/17
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
-###
-# Check payment status
+### Delete payment prod
+DELETE http://api.capitalconnect.africa/payments/17
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+### Check payment status
 GET http://localhost:3000/payments/status?orderTrackingId=da31e1d4-87ac-4bf2-96f8-dcfc7150d847
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
-###
-# Check payment status prod
+### Check payment status prod
 GET http://api.capitalconnect.africa/payments/status?orderTrackingId=55d9a645-6658-434b-8a74-dcf66fc61862
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
