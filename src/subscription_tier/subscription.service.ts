@@ -1,9 +1,14 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { SubscriptionTier } from './entities/subscription_tier.entity';
 import { User } from '../users/entities/user.entity';
 import { UserSubscription } from './entities/userSubscription.entity';
+import { SubscriptionTierEnum } from '../subscription/subscription-tier.enum';
 
 @Injectable()
 export class SubscriptionService {
@@ -74,5 +79,49 @@ export class SubscriptionService {
     } else {
       return userSubscription;
     }
+  }
+
+  async canUpgradeUserSubscription(
+    userId: number,
+    upgradeTier: string,
+  ): Promise<User> {
+    const user = await this.userRepository.findOne({
+      where: { id: userId },
+      relations: ['subscriptions', 'subscriptions.subscriptionTier'],
+    });
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    let currentTier = user.subscriptions?.find(
+      (subscription) => subscription.isActive,
+    )?.subscriptionTier?.name;
+    if (!currentTier) {
+      currentTier = SubscriptionTierEnum.BASIC;
+    }
+
+    const tierOrder = [
+      SubscriptionTierEnum.BASIC,
+      SubscriptionTierEnum.PLUS,
+      SubscriptionTierEnum.PRO,
+      SubscriptionTierEnum.ELITE,
+    ];
+
+    const userTierIndex = tierOrder.indexOf(currentTier);
+    const nextTier = tierOrder.indexOf(upgradeTier as SubscriptionTierEnum);
+
+    console.log('Current tier:', userTierIndex, nextTier);
+    if (nextTier === -1) {
+      throw new BadRequestException('This is not a valid subscription tier');
+    }
+
+    if (userTierIndex >= nextTier) {
+      throw new BadRequestException(
+        `Subscription upgrade from ${currentTier} to ${upgradeTier} is not possible`,
+      );
+    }
+
+    return user;
   }
 }

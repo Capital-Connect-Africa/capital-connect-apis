@@ -4,7 +4,8 @@ import { Repository } from 'typeorm';
 import { SubscriptionTier } from './entities/subscription_tier.entity';
 import { CreateSubscriptionTierDto } from './dto/create-subscription_tier.dto';
 import { UpdateSubscriptionTierDto } from './dto/update-subscription_tier.dto';
-import { User } from "../users/entities/user.entity";
+import { User } from '../users/entities/user.entity';
+import { SubscriptionTierEnum } from '../subscription/subscription-tier.enum';
 
 @Injectable()
 export class SubscriptionTierService {
@@ -27,12 +28,27 @@ export class SubscriptionTierService {
   }
 
   async findOne(id: number) {
-      const subscriptionTier = await this.subscriptionTierRepository.findOne({ where: { id } });
-      
-      if (!subscriptionTier) {
-        throw new NotFoundException(`Subscription tier with ID ${id} not found`);
-       }
-      return subscriptionTier;
+    const subscriptionTier = await this.subscriptionTierRepository.findOne({
+      where: { id },
+    });
+
+    if (!subscriptionTier) {
+      throw new NotFoundException(`Subscription tier with ID ${id} not found`);
+    }
+    return subscriptionTier;
+  }
+
+  async findOneByName(name: string) {
+    const subscriptionTier = await this.subscriptionTierRepository.findOne({
+      where: { name: name as SubscriptionTierEnum },
+    });
+
+    if (!subscriptionTier) {
+      throw new NotFoundException(
+        `Subscription tier with name ${name} not found`,
+      );
+    }
+    return subscriptionTier;
   }
 
   update(id: number, updateSubscriptionTierDto: UpdateSubscriptionTierDto) {
@@ -44,11 +60,11 @@ export class SubscriptionTierService {
 
   async remove(id: number) {
     const result = await this.subscriptionTierRepository.delete(id);
-    
+
     if (result.affected === 0) {
       throw new NotFoundException(`Subscription tier with ID ${id} not found`);
     }
-    
+
     return { message: `Subscription tier with ID ${id} successfully deleted` };
   }
 }
