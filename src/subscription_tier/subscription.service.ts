@@ -124,4 +124,12 @@ export class SubscriptionService {
 
     return user;
   }
+
+  findAll(page: number = 1, limit: number = 10): Promise<UserSubscription[]> {
+    return this.userSubscriptionRepository.find({
+      take: limit,
+      skip: (page - 1) * limit,
+      relations: ['user', 'subscriptionTier'],
+    });
+  }
 }

@@ -7,6 +7,7 @@ import {
   Param,
   ParseIntPipe,
   Post,
+  Query,
   Req,
   UseGuards,
 } from '@nestjs/common';
@@ -252,5 +253,11 @@ export class SubscriptionController {
     }
 
     return subscriptionResponse;
+  }
+
+  @Get()
+  @Roles(Role.Admin)
+  async findAll(@Query('page') page: number, @Query('limit') limit: number) {
+    return this.subscriptionService.findAll(page, limit);
   }
 }
