@@ -25,8 +25,7 @@ export class PaymentService {
     callbackPaymentDto: CallbackPaymentDto,
   ) {
     console.log('Processing payment callback with token:', pesapalToken);
-    const { OrderTrackingId, OrderNotificationType, OrderMerchantReference } =
-      callbackPaymentDto;
+    const { OrderTrackingId } = callbackPaymentDto;
     const pesapalPayment = await this.checkPaymentStatus(
       pesapalToken,
       OrderTrackingId,
@@ -123,11 +122,15 @@ export class PaymentService {
     return this.paymentsRepository.find({
       skip,
       take: limit,
+      relations: ['booking', 'userSubscription'],
     });
   }
 
   async findOne(id: number) {
-    const payment = await this.paymentsRepository.findOneBy({ id });
+    const payment = await this.paymentsRepository.findOne({
+      where: { id },
+      relations: ['booking', 'userSubscription', 'user'],
+    });
     if (!payment) {
       throw new NotFoundException(`Payment with id ${id} not found`);
     }

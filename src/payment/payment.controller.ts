@@ -76,15 +76,16 @@ export class PaymentController {
 
   @Get()
   @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.Admin)
   findAll(@Query('page') page: number, @Query('limit') limit: number) {
     return this.paymentsService.findAll(page, limit);
   }
 
   @Get(':id')
   @UseGuards(JwtAuthGuard, RolesGuard)
-  findOne(@Param('id') id: string) {
+  findOne(@Param('id') id: number) {
     try {
-      return this.paymentsService.findOne(+id);
+      return this.paymentsService.findOne(id);
     } catch (error) {
       throwInternalServer(error);
     }

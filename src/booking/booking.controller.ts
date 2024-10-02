@@ -53,7 +53,7 @@ export class BookingController {
             currency: 'KES',
             amount: process.env.ADVISORY_SESSIONS_COST,
             description: 'Advisory session booking fee.',
-            callback_url: process.env.PESAPAL_CALLBACK_URL,
+            callback_url: process.env.BOOKING_CALLBACK_URL,
             redirect_mode: 'TOP_WINDOW',
             notification_id: process.env.PESAPAL_NOTIFICATION_ID,
             branch: 'Capital Connect Africa App',
