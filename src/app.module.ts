@@ -38,6 +38,7 @@ import { StatisticsModule } from './statistics/statistics.module';
 import { SpecialCriteriaModule } from './special-criteria/special-criteria.module';
 import { SubscriptionTierModule } from './subscription_tier/subscription_tier.module';
 import { BillingModule } from './billing/billing.module';
+import { SegmentModule } from './segment/segment.module';
 
 @Module({
   imports: [
@@ -82,6 +83,7 @@ import { BillingModule } from './billing/billing.module';
     SpecialCriteriaModule,
     SubscriptionTierModule,
     BillingModule,
+    SegmentModule,
   ],
   providers: [
     AppService,
