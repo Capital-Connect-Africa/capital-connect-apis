@@ -1,0 +1,47 @@
+###
+# Create segment
+POST http://localhost:3000/segments
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+{
+    "name": "Segment 1",
+    "subSectorId": 1,
+    "description": "Segment 200 description"
+}
+
+###
+# Get segment by id
+
+GET http://localhost:3000/segments/10
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+###
+# Get segments
+
+GET http://localhost:3000/segments
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+###
+# Get segments paginated
+
+GET http://localhost:3000/segments?page=1&count=30
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+###
+# Update segment
+
+PUT http://localhost:3000/segments/1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+{
+    "name": "Updated segment 1",
+    "description": "Updated segment 1 description"
+}
+
+###
+# Delete segment
+
+DELETE http://localhost:3000/segments/1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmaXJzdE5hbWUiOm51bGwsImxhc3ROYW1lIjpudWxsLCJ1c2VybmFtZSI6ImdhdHVtYWlhbkBnbWFpbC5jb20iLCJzdWIiOjEsInJvbGVzIjpbImFkbWluIl0sImhhc0FjY2VwdGVkVGVybXMiOnRydWUsInN1YnNjcmlwdGlvblRpZXIiOiJiYXNpYyIsImlhdCI6MTcyNzg2MzcyMywiZXhwIjoxNzI3OTUwMTIzfQ.trDG6p3yssvVU-M0yG0E-x31MFeVkfa01RJ3-3oPsR0
