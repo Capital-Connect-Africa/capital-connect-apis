@@ -8,7 +8,7 @@ import * as sgMail from '@sendgrid/mail';
 import { randomBytes } from 'crypto';
 import { addHours } from 'date-fns';
 import { welcomeEmailTemplate } from '../templates/welcome-reset';
-import { SubscriptionTierEnum } from "../subscription/subscription-tier.enum";
+import { SubscriptionTierEnum } from '../subscription/subscription-tier.enum';
 const brevo = require('@getbrevo/brevo');
 
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
@@ -44,7 +44,9 @@ export class AuthService {
 
       const userRoles = user.roles?.split(',').map((role) => role.trim());
       const subscriptions = user.subscriptions;
-      const subscriptionTier = subscriptions?.find((subscription) => subscription.isActive)?.subscriptionTier?.name;
+      const subscriptionTier = subscriptions?.find(
+        (subscription) => subscription.isActive,
+      )?.subscriptionTier?.name;
       const payload = {
         firstName: user.firstName,
         lastName: user.lastName,
