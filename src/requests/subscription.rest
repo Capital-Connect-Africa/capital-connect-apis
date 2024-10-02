@@ -17,6 +17,10 @@ GET http://api.capitalconnect.africa/subscriptions/19
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 Content-Type: application/json
 
+### Fetch subscriptions
+GET http://localhost:3000/subscriptions?limit=2&page=1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
 ### Subscribe
 
 POST http://localhost:3000/subscriptions/subscribe
@@ -36,6 +40,10 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 {
   "subscriptionTierId": 6
 }
+
+### Fetch subscriptions
+GET http://api.capitalconnect.africa/subscriptions?limit=2&page=1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
 ### Subscribe prod
 
