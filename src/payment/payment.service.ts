@@ -174,7 +174,11 @@ export class PaymentService {
     weekAgo.setDate(weekAgo.getDate() - 7);
     const skip = (page - 1) * limit;
     return this.paymentsRepository.find({
-      where: { user: { id: userId }, createdAt: MoreThan(weekAgo) },
+      where: {
+        user: { id: userId },
+        createdAt: MoreThan(weekAgo),
+        status: 'initiated',
+      },
       skip,
       take: limit,
       relations: ['booking', 'userSubscription'],

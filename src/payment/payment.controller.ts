@@ -124,7 +124,11 @@ export class PaymentController {
 
   @Get('user/:userId')
   @UseGuards(JwtAuthGuard)
-  async findPaymentsByUserId(@Param('userId') userId: number, @Query('page') page: number, @Query('limit') limit: number) {
+  async findPaymentsByUserId(
+    @Param('userId') userId: number,
+    @Query('page') page: number,
+    @Query('limit') limit: number,
+  ) {
     try {
       return this.paymentsService.findPaymentsByUserId(userId, page, limit);
     } catch (error) {
@@ -134,9 +138,17 @@ export class PaymentController {
 
   @Get('user/:userId/recent')
   @UseGuards(JwtAuthGuard)
-  async findPaymentsByUserIdPastWeek(@Param('userId') userId: number, @Query('page') page: number, @Query('limit') limit: number) {
+  async findPaymentsByUserIdPastWeek(
+    @Param('userId') userId: number,
+    @Query('page') page: number,
+    @Query('limit') limit: number,
+  ) {
     try {
-      return this.paymentsService.findPaymentsByUserIdPastWeek(userId, page, limit);
+      return this.paymentsService.findPaymentsByUserIdPastWeek(
+        userId,
+        page,
+        limit,
+      );
     } catch (error) {
       throwInternalServer(error);
     }
