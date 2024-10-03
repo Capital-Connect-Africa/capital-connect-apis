@@ -102,3 +102,11 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 GET http://api.capitalconnect.africa/payments/status?orderTrackingId=55d9a645-6658-434b-8a74-dcf66fc61862
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
+### Get payments by user id
+GET http://localhost:3000/payments/user/19?page=1&limit=2
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+### Get recent payments by user id
+GET http://localhost:3000/payments/user/19/recent?page=1&limit=2
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
