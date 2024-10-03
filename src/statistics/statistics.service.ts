@@ -16,6 +16,8 @@ import { fundBands } from './stats.type';
 import { ConnectionRequest } from 'src/matchmaking/entities/connectionRequest.entity';
 import { UserSubscription } from 'src/subscription_tier/entities/userSubscription.entity';
 import { SubscriptionTierEnum } from 'src/subscription/subscription-tier.enum';
+import { Booking } from 'src/booking/entities/booking.entity';
+import { Payment } from 'src/payment/entities/payment.entity';
 
 interface StatsFilter {
   investorProfile?: InvestorProfile;
@@ -47,6 +49,10 @@ export class StatisticsService {
     private readonly connectionRequestRepository: Repository<ConnectionRequest>,
     @InjectRepository(UserSubscription)
     private readonly subscriptionRepository: Repository<UserSubscription>,
+    @InjectRepository(Booking)
+    private readonly bookingRepository: Repository<Booking>,
+    @InjectRepository(Payment)
+    private paymentsRepository: Repository<Payment>,
   ) {}
 
   async getUserStatistics(): Promise<{ [key in Role]: number }> {
@@ -391,4 +397,28 @@ export class StatisticsService {
     }); 
     return { subscription, basic, plus, pro, elite };
   }   
+
+  async getBookingStatistics(): Promise<{
+    bookings: number;
+  }> {
+    const bookingsCount = await this.bookingRepository.count({});
+    return { bookings: bookingsCount };
+  } 
+
+  async getPaymentsStatistics (): Promise<{
+    initiated: number;
+    completed: number;
+    failed: number;
+  }>{
+    const initiated = await this.paymentsRepository.count({
+      where: {status: "initiated"},
+    });
+    const completed = await this.paymentsRepository.count({
+      where: {status: "Completed"},
+    });
+    const failed = await this.paymentsRepository.count({
+      where: {status: "Failed"},
+    });
+    return { initiated, completed, failed}
+  }
 }

@@ -7,22 +7,24 @@ import { SpecialCriterion } from 'src/special-criteria/entities/special-criterio
 import { RolesGuard } from 'src/auth/roles.guard';
 
 @UseGuards(JwtAuthGuard, RolesGuard)
-@Roles(Role.Admin)
 @Controller('statistics')
 export class StatisticsController {
   constructor(private readonly statisticsService: StatisticsService) {}
 
   @Get('users')
+  @Roles(Role.Admin)
   async getUserStatistics() {
     return this.statisticsService.getUserStatistics();
   }
 
   @Get('matchmaking')
+  @Roles(Role.Admin)
   async getMatchMakingStatistics() {
     return this.statisticsService.getMatchMakingStatistics();
   }
 
   @Get('matchmaking/:id')
+  @Roles(Role.Admin, Role.Investor, Role.User)
   async getMatchMakingStatisticsPerCompany(
     @Param('id') id: number,
     @Query('role') role: 'company' | 'investor',
@@ -37,12 +39,14 @@ export class StatisticsController {
   }
 
   @Get('special-criteria')
+  @Roles(Role.Admin)
   async getSpecialCriteriaStatistics() {
     const statistics = await this.statisticsService.getSpecialCriteriaStatistics();
     return statistics;  
   }
 
   @Get('special-criteria/:id')
+  @Roles(Role.Admin, Role.Investor)
   async getSpecialCriteriaStatisticsInvestor(
     @Param('id') id: number,
   ) {
@@ -51,46 +55,55 @@ export class StatisticsController {
   }
 
   @Get('businesses')
+  @Roles(Role.Admin)
   async getTotalBusinesses(){
     return await this.statisticsService.getBusinessesStatistics();
   }
 
   @Get('businesses-stage')
+  @Roles(Role.Admin)
   async getBusinessesPerStage() {
     return await this.statisticsService.getBusinessesPerStage();
   }
 
   @Get('businesses-fund')
+  @Roles(Role.Admin)
   async getBusinessesPerFunds() {
     return await this.statisticsService.getBusinessesPerFundRaise();
   }
 
   @Get('businesses-country')
+  @Roles(Role.Admin)
   async getBusinessesPerCountry() {
     return await this.statisticsService.getCompaniesPerCountry();
   }
 
   @Get('investors')
+  @Roles(Role.Admin)
   async getTotalInvestors(){
     return await this.statisticsService.getInvestorsStatistics();
   }
 
   @Get('sectors-stats')
+  @Roles(Role.Admin)
   async getStatsPerSector() {
     return await this.statisticsService.getInvestorsAndCompaniesPerSector();
   }
 
   @Get('funding-stats')
+  @Roles(Role.Admin)
   async getStatsByFunding() {
     return await this.statisticsService.getInvestorsAndCompaniesByFunding();
   }
 
   @Get('subscription')
+  @Roles(Role.Admin)
   async getSubscriptionStats() {
     return await this.statisticsService.getSubscriptionStatistics();
   }
 
   @Get('investors-funds')
+  @Roles(Role.Admin)
   async getInvestorsPerFunding(
     @Query('type') type: 'minimumFunding' | 'maximumFunding'
   ) {
@@ -102,10 +115,33 @@ export class StatisticsController {
   }
 
   @Get('requests/:id')
+  @Roles(Role.Admin, Role.Investor)
   async getConnectionRequestStatistics(
     @Param('id') id: number,
   ) {
     const stats = await this.statisticsService.getConnectionRequestStatistics(id);
     return stats
+  }  
+
+  @Get('bookings')
+  @Roles(Role.Admin)
+  async getBookingStatistics() {
+    try {
+      const stats = await this.statisticsService.getBookingStatistics();
+      return stats;
+    } catch (error) {
+      throw new Error('Error fetching booking statistics');
+    }
+  }
+
+  @Get('payments')
+  @Roles(Role.Admin)
+  async getPaymentsStatistics() {
+    try {
+      const stats = await this.statisticsService.getPaymentsStatistics();
+      return stats;
+    } catch (error) {
+      throw new Error('Error fetching booking statistics');
+    }
   }
 }

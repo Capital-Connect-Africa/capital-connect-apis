@@ -13,11 +13,13 @@ import { Stage } from 'src/stage/entities/stage.entity';
 import { Country } from 'src/country/entities/country.entity';
 import { ConnectionRequest } from 'src/matchmaking/entities/connectionRequest.entity';
 import { UserSubscription } from 'src/subscription_tier/entities/userSubscription.entity';
+import { Booking } from 'src/booking/entities/booking.entity';
+import { Payment } from 'src/payment/entities/payment.entity';
 
 @Module({
   imports: [TypeOrmModule.forFeature([
     User, Matchmaking, SpecialCriterion, Company, InvestorProfile, Sector, UseOfFunds, Stage, Country,
-    ConnectionRequest, UserSubscription,
+    ConnectionRequest, UserSubscription, Booking, Payment,
   ])],
   providers: [StatisticsService],
   controllers: [StatisticsController],

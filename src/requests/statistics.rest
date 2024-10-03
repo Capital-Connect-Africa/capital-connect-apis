@@ -16,7 +16,7 @@ GET https://capitalconnect-0060e0fb0eb4.herokuapp.com/statistics/matchmaking
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
 ### Get matchmaking statistics per investor/company (investorId/companyId)
-GET http://localhost:3000/statistics/matchmaking/1?role=company
+GET http://localhost:3000/statistics/matchmaking/5?role=company
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
 ### Get matchmaking statistics per investor/company (investorId/companyId)
@@ -73,9 +73,17 @@ GET http://localhost:3000/statistics/funding-stats
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
 ### Get statistics for all connection requests by investorId.
-GET https://capitalconnect-0060e0fb0eb4.herokuapp.com/statistics/requests/35
+GET http://localhost:3000/statistics/requests/2
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
 ### Get subscription statistics.
 GET http://localhost:3000/statistics/subscription
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+### Get bookings statistics.
+GET http://localhost:3000/statistics/bookings
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+### Get payments statistics.
+GET http://localhost:3000/statistics/payments
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
