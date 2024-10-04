@@ -1,9 +1,8 @@
-import { BadRequestException, Controller, Get, NotFoundException, Param, Query, UseGuards } from '@nestjs/common';
+import { Controller, Get, NotFoundException, Param, Query, UseGuards } from '@nestjs/common';
 import { StatisticsService } from './statistics.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { Roles } from '../auth/roles.decorator';
 import { Role } from '../auth/role.enum';
-import { SpecialCriterion } from 'src/special-criteria/entities/special-criterion.entity';
 import { RolesGuard } from 'src/auth/roles.guard';
 
 @UseGuards(JwtAuthGuard, RolesGuard)
