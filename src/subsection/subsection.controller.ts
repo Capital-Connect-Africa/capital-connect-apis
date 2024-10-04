@@ -39,7 +39,7 @@ export class SubsectionController {
   }
 
   @Get()
-  async findAll(@Query('page') page: number, @Query('count') limit: number){
+  async findAll(@Query('page') page: number, @Query('limit') limit: number){
     try {
       const subsections = await this.subsectionService.findAll(page, limit);
       return subsections;

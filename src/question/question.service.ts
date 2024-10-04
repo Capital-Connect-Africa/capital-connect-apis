@@ -22,6 +22,7 @@ export class QuestionService {
       skip,
       take: limit,
       relations: ['answers'],
+      order: {id: 'DESC'},
     });
   }
 

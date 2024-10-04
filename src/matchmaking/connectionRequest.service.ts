@@ -88,6 +88,7 @@ export class ConnectionRequestService {
       relations: ['investorProfile', 'company'],
       take: limit,
       skip: (page - 1) * limit,
+      order: {id: 'DESC'},
     });
   }
 
@@ -112,6 +113,7 @@ export class ConnectionRequestService {
       relations: ['company'],
       take: limit,
       skip: (page - 1) * limit,
+      order: {id: 'DESC'},
     });
   }
 
@@ -132,6 +134,7 @@ export class ConnectionRequestService {
       relations: ['investorProfile'],
       take: limit,
       skip: (page - 1) * limit,
+      order: {id: 'DESC'},
     });
   }
 

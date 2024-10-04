@@ -39,7 +39,7 @@ export class AnswerController {
   }
 
   @Get()
-  findAll(@Query('page') page: number, @Query('count') limit: number) {
+  findAll(@Query('page') page: number, @Query('limit') limit: number) {
     try {
       return this.answerService.findAll(page, limit);
     } catch (error) {

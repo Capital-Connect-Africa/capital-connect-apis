@@ -123,6 +123,7 @@ export class PaymentService {
       skip,
       take: limit,
       relations: ['booking', 'userSubscription'],
+      order: {id: 'DESC'},
     });
   }
 

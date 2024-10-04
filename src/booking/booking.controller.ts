@@ -112,7 +112,7 @@ export class BookingController {
   findAll(
     @Req() req,
     @Query('page') page: number = 1,
-    @Query('count') limit: number = 10,
+    @Query('limit') limit: number = 10,
   ) {
     const user = req.user;
     return this.bookingService.findAll(user, page, limit);

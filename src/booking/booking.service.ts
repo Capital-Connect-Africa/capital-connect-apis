@@ -25,14 +25,16 @@ export class BookingService {
 
   findAll(user: User, page: number = 1, limit: number = 10) {
     const skip = (page - 1) * limit;
-    const query = {
+    const query: any= {
       skip,
       take: limit,
-      relations: ['payments'],
+      order: {id: 'DESC' },
+      relations: ['payments']
     };
 
     if (!user.roles.includes('admin'))
       query['where'] = { user: { id: user.id } };
+
     return this.bookingRepository.find(query);
   }
 

@@ -64,6 +64,7 @@ export class SubmissionService {
         answer: { id: answerId },
       },
       relations: ['user', 'question', 'answer'],
+      order: {id: 'DESC'},
     });
   }
 

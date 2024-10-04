@@ -53,6 +53,7 @@ export class InvestorProfileService {
         'contactPersons',
         'specialCriteria',
       ],
+      order: {id: 'DESC'},
     });
   }
 

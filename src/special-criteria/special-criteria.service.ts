@@ -89,6 +89,7 @@ export class SpecialCriteriaService {
       skip,
       take: limit,
       relations: ['questions', 'questions.answers', 'investorProfile'],
+      order: {id: 'DESC'},
     });
   }
 
@@ -133,6 +134,7 @@ export class SpecialCriteriaService {
       skip,
       take: limit,
       relations: ['questions', 'questions.answers', 'investorProfile'],
+      order: {id: 'DESC'},
     });
   }
 
@@ -152,6 +154,7 @@ export class SpecialCriteriaService {
       skip,
       take: limit,
       relations: ['questions', 'questions.answers', 'investorProfile'],
+      order: {id: 'DESC'},
     });
   }
 

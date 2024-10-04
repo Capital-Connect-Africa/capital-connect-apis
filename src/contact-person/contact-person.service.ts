@@ -31,6 +31,7 @@ export class ContactPersonService {
       skip,
       take: limit,
       relations: ['investorProfile'],
+      order: {id: 'DESC'},
     });
   }
 
