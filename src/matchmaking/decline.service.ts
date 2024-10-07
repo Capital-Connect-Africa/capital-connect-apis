@@ -28,8 +28,13 @@ export class DeclineService {
     return reason;
   }
 
-  async findAll(): Promise<DeclineReason[]> {
-    return this.declineReasonRepository.find();
+  async findAll(page: number = 1, limit: number = 30): Promise<DeclineReason[]> {
+    const skip = (page - 1) * limit;
+    return this.declineReasonRepository.find({
+      skip,
+      take: limit,
+      order: {id: 'DESC'},
+    });
   }
 
   async update(

@@ -6,6 +6,7 @@ import {
   Param,
   Post,
   Put,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
@@ -36,8 +37,8 @@ export class DeclineController {
   }
 
   @Get()
-  async findAll(): Promise<DeclineReason[]> {
-    return this.declineService.findAll();
+  async findAll(@Query('page') page: number, @Query('limit') limit: number): Promise<DeclineReason[]> {
+    return this.declineService.findAll(page, limit);
   }
 
   @Put(':id')

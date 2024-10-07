@@ -49,6 +49,7 @@ export class CompanyService {
       skip,
       take: limit,
       relations: ['companyLogo', 'user'],
+      order: {id: 'DESC'}
     });
   }
 

@@ -21,6 +21,9 @@ export class AnswerService {
     return this.answerRepository.find({
       skip,
       take: limit,
+      order: {
+        id: 'DESC', 
+      },
     });
   }
 

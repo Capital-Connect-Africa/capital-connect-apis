@@ -42,6 +42,7 @@ export class MobileNumberService {
       skip,
       take: limit,
       relations: ['user'],
+      order: {id: 'DESC'},
     });
   }
 

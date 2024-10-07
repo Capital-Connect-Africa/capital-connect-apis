@@ -130,6 +130,7 @@ export class SubscriptionService {
       take: limit,
       skip: (page - 1) * limit,
       relations: ['user', 'subscriptionTier'],
+      order: {id: 'DESC'},
     });
   }
 }
