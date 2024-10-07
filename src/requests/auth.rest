@@ -2,11 +2,13 @@
 
 GET http://localhost:3000
 
-### Landing home
+#####
+### Landing
 
 GET http://localhost:3000/home
 
-### Sign up
+#####
+# Sign up
 POST http://localhost:3000/auth/signup
 Content-Type: application/json
 
@@ -17,7 +19,6 @@ Content-Type: application/json
 }
 
 ### Sign up prod
-
 POST https://capitalconnect-0060e0fb0eb4.herokuapp.com/auth/signup
 Content-Type: application/json
 
@@ -27,7 +28,6 @@ Content-Type: application/json
 }
 
 ### Login
-
 POST  http://localhost:3000/auth/login
 Content-Type: application/json
 
@@ -37,7 +37,6 @@ Content-Type: application/json
 }
 
 ### Sign up with name
-
 POST http://localhost:3000/auth/signup
 Content-Type: application/json
 
@@ -58,7 +57,8 @@ Content-Type: application/json
     "password": "pass123"
 }
 
-### Login wrong creds || user
+###
+# Login wrong creds || user
 
 POST http://localhost:3000/auth/login
 Content-Type: application/json
@@ -68,7 +68,8 @@ Content-Type: application/json
     "password": "pass112"
 }
 
-### Sign up prod
+#####
+# Sign up prod
 POST https://capitalconnect-0060e0fb0eb4.herokuapp.com/auth/login
 Content-Type: application/json
 
@@ -77,7 +78,8 @@ Content-Type: application/json
   "password": "pass12"
 }
 
-### Resend verification email
+###
+# Resend verification email
 
 POST http://localhost:3000/auth/resend-verification-email
 Content-Type: application/json
@@ -86,7 +88,8 @@ Content-Type: application/json
     "email": "vic@gmail.com"
 }
 
-### Resend verification email
+###
+# Resend verification email
 
 POST http://api.capitalconnect.africa/auth/resend-verification-email
 Content-Type: application/json

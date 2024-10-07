@@ -1,9 +1,8 @@
-import { BadRequestException, Controller, Get, NotFoundException, Param, Query, UseGuards } from '@nestjs/common';
+import { Controller, Get, NotFoundException, Param, Query, UseGuards } from '@nestjs/common';
 import { StatisticsService } from './statistics.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { Roles } from '../auth/roles.decorator';
 import { Role } from '../auth/role.enum';
-import { SpecialCriterion } from 'src/special-criteria/entities/special-criterion.entity';
 import { RolesGuard } from 'src/auth/roles.guard';
 
 @UseGuards(JwtAuthGuard, RolesGuard)
@@ -24,7 +23,7 @@ export class StatisticsController {
   }
 
   @Get('matchmaking/:id')
-  @Roles(Role.Investor, Role.User, Role.Admin)
+  @Roles(Role.Admin, Role.Investor, Role.User)
   async getMatchMakingStatisticsPerCompany(
     @Param('id') id: number,
     @Query('role') role: 'company' | 'investor',
@@ -46,7 +45,7 @@ export class StatisticsController {
   }
 
   @Get('special-criteria/:id')
-  @Roles(Role.Investor, Role.Admin)
+  @Roles(Role.Admin, Role.Investor)
   async getSpecialCriteriaStatisticsInvestor(
     @Param('id') id: number,
   ) {
@@ -115,11 +114,33 @@ export class StatisticsController {
   }
 
   @Get('requests/:id')
-  @Roles(Role.Investor, Role.Admin)
+  @Roles(Role.Admin, Role.Investor)
   async getConnectionRequestStatistics(
     @Param('id') id: number,
   ) {
     const stats = await this.statisticsService.getConnectionRequestStatistics(id);
     return stats
+  }  
+
+  @Get('bookings')
+  @Roles(Role.Admin)
+  async getBookingStatistics() {
+    try {
+      const stats = await this.statisticsService.getBookingStatistics();
+      return stats;
+    } catch (error) {
+      throw new Error('Error fetching booking statistics');
+    }
+  }
+
+  @Get('payments')
+  @Roles(Role.Admin)
+  async getPaymentsStatistics() {
+    try {
+      const stats = await this.statisticsService.getPaymentsStatistics();
+      return stats;
+    } catch (error) {
+      throw new Error('Error fetching booking statistics');
+    }
   }
 }
