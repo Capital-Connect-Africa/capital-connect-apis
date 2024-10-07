@@ -17,6 +17,12 @@ GET http://localhost:3000/segments/10
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
 ###
+# Get segments by subSectorId
+
+GET http://localhost:3000/segments/sub-sectors/1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+###
 # Get segments
 
 GET http://localhost:3000/segments
@@ -25,7 +31,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 ###
 # Get segments paginated
 
-GET http://localhost:3000/segments?page=1&count=30
+GET http://localhost:3000/segments?page=1&limit=30
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
 ###
@@ -44,4 +50,4 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 # Delete segment
 
 DELETE http://localhost:3000/segments/1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmaXJzdE5hbWUiOm51bGwsImxhc3ROYW1lIjpudWxsLCJ1c2VybmFtZSI6ImdhdHVtYWlhbkBnbWFpbC5jb20iLCJzdWIiOjEsInJvbGVzIjpbImFkbWluIl0sImhhc0FjY2VwdGVkVGVybXMiOnRydWUsInN1YnNjcmlwdGlvblRpZXIiOiJiYXNpYyIsImlhdCI6MTcyNzg2MzcyMywiZXhwIjoxNzI3OTUwMTIzfQ.trDG6p3yssvVU-M0yG0E-x31MFeVkfa01RJ3-3oPsR0
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
