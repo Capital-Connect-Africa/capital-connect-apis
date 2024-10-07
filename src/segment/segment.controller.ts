@@ -55,6 +55,11 @@ export class SegmentController {
     }
   }
 
+  @Get('sub-sectors/:subSectorId')
+  async findSegments(@Param('subSectorId') subSectorId: number): Promise<Segment[]> {
+    return this.segmentService.findSegments(subSectorId);
+  }
+
   @Put(':id')
   @Roles(Role.Admin)
   async update(@Param('id') id: string, @Body() updateSegmentDto: UpdateSegmentDto) {
