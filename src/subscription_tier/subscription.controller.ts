@@ -225,7 +225,7 @@ export class SubscriptionController {
 
       // Redirect url: https://pay.pesapal.com/iframe/PesapalIframe3/Index?OrderTrackingId=[order_tracking_id]
       const res = response.data;
-      // console.log('Response', res);
+      console.log('Response', res);
       if (res.status !== '200')
         throw new HttpException(
           `Failed to initiate payment ${res.message}`,
@@ -245,7 +245,7 @@ export class SubscriptionController {
       subscriptionResponse.paymentId = payment.id;
     } catch (error) {
       console.error('Error', error);
-      // console.log('Error response', JSON.stringify(error.response?.data));
+      console.log('Error response', JSON.stringify(error.response?.data));
       throw new HttpException(
         `Failed to initiate payment ${error.message}`,
         500,
