@@ -37,6 +37,7 @@ export class SubscriptionTierModule {
       .apply(AuthMiddleware)
       .forRoutes(
         { path: 'subscriptions/subscribe', method: RequestMethod.POST },
+        { path: 'subscriptions/upgrade', method: RequestMethod.POST },
         { path: 'payments/:id', method: RequestMethod.GET },
       );
   }
