@@ -421,4 +421,21 @@ export class StatisticsService {
     });
     return { initiated, completed, failed}
   }
+
+  async getPaymentsStatisticsByUserId (userId: number): Promise<{
+    initiated: number;
+    completed: number;
+    failed: number;
+  }>{
+    const initiated = await this.paymentsRepository.count({
+      where: {status: "initiated", user: { id: userId }},
+    });
+    const completed = await this.paymentsRepository.count({
+      where: {status: "Completed", user: { id: userId }},
+    });
+    const failed = await this.paymentsRepository.count({
+      where: {status: "Failed", user: { id: userId }},
+    });
+    return { initiated, completed, failed}
+  }
 }
