@@ -48,6 +48,13 @@ export class PaymentService {
       updatedPayment.userSubscription &&
       updatedPayment.status === 'Completed'
     ) {
+      const activeSubscriptions = await this.userSubscriptionRepository.find({
+        where: { isActive: true },
+      });
+      for (const subscription of activeSubscriptions) {
+        subscription.isActive = false;
+        await this.userSubscriptionRepository.save(subscription);
+      }
       const userSubscription = await this.userSubscriptionRepository.findOneBy({
         id: updatedPayment.userSubscription.id,
       });
