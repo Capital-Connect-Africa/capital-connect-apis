@@ -3,7 +3,7 @@ import { CreatePaymentDto } from './dto/create-payment.dto';
 import { UpdatePaymentDto } from './dto/update-payment.dto';
 import { Payment } from './entities/payment.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { MoreThan, Repository } from 'typeorm';
+import { In, MoreThan, Repository } from "typeorm";
 import { Booking } from 'src/booking/entities/booking.entity';
 import { User } from 'src/users/entities/user.entity';
 import { HttpService } from '@nestjs/axios';
@@ -178,7 +178,7 @@ export class PaymentService {
       where: {
         user: { id: userId },
         createdAt: MoreThan(weekAgo),
-        status: 'initiated',
+        status: In(['initiated', 'Failed']),
       },
       skip,
       take: limit,
