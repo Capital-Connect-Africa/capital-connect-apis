@@ -43,7 +43,7 @@ export class SubscriptionService {
       subscriptionTier,
       subscriptionDate: currentDate,
       expiryDate,
-      isActive: false,
+      isActive: true,
     });
 
     return await this.userSubscriptionRepository.save(userSubscription);
