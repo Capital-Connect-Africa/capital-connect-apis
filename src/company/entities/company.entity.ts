@@ -28,6 +28,9 @@ export class Company {
   @Column({ nullable: true })
   businessSubsector: string;
 
+  @Column('text', { array: true })
+  segments: string[];
+
   @Column()
   productsAndServices: string;
 

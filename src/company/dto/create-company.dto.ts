@@ -1,4 +1,5 @@
 import {
+  IsArray,
   IsBoolean,
   IsEnum,
   IsNotEmpty,
@@ -24,6 +25,10 @@ export class CreateCompanyDto {
   @IsString()
   @IsOptional()
   businessSubsector: string;
+
+  @IsArray()
+  @IsOptional()
+  segments: string[];
 
   @IsString()
   @IsNotEmpty()

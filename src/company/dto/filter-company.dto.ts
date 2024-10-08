@@ -25,6 +25,11 @@ export class FilterCompanyDto {
   businessSubsectors?: string[];
 
   @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  segments?: string[];
+
+  @IsOptional()
   @IsString()
   productsAndServices?: string;
 
