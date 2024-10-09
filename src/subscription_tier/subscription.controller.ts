@@ -44,7 +44,7 @@ export class SubscriptionController {
     @Param('userId', ParseIntPipe) userId: number,
     @Param('subscriptionId', ParseIntPipe) subscriptionId: number,
   ) {
-    return this.subscriptionService.assignSubscription(userId, subscriptionId);
+    return this.subscriptionService.assignNewSubscription(userId, subscriptionId);
   }
 
   @Get('validate/:userId')
