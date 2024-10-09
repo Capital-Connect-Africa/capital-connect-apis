@@ -140,7 +140,20 @@ export class StatisticsController {
       const stats = await this.statisticsService.getPaymentsStatistics();
       return stats;
     } catch (error) {
-      throw new Error('Error fetching booking statistics');
+      throw new Error('Error fetching payments statistics');
+    }
+  }
+
+  @Get('payments/:id')
+  @Roles(Role.Admin, Role.Investor, Role.User)
+  async getPaymentsStatisticsByUserId(
+    @Param('id') id: number,
+  ) {
+    try {
+      const stats = await this.statisticsService.getPaymentsStatisticsByUserId(id);
+      return stats;
+    } catch (error) {
+      throw new Error('Error fetching payment statistics');
     }
   }
 }
