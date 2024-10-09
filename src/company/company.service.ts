@@ -291,6 +291,7 @@ export class CompanyService {
       countries,
       businessSectors,
       businessSubsectors,
+      segments,
       productsAndServices,
       registrationStructures,
       yearsOfOperation,
@@ -318,6 +319,13 @@ export class CompanyService {
         { businessSubsectors },
       );
     }
+
+    if (segments && segments.length > 0) {
+      queryBuilder.andWhere(
+        'companies.segments && ARRAY[:...segments]',
+        { segments },
+      );
+    }    
 
     if (productsAndServices) {
       queryBuilder.andWhere(
@@ -371,6 +379,7 @@ export class CompanyService {
       countries,
       businessSectors,
       businessSubsectors,
+      segments,
       productsAndServices,
       registrationStructures,
       investmentStructure,
@@ -402,6 +411,13 @@ export class CompanyService {
         { businessSubsectors },
       );
     }
+
+    if (segments && segments.length > 0) {
+      queryBuilder.andWhere(
+        'companies.segments && ARRAY[:...segments]',
+        { segments },
+      );
+    }    
 
     if (productsAndServices) {
       queryBuilder.orWhere(
