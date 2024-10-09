@@ -43,11 +43,45 @@ export class SubscriptionService {
       subscriptionTier,
       subscriptionDate: currentDate,
       expiryDate,
-      isActive: true,
+      isActive: false,
     });
 
     return await this.userSubscriptionRepository.save(userSubscription);
   }
+
+  async assignNewSubscription( userId: number, subscriptionTierId: number ): Promise<UserSubscription> {
+    const user = await this.userRepository.findOne({ where: { id: userId } });
+    const subscriptionTier = await this.subscriptionTierRepository.findOne({
+      where: { id: subscriptionTierId },
+    });
+  
+    if (!user || !subscriptionTier) {
+      throw new Error('User or subscription tier not found');
+    }
+  
+    const activeSubscription = await this.userSubscriptionRepository.findOne({
+      where: { user: { id: userId }, isActive: true },
+    });
+  
+    if (activeSubscription) {
+      activeSubscription.isActive = false;
+      await this.userSubscriptionRepository.save(activeSubscription);
+    }
+  
+    const currentDate = new Date();
+    const expiryDate = new Date(currentDate);
+    expiryDate.setFullYear(currentDate.getFullYear() + 1); // Set expiry to one year from the current date
+  
+    const newSubscription = this.userSubscriptionRepository.create({
+      user,
+      subscriptionTier,
+      subscriptionDate: currentDate,
+      expiryDate,
+      isActive: true,
+    });
+  
+    return await this.userSubscriptionRepository.save(newSubscription);
+  } 
 
   async validateSubscription(userId: number): Promise<boolean> {
     const userSubscription = await this.userSubscriptionRepository.findOne({
