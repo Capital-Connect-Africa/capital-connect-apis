@@ -23,20 +23,24 @@ export class BookingService {
     return await this.bookingRepository.save(bookingObj);
   }
 
-  findAll(user: User, page: number = 1, limit: number = 10) {
+  async findAll(user: User, page: number = 1, limit: number = 10): 
+  Promise<{ data: Booking[], total: number }> {
     const skip = (page - 1) * limit;
-    const query: any= {
+    const query: any = {
       skip,
       take: limit,
-      order: {id: 'DESC' },
-      relations: ['payments']
+      order: { id: 'DESC' },
+      relations: ['payments'],
     };
-
-    if (!user.roles.includes('admin'))
-      query['where'] = { user: { id: user.id } };
-
-    return this.bookingRepository.find(query);
-  }
+  
+    if (!user.roles.includes('admin')) {
+      query.where = { user: { id: user.id } };
+    }
+  
+    const [data, total] = await this.bookingRepository.findAndCount(query);
+  
+    return { data, total };
+  }  
 
   async findOne(id: number) {
     const booking = await this.bookingRepository.findOneBy({ id });

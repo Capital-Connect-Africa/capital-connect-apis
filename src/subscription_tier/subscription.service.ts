@@ -19,7 +19,7 @@ export class SubscriptionService {
     private readonly userRepository: Repository<User>,
     @InjectRepository(SubscriptionTier)
     private readonly subscriptionTierRepository: Repository<SubscriptionTier>,
-  ) {}
+  ) { }
 
   async assignSubscription(
     userId: number,
@@ -125,12 +125,14 @@ export class SubscriptionService {
     return user;
   }
 
-  findAll(page: number = 1, limit: number = 10): Promise<UserSubscription[]> {
-    return this.userSubscriptionRepository.find({
+  async findAll(page: number = 1, limit: number = 10){
+    const [data, total] = await this.userSubscriptionRepository.findAndCount({
       take: limit,
       skip: (page - 1) * limit,
       relations: ['user', 'subscriptionTier'],
-      order: {id: 'DESC'},
+      order: { id: 'DESC' },
     });
+
+    return { data, total };
   }
 }
