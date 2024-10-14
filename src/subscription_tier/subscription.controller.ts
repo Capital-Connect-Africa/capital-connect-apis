@@ -54,7 +54,7 @@ export class SubscriptionController {
     return { hasSubscription };
   }
 
-  @Get(':userId')
+  @Get('user/:userId')
   async fetchSubscription(@Param('userId', ParseIntPipe) userId: number) {
     return await this.subscriptionService.fetchSubscription(userId);
   }
@@ -259,5 +259,22 @@ export class SubscriptionController {
   @Roles(Role.Admin)
   async findAll(@Query('page') page: number, @Query('limit') limit: number) {
     return this.subscriptionService.findAll(page, limit);
+  }
+
+  @Get(':id')
+  @Roles(Role.Admin)
+  async findOne(@Param('id') id: number) {
+    return this.subscriptionService.findOne(id);
+  }
+
+  @Post('status')
+  @Roles(Role.Admin)
+  async changeSubscriptionStatus(
+    @Body() statusDto: { id: number; isActive: boolean },
+  ) {
+    return await this.subscriptionService.changeSubscriptionStatus(
+      statusDto.id,
+      statusDto.isActive,
+    );
   }
 }

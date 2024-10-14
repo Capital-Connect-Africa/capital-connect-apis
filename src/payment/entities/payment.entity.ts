@@ -1,9 +1,16 @@
-import { Booking } from "src/booking/entities/booking.entity";
-import { User } from "src/users/entities/user.entity";
-import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
-import { UserSubscription } from "../../subscription_tier/entities/userSubscription.entity";
+import { Booking } from 'src/booking/entities/booking.entity';
+import { User } from 'src/users/entities/user.entity';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
+import { UserSubscription } from '../../subscription_tier/entities/userSubscription.entity';
 
-@Entity("payments")
+@Entity('payments')
 export class Payment {
   @PrimaryGeneratedColumn()
   id: number;
@@ -29,12 +36,15 @@ export class Payment {
   @UpdateDateColumn({ type: 'timestamptz' })
   updatedAt: Date;
 
-  @ManyToOne(() => UserSubscription, userSubscription => userSubscription.payments)
+  @ManyToOne(
+    () => UserSubscription,
+    (userSubscription) => userSubscription.payments,
+  )
   userSubscription: UserSubscription;
 
-  @ManyToOne(() => Booking, booking => booking.payments)
+  @ManyToOne(() => Booking, (booking) => booking.payments)
   booking: Booking;
 
-  @ManyToOne(() => User, user => user.payments, { onDelete: 'CASCADE' })
+  @ManyToOne(() => User, (user) => user.payments, { onDelete: 'CASCADE' })
   user: User;
 }
