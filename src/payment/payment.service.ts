@@ -3,7 +3,7 @@ import { CreatePaymentDto } from './dto/create-payment.dto';
 import { UpdatePaymentDto } from './dto/update-payment.dto';
 import { Payment } from './entities/payment.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { In, MoreThan, Repository } from "typeorm";
+import { In, MoreThan, Repository } from 'typeorm';
 import { Booking } from 'src/booking/entities/booking.entity';
 import { User } from 'src/users/entities/user.entity';
 import { HttpService } from '@nestjs/axios';
@@ -129,15 +129,25 @@ export class PaymentService {
     return this.paymentsRepository.find({
       skip,
       take: limit,
-      relations: ['booking', 'userSubscription'],
-      order: {id: 'DESC'},
+      relations: [
+        'booking',
+        'userSubscription',
+        'userSubscription.subscriptionTier',
+        'user',
+      ],
+      order: { id: 'DESC' },
     });
   }
 
   async findOne(id: number) {
     const payment = await this.paymentsRepository.findOne({
       where: { id },
-      relations: ['booking', 'userSubscription', 'user'],
+      relations: [
+        'booking',
+        'userSubscription',
+        'userSubscription.subscriptionTier',
+        'user',
+      ],
     });
     if (!payment) {
       throw new NotFoundException(`Payment with id ${id} not found`);

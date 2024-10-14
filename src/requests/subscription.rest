@@ -41,6 +41,21 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
   "subscriptionTierId": 6
 }
 
+### Get subscription
+GET http://localhost:3000/subscriptions/1
+Authorization: Bearer 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+### Change status
+
+POST http://localhost:3000/subscriptions/status
+Content-Type: application/json
+Authorization: Bearer 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+{
+  "id": 1,
+  "isActive": true
+}
+
 ### Fetch subscriptions prod
 GET http://api.capitalconnect.africa/subscriptions?limit=2&page=1
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
@@ -63,4 +78,15 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
 {
   "subscriptionTierId": 6
+}
+
+### Change status prod
+
+POST http://api.capitalconnect.africa/subscriptions/status
+Content-Type: application/json
+Authorization: Bearer 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+{
+  "id": 1,
+  "isActive": true
 }
