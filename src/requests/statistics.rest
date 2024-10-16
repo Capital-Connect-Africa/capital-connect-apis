@@ -1,3 +1,15 @@
+### Data drilling (Only use one parameter example "countries":["Rwanda"])
+POST http://localhost:3000/statistics/stats-filter
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+{
+  "countries":["Rwanda"],
+  "growthStages": ["Start-up pre-revenue"],
+  "businessSectors": ["Technology"],
+  "useOfFunds": ["Working capital"]
+}
+
 ### Get user statistics
 GET http://localhost:3000/statistics/users
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
@@ -16,7 +28,7 @@ GET https://capitalconnect-0060e0fb0eb4.herokuapp.com/statistics/matchmaking
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
 ### Get matchmaking statistics per investor/company (investorId/companyId)
-GET http://localhost:3000/statistics/matchmaking/5?role=company
+GET http://localhost:3000/statistics/matchmaking/8?role=company
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
 ### Get matchmaking statistics per investor/company (investorId/companyId)
@@ -57,7 +69,7 @@ GET http://localhost:3000/statistics/businesses-country
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
 ### Get Total number of Investors registered
-GET https://capitalconnect-0060e0fb0eb4.herokuapp.com/statistics/investors
+GET http://localhost:3000/statistics/investors
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
 ### Get Total number of Investors and companies per sector.

@@ -1,14 +1,21 @@
-import { Controller, Get, NotFoundException, Param, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, NotFoundException, Param, Post, Query, UseGuards } from '@nestjs/common';
 import { StatisticsService } from './statistics.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { Roles } from '../auth/roles.decorator';
 import { Role } from '../auth/role.enum';
 import { RolesGuard } from 'src/auth/roles.guard';
+import { FilterStatsDto } from './dto/filter-stats.dto';
 
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Controller('statistics')
 export class StatisticsController {
   constructor(private readonly statisticsService: StatisticsService) {}
+
+  @Post('stats-filter')
+  @Roles(Role.Admin, Role.Investor)
+  async filterStats(@Body() filterStatsDto: FilterStatsDto) {
+    return this.statisticsService.statsFilter(filterStatsDto);
+  }
 
   @Get('users')
   @Roles(Role.Admin)
