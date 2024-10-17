@@ -199,7 +199,7 @@ export class PaymentService {
       },
       skip,
       take: limit,
-      relations: ['booking', 'userSubscription'],
+      relations: ['booking', 'userSubscription', 'userSubscription.subscriptionTier'],
     });
   }
 }
