@@ -34,16 +34,14 @@ export class PaymentService {
       where: {
         orderTrackingId: OrderTrackingId,
       },
-      relations: ['userSubscription'],
+      relations: ['userSubscription', 'userSubscription.user'],
     });
     if (!payment)
       throw new NotFoundException(
         `Payment with order tracking id ${OrderTrackingId} not found`,
       );
     payment.status = pesapalPayment.payment_status_description;
-    console.log('Payment status:', payment.status);
     const updatedPayment = await this.paymentsRepository.save(payment);
-    console.log('Updated payment:', updatedPayment);
     if (
       updatedPayment.userSubscription &&
       updatedPayment.status === 'Completed'
