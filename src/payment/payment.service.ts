@@ -124,9 +124,9 @@ export class PaymentService {
     return await this.paymentsRepository.save(paymentObj);
   }
 
-  findAll(page: number = 1, limit: number = 10) {
+  async findAll(page: number = 1, limit: number = 10) {
     const skip = (page - 1) * limit;
-    return this.paymentsRepository.find({
+    const [data, total] = await this.paymentsRepository.findAndCount({
       skip,
       take: limit,
       relations: [
@@ -137,6 +137,8 @@ export class PaymentService {
       ],
       order: { id: 'DESC' },
     });
+    
+    return {data, total};
   }
 
   async findOne(id: number) {
