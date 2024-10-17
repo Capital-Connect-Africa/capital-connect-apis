@@ -54,43 +54,43 @@ export class StatisticsController {
   }
 
   @Get('businesses')
-  @Roles(Role.Admin)
+  @Roles(Role.Admin, Role.Investor)
   async getTotalBusinesses(){
     return await this.statisticsService.getBusinessesStatistics();
   }
 
   @Get('businesses-stage')
-  @Roles(Role.Admin)
+  @Roles(Role.Admin, Role.Investor)
   async getBusinessesPerStage() {
     return await this.statisticsService.getBusinessesPerStage();
   }
 
   @Get('businesses-fund')
-  @Roles(Role.Admin)
+  @Roles(Role.Admin, Role.Investor)
   async getBusinessesPerFunds() {
     return await this.statisticsService.getBusinessesPerFundRaise();
   }
 
   @Get('businesses-country')
-  @Roles(Role.Admin)
+  @Roles(Role.Admin, Role.Investor)
   async getBusinessesPerCountry() {
     return await this.statisticsService.getCompaniesPerCountry();
   }
 
   @Get('investors')
-  @Roles(Role.Admin)
+  @Roles(Role.Admin, Role.User)
   async getTotalInvestors(){
     return await this.statisticsService.getInvestorsStatistics();
   }
 
   @Get('sectors-stats')
-  @Roles(Role.Admin)
+  @Roles(Role.Admin, Role.User, Role.Investor)
   async getStatsPerSector() {
     return await this.statisticsService.getInvestorsAndCompaniesPerSector();
   }
 
   @Get('funding-stats')
-  @Roles(Role.Admin)
+  @Roles(Role.Admin, Role.User, Role.Investor)
   async getStatsByFunding() {
     return await this.statisticsService.getInvestorsAndCompaniesByFunding();
   }
@@ -102,7 +102,7 @@ export class StatisticsController {
   }
 
   @Get('investors-funds')
-  @Roles(Role.Admin)
+  @Roles(Role.Admin, Role.User)
   async getInvestorsPerFunding(
     @Query('type') type: 'minimumFunding' | 'maximumFunding'
   ) {
