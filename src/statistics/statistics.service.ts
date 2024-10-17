@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '../users/entities/user.entity';
-import { ArrayContains, Between, LessThan, LessThanOrEqual, MoreThan, Repository } from 'typeorm';
+import { ArrayContains, Between, MoreThan, Repository } from 'typeorm';
 import { Role } from '../auth/role.enum';
 import { Matchmaking } from '../matchmaking/entities/matchmaking.entity';
 import { MatchStatus } from '../matchmaking/MatchStatus.enum';
@@ -18,6 +18,7 @@ import { UserSubscription } from 'src/subscription_tier/entities/userSubscriptio
 import { SubscriptionTierEnum } from 'src/subscription/subscription-tier.enum';
 import { Booking } from 'src/booking/entities/booking.entity';
 import { Payment } from 'src/payment/entities/payment.entity';
+import { FilterStatsDto } from './dto/filter-stats.dto';
 
 interface StatsFilter {
   investorProfile?: InvestorProfile;
@@ -70,6 +71,69 @@ export class StatisticsService {
         where: { roles: Role.Advisor },
       }),
     };
+
+    return stats;
+  }
+
+  async statsFilter(filterStatsDto: FilterStatsDto) {
+    const { countries, businessSectors, growthStages, useOfFunds } = filterStatsDto;
+
+    const queryBuilder = this.companyRepository.createQueryBuilder('company')
+        .select(['company.country', 'company.businessSector', 'company.growthStage', 'company.useOfFunds']);
+
+    const whereConditions = [];
+    const parameters = {};
+
+    if (countries && countries.length > 0) {
+        whereConditions.push('company.country IN (:...countries)');
+        parameters['countries'] = countries;
+    }
+
+    if (businessSectors && businessSectors.length > 0) {
+        whereConditions.push('company.businessSector IN (:...businessSectors)');
+        parameters['businessSectors'] = businessSectors;
+    }
+
+    if (growthStages && growthStages.length > 0) {
+        whereConditions.push('company.growthStage IN (:...growthStages)');
+        parameters['growthStages'] = growthStages;
+    }
+
+    if (useOfFunds && useOfFunds.length > 0) {
+        whereConditions.push('company.useOfFunds IN (:...useOfFunds)');
+        parameters['useOfFunds'] = useOfFunds;
+    }
+
+    if (whereConditions.length > 0) {
+        queryBuilder.where(whereConditions.join(' AND '), parameters);
+    }
+
+    const companies = await queryBuilder.getMany();
+    const stats = {
+        Sectors: {},
+        Stage: {},
+        useOfFunds: {},
+        Countries: {}
+    };
+
+    companies.forEach(company => {
+        const sector = company.businessSector;
+        const stage = company.growthStage;
+        const useOfFunds = company.useOfFunds;
+        const country = company.country;
+
+        // Count sectors
+        stats.Sectors[sector] = (stats.Sectors[sector] || 0) + 1;
+
+        // Count growth stages
+        stats.Stage[stage] = (stats.Stage[stage] || 0) + 1;
+
+        // Count use of funds
+        stats.useOfFunds[useOfFunds] = (stats.useOfFunds[useOfFunds] || 0) + 1;
+
+        // Count countries
+        stats.Countries[country] = (stats.Countries[country] || 0) + 1;
+    });
 
     return stats;
   }
