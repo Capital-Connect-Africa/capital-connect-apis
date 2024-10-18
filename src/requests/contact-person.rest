@@ -10,10 +10,18 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
   "emailAddress": "jane.doe@example.com",
   "phoneNumber": "+254771114712",
   "primaryContact": true,
-  "investorProfileId": 1
+  "investorProfileId": 3
 }
 
-###
+### Grant profile access ContactPerson
+POST http://localhost:3000/contact-persons/grant-access
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+{
+  "contactPersonId": 4,
+  "investorProfileId": 3
+}
 
 ### Get all ContactPersons
 GET http://localhost:3000/contact-persons

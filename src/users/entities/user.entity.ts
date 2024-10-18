@@ -5,15 +5,15 @@ import {
   PrimaryGeneratedColumn,
   BeforeInsert,
   OneToMany,
-  OneToOne, ManyToOne
-} from "typeorm";
+  OneToOne,
+} from 'typeorm';
 import * as bcrypt from 'bcryptjs';
 import { Submission } from 'src/submission/entities/submission.entity';
 import { Booking } from 'src/booking/entities/booking.entity';
 import { Payment } from 'src/payment/entities/payment.entity';
 import { MobileNumber } from 'src/mobile/entities/mobile-number.entity';
 import { InvestorProfile } from '../../investor-profile/entities/investor-profile.entity';
-import { UserSubscription } from "../../subscription_tier/entities/userSubscription.entity";
+import { UserSubscription } from '../../subscription_tier/entities/userSubscription.entity';
 
 @Entity('users')
 export class User {
@@ -68,7 +68,10 @@ export class User {
   @OneToMany(() => MobileNumber, (mobile) => mobile.user)
   mobileNumbers: MobileNumber[];
 
-  @OneToOne(() => InvestorProfile, (investorProfile) => investorProfile.investor)
+  @OneToOne(
+    () => InvestorProfile,
+    (investorProfile) => investorProfile.investor,
+  )
   investorProfile: InvestorProfile;
 
   @BeforeInsert()
@@ -76,6 +79,10 @@ export class User {
     this.password = await bcrypt.hash(this.password, 10);
   }
 
-  @OneToMany(() => UserSubscription, (userSubscription) => userSubscription.user, { onDelete: 'CASCADE' })
+  @OneToMany(
+    () => UserSubscription,
+    (userSubscription) => userSubscription.user,
+    { onDelete: 'CASCADE' },
+  )
   subscriptions: UserSubscription[];
 }
