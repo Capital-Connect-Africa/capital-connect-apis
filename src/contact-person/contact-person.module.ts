@@ -8,10 +8,25 @@ import { UsersModule } from '../users/users.module';
 import { InvestorProfile } from '../investor-profile/entities/investor-profile.entity';
 import { Sector } from '../sector/entities/sector.entity';
 import { SubSector } from '../subsector/entities/subsector.entity';
+import { AuthService } from "../auth/auth.service";
+import { AuthModule } from "../auth/auth.module";
+import { PassportModule } from "@nestjs/passport";
+import { JwtModule } from "@nestjs/jwt";
+import { ConfigModule, ConfigService } from "@nestjs/config";
 
 @Module({
   imports: [
     UsersModule,
+    AuthModule,
+    PassportModule,
+    JwtModule.registerAsync({
+      imports: [ConfigModule],
+      useFactory: async (configService: ConfigService) => ({
+        secret: configService.get<string>('JWT_SECRET'),
+        signOptions: { expiresIn: '1d' },
+      }),
+      inject: [ConfigService],
+    }),
     TypeOrmModule.forFeature([
       ContactPerson,
       InvestorProfile,
@@ -20,6 +35,6 @@ import { SubSector } from '../subsector/entities/subsector.entity';
     ]),
   ],
   controllers: [ContactPersonController],
-  providers: [ContactPersonService, UsersService],
+  providers: [ContactPersonService, AuthService, UsersService],
 })
 export class ContactPersonModule {}

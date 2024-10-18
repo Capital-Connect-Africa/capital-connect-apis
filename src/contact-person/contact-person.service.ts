@@ -7,6 +7,9 @@ import { ContactPerson } from './entities/contact-person.entity';
 import { InvestorProfile } from '../investor-profile/entities/investor-profile.entity';
 import { GrantAccessDto } from './dto/grant-access.dto';
 import { UsersService } from '../users/users.service';
+import { User } from "../users/entities/user.entity";
+import { AuthService } from "../auth/auth.service";
+import { contactPersonWelcomeEmailTemplate } from "../templates/contact-persons-welcome-email";
 
 @Injectable()
 export class ContactPersonService {
@@ -16,6 +19,7 @@ export class ContactPersonService {
     @InjectRepository(InvestorProfile)
     private investorProfileRepository: Repository<InvestorProfile>,
     private usersService: UsersService,
+    private authService: AuthService
   ) {}
 
   async create(
@@ -96,6 +100,20 @@ export class ContactPersonService {
     user.investorProfiles = [investorProfile];
     user = await this.usersService.save(user);
     user.password = password;
+    this.sendVerificationEmail(user);
     return user;
+  }
+
+  async sendVerificationEmail(user: User) {
+    const verificationUrl = `${process.env.FRONTEND_URL}/verify-email/?token=${user.emailVerificationToken}`;
+    const msg = {
+      to: user.username,
+      from: process.env.FROM_EMAIL, // Use your verified sender
+      subject: 'Email Verification',
+      html: contactPersonWelcomeEmailTemplate(verificationUrl, user.password),
+    };
+
+    // await this.sendEmailVerificatioinMailViaSendGrid(msg);
+    await this.authService.sendEmailVerificationMailViaBrevo(msg, user);
   }
 }
