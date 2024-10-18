@@ -166,12 +166,15 @@ export class SpecialCriteriaService {
     // Find the special criteria with its related questions
     const specialCriteria = await this.specialCriteriaRepository.findOne({
       where: { id: specialCriteriaId },
-      relations: ['questions', 'questions.answers'], // Load answers too
+      relations: ['questions', 'questions.answers', 'investorProfile'], // Load answers too
     });
   
     if (!specialCriteria) {
       throw new NotFoundException(`Special criteria with id ${specialCriteriaId} not found`);
     }
+
+    // Get the InvestorProfileId from the special criteria's owner
+    const investorProfileId = specialCriteria.investorProfile?.id;
   
     const questionIds = specialCriteria.questions.map(question => question.id);
   
@@ -222,7 +225,20 @@ export class SpecialCriteriaService {
       },
       relations: ['user'], // Assuming companies are linked to users
     });
-  
+
+    // Fetch matchmaking status for each company
+    const status: { [companyId: number]: string | null } = {}; 
+    for (const company of companies) {
+      const matching = await this.matchmakingRepository.find({
+        where: {
+          investorProfile: { id: investorProfileId }, 
+          company: { id: company.id }, 
+        },
+      });
+
+      status[company.id] = matching.length > 0 ? matching[0].status : null; 
+    }
+
     // Build the result object with percentageScore per company
     const companiesWithScores = companies.map(company => {
       const userScore = userPercentageScores.find(score => score.userId === company.user.id);
@@ -232,6 +248,7 @@ export class SpecialCriteriaService {
       return {
         ...companyWithoutUser,
         percentageScore,
+        status: status[company.id],
       };
     });
   
