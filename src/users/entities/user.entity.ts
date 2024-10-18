@@ -6,6 +6,8 @@ import {
   BeforeInsert,
   OneToMany,
   OneToOne,
+  ManyToMany,
+  JoinTable,
 } from 'typeorm';
 import * as bcrypt from 'bcryptjs';
 import { Submission } from 'src/submission/entities/submission.entity';
@@ -85,4 +87,15 @@ export class User {
     { onDelete: 'CASCADE' },
   )
   subscriptions: UserSubscription[];
+
+  @ManyToMany(() => InvestorProfile, (profile) => profile.users)
+  @JoinTable({
+    name: 'contact_person_profiles', // Name of the join table
+    joinColumn: { name: 'contactPersonId', referencedColumnName: 'id' },
+    inverseJoinColumn: {
+      name: 'investorProfileId',
+      referencedColumnName: 'id',
+    },
+  })
+  investorProfiles: InvestorProfile[];
 }

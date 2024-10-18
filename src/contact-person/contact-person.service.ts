@@ -85,13 +85,16 @@ export class ContactPersonService {
 
     const password = Math.random().toString(36).slice(-10);
 
-    const user = await this.usersService.create({
+    let user = await this.usersService.create({
       username: contactPerson.emailAddress,
       firstName: contactPerson.firstName,
       lastName: contactPerson.lastName,
       password: password,
       roles: 'contact_person',
     });
+
+    user.investorProfiles = [investorProfile];
+    user = await this.usersService.save(user);
     user.password = password;
     return user;
   }

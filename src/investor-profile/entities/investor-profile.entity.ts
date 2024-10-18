@@ -95,6 +95,12 @@ export class InvestorProfile {
   )
   specialCriteria: SpecialCriterion[];
 
-  @OneToMany(() => ConnectionRequest, (connectionRequest) => connectionRequest.investorProfile)
+  @OneToMany(
+    () => ConnectionRequest,
+    (connectionRequest) => connectionRequest.investorProfile,
+  )
   connectionRequests: ConnectionRequest[];
+
+  @ManyToMany(() => User, (user) => user.investorProfiles)
+  users: User[];
 }
