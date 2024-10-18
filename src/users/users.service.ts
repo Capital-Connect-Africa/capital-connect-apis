@@ -23,8 +23,8 @@ export class UsersService {
     private usersRepository: Repository<User>,
   ) {}
 
-  async findOne(id: number): Promise<User | undefined> {
-    return this.usersRepository.findOne({
+  async findOne(id: number): Promise<any> {
+    const user = await this.usersRepository.findOne({
       where: { id },
       relations: [
         'mobileNumbers',
@@ -32,7 +32,17 @@ export class UsersService {
         'subscriptions.subscriptionTier',
       ],
     });
-  }
+  
+    if (!user) {
+      return undefined;
+    }
+    const activeSubscription = user.subscriptions.filter(sub => sub.isActive);
+
+    return {
+      ...user,
+      activeSubscription: activeSubscription.length > 0 ? activeSubscription : null,
+    };
+  }  
 
   async findByUsername(username: string): Promise<User | undefined> {
     return this.usersRepository.findOne({
@@ -61,15 +71,24 @@ export class UsersService {
     return await this.usersRepository.save(usr);
   }
 
-  async findAll(): Promise<User[]> {
-    return this.usersRepository.find({
+  async findAll(): Promise<any[]> {
+    const users = await this.usersRepository.find({
       relations: [
         'mobileNumbers',
         'subscriptions',
         'subscriptions.subscriptionTier',
       ],
     });
-  }
+  
+    return users.map(user => {
+      const activeSubscription = user.subscriptions.filter(sub => sub.isActive);
+      
+      return {
+        ...user,
+        activeSubscription: activeSubscription.length > 0 ? activeSubscription : null,
+      };
+    });
+  }  
 
   async update(id: number, updateUserDto: Partial<User>): Promise<User> {
     if (updateUserDto.username) {
