@@ -7,7 +7,7 @@ import { Role } from './role.enum';
 import * as sgMail from '@sendgrid/mail';
 import { randomBytes } from 'crypto';
 import { addHours } from 'date-fns';
-import { welcomeEmailTemplate } from '../templates/welcome-reset';
+import { welcomeEmailTemplate } from '../templates/welcome-email';
 import { SubscriptionTierEnum } from '../subscription/subscription-tier.enum';
 const brevo = require('@getbrevo/brevo');
 

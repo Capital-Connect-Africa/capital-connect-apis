@@ -70,69 +70,79 @@ export class StatisticsService {
       [Role.Advisor]: await this.userRepository.count({
         where: { roles: Role.Advisor },
       }),
+      [Role.ContactPerson]: await this.userRepository.count({
+        where: { roles: Role.ContactPerson },
+      }),
     };
 
     return stats;
   }
 
   async statsFilter(filterStatsDto: FilterStatsDto) {
-    const { countries, businessSectors, growthStages, useOfFunds } = filterStatsDto;
+    const { countries, businessSectors, growthStages, useOfFunds } =
+      filterStatsDto;
 
-    const queryBuilder = this.companyRepository.createQueryBuilder('company')
-        .select(['company.country', 'company.businessSector', 'company.growthStage', 'company.useOfFunds']);
+    const queryBuilder = this.companyRepository
+      .createQueryBuilder('company')
+      .select([
+        'company.country',
+        'company.businessSector',
+        'company.growthStage',
+        'company.useOfFunds',
+      ]);
 
     const whereConditions = [];
     const parameters = {};
 
     if (countries && countries.length > 0) {
-        whereConditions.push('company.country IN (:...countries)');
-        parameters['countries'] = countries;
+      whereConditions.push('company.country IN (:...countries)');
+      parameters['countries'] = countries;
     }
 
     if (businessSectors && businessSectors.length > 0) {
-        whereConditions.push('company.businessSector IN (:...businessSectors)');
-        parameters['businessSectors'] = businessSectors;
+      whereConditions.push('company.businessSector IN (:...businessSectors)');
+      parameters['businessSectors'] = businessSectors;
     }
 
     if (growthStages && growthStages.length > 0) {
-        whereConditions.push('company.growthStage IN (:...growthStages)');
-        parameters['growthStages'] = growthStages;
+      whereConditions.push('company.growthStage IN (:...growthStages)');
+      parameters['growthStages'] = growthStages;
     }
 
     if (useOfFunds && useOfFunds.length > 0) {
-        whereConditions.push('company.useOfFunds IN (:...useOfFunds)');
-        parameters['useOfFunds'] = useOfFunds;
+      whereConditions.push('company.useOfFunds IN (:...useOfFunds)');
+      parameters['useOfFunds'] = useOfFunds;
     }
 
     if (whereConditions.length > 0) {
-        queryBuilder.where(whereConditions.join(' AND '), parameters);
+      queryBuilder.where(whereConditions.join(' AND '), parameters);
     }
 
     const companies = await queryBuilder.getMany();
     const stats = {
-        Sectors: {},
-        Stage: {},
-        useOfFunds: {},
-        Countries: {}
+      Sectors: {},
+      Stage: {},
+      useOfFunds: {},
+      Countries: {},
     };
 
-    companies.forEach(company => {
-        const sector = company.businessSector;
-        const stage = company.growthStage;
-        const useOfFunds = company.useOfFunds;
-        const country = company.country;
+    companies.forEach((company) => {
+      const sector = company.businessSector;
+      const stage = company.growthStage;
+      const useOfFunds = company.useOfFunds;
+      const country = company.country;
 
-        // Count sectors
-        stats.Sectors[sector] = (stats.Sectors[sector] || 0) + 1;
+      // Count sectors
+      stats.Sectors[sector] = (stats.Sectors[sector] || 0) + 1;
 
-        // Count growth stages
-        stats.Stage[stage] = (stats.Stage[stage] || 0) + 1;
+      // Count growth stages
+      stats.Stage[stage] = (stats.Stage[stage] || 0) + 1;
 
-        // Count use of funds
-        stats.useOfFunds[useOfFunds] = (stats.useOfFunds[useOfFunds] || 0) + 1;
+      // Count use of funds
+      stats.useOfFunds[useOfFunds] = (stats.useOfFunds[useOfFunds] || 0) + 1;
 
-        // Count countries
-        stats.Countries[country] = (stats.Countries[country] || 0) + 1;
+      // Count countries
+      stats.Countries[country] = (stats.Countries[country] || 0) + 1;
     });
 
     return stats;
@@ -211,11 +221,10 @@ export class StatisticsService {
     return { criteria };
   }
 
-
-  async getBusinessesStatistics (): Promise<{totalBusinesses: number}>{
+  async getBusinessesStatistics(): Promise<{ totalBusinesses: number }> {
     const stats = {
-      totalBusinesses: await this.companyRepository.count()
-    }
+      totalBusinesses: await this.companyRepository.count(),
+    };
     return stats;
   }
 
@@ -226,12 +235,12 @@ export class StatisticsService {
 
     await Promise.all(
       stages.map(async (stage) => {
-            const totalBusinesses = await this.companyRepository.count({
-                where: { growthStage: stage.title as string },
-            });
+        const totalBusinesses = await this.companyRepository.count({
+          where: { growthStage: stage.title as string },
+        });
 
-            result[stage.title] = totalBusinesses;
-        })
+        result[stage.title] = totalBusinesses;
+      }),
     );
 
     return result;
@@ -239,21 +248,21 @@ export class StatisticsService {
 
   async getCompaniesPerCountry(): Promise<{ [country: string]: number }> {
     const companiesPerCountry = await this.companyRepository
-        .createQueryBuilder('company')
-        .select('company.country', 'country')
-        .addSelect('COUNT(company.id)', 'total')
-        .groupBy('company.country')
-        .getRawMany();
+      .createQueryBuilder('company')
+      .select('company.country', 'country')
+      .addSelect('COUNT(company.id)', 'total')
+      .groupBy('company.country')
+      .getRawMany();
 
     const result: { [country: string]: number } = {};
     companiesPerCountry.forEach(({ country, total }) => {
-        result[country] = Number(total);
+      result[country] = Number(total);
     });
 
     return result;
   }
 
-  async getBusinessesPerFundRaise(): Promise<{ 
+  async getBusinessesPerFundRaise(): Promise<{
     Seed: number;
     PreSeries: number;
     SeriesA: number;
@@ -268,70 +277,102 @@ export class StatisticsService {
     });
 
     const PreSeries = await this.companyRepository.count({
-      where: { fundsNeeded: Between(fundBands.PreSeries[0], fundBands.PreSeries[1]) },
+      where: {
+        fundsNeeded: Between(fundBands.PreSeries[0], fundBands.PreSeries[1]),
+      },
     });
 
     const SeriesA = await this.companyRepository.count({
-      where: { fundsNeeded: Between(fundBands.SeriesA[0], fundBands.SeriesA[1]) },
+      where: {
+        fundsNeeded: Between(fundBands.SeriesA[0], fundBands.SeriesA[1]),
+      },
     });
 
     const SeriesB = await this.companyRepository.count({
-      where: { fundsNeeded: Between(fundBands.SeriesB[0], fundBands.SeriesB[1]) },
+      where: {
+        fundsNeeded: Between(fundBands.SeriesB[0], fundBands.SeriesB[1]),
+      },
     });
 
     const SeriesC = await this.companyRepository.count({
-      where: { fundsNeeded: Between(fundBands.SeriesC[0], fundBands.SeriesC[1]) },
+      where: {
+        fundsNeeded: Between(fundBands.SeriesC[0], fundBands.SeriesC[1]),
+      },
     });
 
     const GrowthStage = await this.companyRepository.count({
-      where: { fundsNeeded: Between(fundBands.GrowthStage[0], fundBands.GrowthStage[1]) },
+      where: {
+        fundsNeeded: Between(
+          fundBands.GrowthStage[0],
+          fundBands.GrowthStage[1],
+        ),
+      },
     });
 
     const LateGrowthStage = await this.companyRepository.count({
-      where: { fundsNeeded: Between(fundBands.LateGrowthStage[0], fundBands.LateGrowthStage[1]) },
+      where: {
+        fundsNeeded: Between(
+          fundBands.LateGrowthStage[0],
+          fundBands.LateGrowthStage[1],
+        ),
+      },
     });
 
     const ExpansionStage = await this.companyRepository.count({
       where: { fundsNeeded: MoreThan(fundBands.ExpansionStage[0]) },
     });
 
-    return { Seed, PreSeries, SeriesA, SeriesB, SeriesC, GrowthStage, LateGrowthStage, ExpansionStage };
+    return {
+      Seed,
+      PreSeries,
+      SeriesA,
+      SeriesB,
+      SeriesC,
+      GrowthStage,
+      LateGrowthStage,
+      ExpansionStage,
+    };
   }
 
-
-  async getInvestorsStatistics (): Promise<{totalInvestors: number}>{
+  async getInvestorsStatistics(): Promise<{ totalInvestors: number }> {
     const stats = {
-      totalInvestors: await this.investorProfileRepository.count()
-    }
+      totalInvestors: await this.investorProfileRepository.count(),
+    };
     return stats;
   }
 
-  async getInvestorsAndCompaniesPerSector(): Promise<{ [sectorName: string]: { investors: number; companies: number } }> {
+  async getInvestorsAndCompaniesPerSector(): Promise<{
+    [sectorName: string]: { investors: number; companies: number };
+  }> {
     const sectors = await this.sectorRepository.find();
 
-    const result: { [sectorName: string]: { investors: number; companies: number } } = {};
+    const result: {
+      [sectorName: string]: { investors: number; companies: number };
+    } = {};
 
     await Promise.all(
-        sectors.map(async (sector) => {
-            const totalInvestors = await this.investorProfileRepository.count({
-                where: { sectors: sector },
-            });
+      sectors.map(async (sector) => {
+        const totalInvestors = await this.investorProfileRepository.count({
+          where: { sectors: sector },
+        });
 
-            const totalCompanies = await this.companyRepository.count({
-                where: { businessSector: sector.name },
-            });
+        const totalCompanies = await this.companyRepository.count({
+          where: { businessSector: sector.name },
+        });
 
-            result[sector.name] = {
-              companies: totalCompanies,  
-              investors: totalInvestors,
-            };
-        })
+        result[sector.name] = {
+          companies: totalCompanies,
+          investors: totalInvestors,
+        };
+      }),
     );
 
     return result;
   }
 
-  async getInvestorsPerFunding(fundingType: 'minimumFunding' | 'maximumFunding'): Promise<{
+  async getInvestorsPerFunding(
+    fundingType: 'minimumFunding' | 'maximumFunding',
+  ): Promise<{
     seed: number;
     preSeries: number;
     seriesA: number;
@@ -343,68 +384,94 @@ export class StatisticsService {
   }> {
     const seed = await this.investorProfileRepository.count({
       where: {
-        [fundingType]: Between(fundBands.Seed[0], fundBands.Seed[1]) },
+        [fundingType]: Between(fundBands.Seed[0], fundBands.Seed[1]),
+      },
     });
-  
+
     const preSeries = await this.investorProfileRepository.count({
       where: {
-        [fundingType]: Between(fundBands.PreSeries[0], fundBands.PreSeries[1]) },
+        [fundingType]: Between(fundBands.PreSeries[0], fundBands.PreSeries[1]),
+      },
     });
-  
+
     const seriesA = await this.investorProfileRepository.count({
       where: {
-        [fundingType]: Between(fundBands.SeriesA[0], fundBands.SeriesA[1]) },
+        [fundingType]: Between(fundBands.SeriesA[0], fundBands.SeriesA[1]),
+      },
     });
-  
+
     const seriesB = await this.investorProfileRepository.count({
       where: {
-        [fundingType]: Between(fundBands.SeriesB[0], fundBands.SeriesB[1]) },
+        [fundingType]: Between(fundBands.SeriesB[0], fundBands.SeriesB[1]),
+      },
     });
-  
+
     const seriesC = await this.investorProfileRepository.count({
       where: {
-        [fundingType]: Between(fundBands.SeriesC[0], fundBands.SeriesC[1]) },
+        [fundingType]: Between(fundBands.SeriesC[0], fundBands.SeriesC[1]),
+      },
     });
-  
+
     const growthStage = await this.investorProfileRepository.count({
       where: {
-        [fundingType]: Between(fundBands.GrowthStage[0], fundBands.GrowthStage[1]) },
+        [fundingType]: Between(
+          fundBands.GrowthStage[0],
+          fundBands.GrowthStage[1],
+        ),
+      },
     });
-  
+
     const lateGrowthStage = await this.investorProfileRepository.count({
       where: {
-        [fundingType]: Between(fundBands.LateGrowthStage[0], fundBands.LateGrowthStage[1]) },
+        [fundingType]: Between(
+          fundBands.LateGrowthStage[0],
+          fundBands.LateGrowthStage[1],
+        ),
+      },
     });
-  
+
     const expansionStage = await this.investorProfileRepository.count({
       where: {
-        [fundingType]: MoreThan(fundBands.ExpansionStage[0]) },
+        [fundingType]: MoreThan(fundBands.ExpansionStage[0]),
+      },
     });
-  
-    return { seed, preSeries, seriesA, seriesB, seriesC, growthStage, lateGrowthStage, expansionStage };
-  }
-  
 
-  async getInvestorsAndCompaniesByFunding(): Promise<{ [fundingType: string]: { investors: number; companies: number } }> {
+    return {
+      seed,
+      preSeries,
+      seriesA,
+      seriesB,
+      seriesC,
+      growthStage,
+      lateGrowthStage,
+      expansionStage,
+    };
+  }
+
+  async getInvestorsAndCompaniesByFunding(): Promise<{
+    [fundingType: string]: { investors: number; companies: number };
+  }> {
     const useOfFunds = await this.useOfFundsRepository.find();
 
-    const result: { [fundingType: string]: { investors: number; companies: number } } = {};
+    const result: {
+      [fundingType: string]: { investors: number; companies: number };
+    } = {};
 
     await Promise.all(
       useOfFunds.map(async (fund) => {
-              const totalCompanies = await this.companyRepository.count({
-                where: { useOfFunds: fund.title },
-            }); 
+        const totalCompanies = await this.companyRepository.count({
+          where: { useOfFunds: fund.title },
+        });
 
-            const totalInvestors = await this.investorProfileRepository.count({
-                where: { useOfFunds: ArrayContains([fund.title]) },
-            });         
+        const totalInvestors = await this.investorProfileRepository.count({
+          where: { useOfFunds: ArrayContains([fund.title]) },
+        });
 
-            result[fund.title] = {
-              companies: totalCompanies,
-              investors: totalInvestors,
-            };
-        })
+        result[fund.title] = {
+          companies: totalCompanies,
+          investors: totalInvestors,
+        };
+      }),
     );
 
     return result;
@@ -416,16 +483,19 @@ export class StatisticsService {
     approved: number;
   }> {
     const requested = await this.matchMakingRepository.count({
-      where: { status: MatchStatus.REQUESTED, investorProfile: { id: investorId } },
+      where: {
+        status: MatchStatus.REQUESTED,
+        investorProfile: { id: investorId },
+      },
     });
 
     const approved = await this.connectionRequestRepository.count({
       where: { isApproved: true, investorProfile: { id: investorId } },
     });
-  
+
     const declined = await this.connectionRequestRepository.count({
       where: { isApproved: false, investorProfile: { id: investorId } },
-    });  
+    });
     return {
       requested,
       approved,
@@ -445,61 +515,73 @@ export class StatisticsService {
     });
 
     const basic = await this.subscriptionRepository.count({
-      where: { isActive: true, subscriptionTier: { name: SubscriptionTierEnum.BASIC } },
+      where: {
+        isActive: true,
+        subscriptionTier: { name: SubscriptionTierEnum.BASIC },
+      },
     });
-  
+
     const plus = await this.subscriptionRepository.count({
-      where: { isActive: true, subscriptionTier: { name: SubscriptionTierEnum.PLUS } },
-    });  
+      where: {
+        isActive: true,
+        subscriptionTier: { name: SubscriptionTierEnum.PLUS },
+      },
+    });
 
     const pro = await this.subscriptionRepository.count({
-      where: { isActive: true, subscriptionTier: { name: SubscriptionTierEnum.PRO } },
-    }); 
+      where: {
+        isActive: true,
+        subscriptionTier: { name: SubscriptionTierEnum.PRO },
+      },
+    });
 
     const elite = await this.subscriptionRepository.count({
-      where: { isActive: true, subscriptionTier: { name: SubscriptionTierEnum.ELITE } },
-    }); 
+      where: {
+        isActive: true,
+        subscriptionTier: { name: SubscriptionTierEnum.ELITE },
+      },
+    });
     return { subscription, basic, plus, pro, elite };
-  }   
+  }
 
   async getBookingStatistics(): Promise<{
     bookings: number;
   }> {
     const bookingsCount = await this.bookingRepository.count({});
     return { bookings: bookingsCount };
-  } 
-
-  async getPaymentsStatistics (): Promise<{
-    initiated: number;
-    completed: number;
-    failed: number;
-  }>{
-    const initiated = await this.paymentsRepository.count({
-      where: {status: "initiated"},
-    });
-    const completed = await this.paymentsRepository.count({
-      where: {status: "Completed"},
-    });
-    const failed = await this.paymentsRepository.count({
-      where: {status: "Failed"},
-    });
-    return { initiated, completed, failed}
   }
 
-  async getPaymentsStatisticsByUserId (userId: number): Promise<{
+  async getPaymentsStatistics(): Promise<{
     initiated: number;
     completed: number;
     failed: number;
-  }>{
+  }> {
     const initiated = await this.paymentsRepository.count({
-      where: {status: "initiated", user: { id: userId }},
+      where: { status: 'initiated' },
     });
     const completed = await this.paymentsRepository.count({
-      where: {status: "Completed", user: { id: userId }},
+      where: { status: 'Completed' },
     });
     const failed = await this.paymentsRepository.count({
-      where: {status: "Failed", user: { id: userId }},
+      where: { status: 'Failed' },
     });
-    return { initiated, completed, failed}
+    return { initiated, completed, failed };
+  }
+
+  async getPaymentsStatisticsByUserId(userId: number): Promise<{
+    initiated: number;
+    completed: number;
+    failed: number;
+  }> {
+    const initiated = await this.paymentsRepository.count({
+      where: { status: 'initiated', user: { id: userId } },
+    });
+    const completed = await this.paymentsRepository.count({
+      where: { status: 'Completed', user: { id: userId } },
+    });
+    const failed = await this.paymentsRepository.count({
+      where: { status: 'Failed', user: { id: userId } },
+    });
+    return { initiated, completed, failed };
   }
 }

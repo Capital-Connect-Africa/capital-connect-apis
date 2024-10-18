@@ -256,4 +256,8 @@ export class UsersService {
       await this.usersRepository.remove(user);
     }
   }
+
+  async save(user: User) {
+    return this.usersRepository.save(user);
+  }
 }

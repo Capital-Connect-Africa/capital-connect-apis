@@ -74,8 +74,8 @@ POST https://capitalconnect-0060e0fb0eb4.herokuapp.com/auth/login
 Content-Type: application/json
 
 {
-  "username": "vic@gmail.com",
-  "password": "pass12"
+  "username": "vickyjr88@gmail.com",
+  "password": "kanyambude#KE02"
 }
 
 ###

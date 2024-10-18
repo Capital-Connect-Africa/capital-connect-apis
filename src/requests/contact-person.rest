@@ -10,27 +10,31 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
   "emailAddress": "jane.doe@example.com",
   "phoneNumber": "+254771114712",
   "primaryContact": true,
-  "investorProfileId": 1
+  "investorProfileId": 3
 }
 
-###
+### Grant profile access ContactPerson
+POST http://localhost:3000/contact-persons/grant-access
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+{
+  "contactPersonId": 4,
+  "investorProfileId": 3
+}
 
 ### Get all ContactPersons
 GET http://localhost:3000/contact-persons
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
-###
-# Get investor profiles paginated
+
+### Get investor profiles paginated
 GET http://localhost:3000/investor-profiles?page=5&limit=50
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
-
-###
 
 ### Get a specific ContactPerson
 GET http://localhost:3000/contact-persons/5
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
-
-###
 
 ### Update a ContactPerson
 PATCH http://localhost:3000/contact-persons/1
@@ -41,8 +45,16 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
   "designation": "Senior Manager"
 }
 
-###
-
 ### Delete a ContactPerson
 DELETE http://localhost:3000/contact-persons/2
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+### Grant profile access Contact Person Prod
+POST https://capitalconnect-0060e0fb0eb4.herokuapp.com/contact-persons/grant-access
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+{
+  "contactPersonId": 4,
+  "investorProfileId": 3
+}

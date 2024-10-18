@@ -10,18 +10,18 @@ import {
   Put,
   Query,
   Request,
-  UseGuards
-} from "@nestjs/common";
-import { InvestorProfileService } from "./investor-profile.service";
-import { CreateInvestorProfileDto } from "./dto/create-investor-profile.dto";
-import { UpdateInvestorProfileDto } from "./dto/update-investor-profile.dto";
-import { JwtAuthGuard } from "src/auth/jwt-auth.guard";
-import { RolesGuard } from "src/auth/roles.guard";
-import throwInternalServer from "src/shared/utils/exceptions.util";
-import { Roles } from "src/auth/roles.decorator";
-import { Role } from "src/auth/role.enum";
-import { FilterInvestorProfilesDto } from "./dto/filter-investor-profile.dto";
-import { InvestorProfile } from "./entities/investor-profile.entity";
+  UseGuards,
+} from '@nestjs/common';
+import { InvestorProfileService } from './investor-profile.service';
+import { CreateInvestorProfileDto } from './dto/create-investor-profile.dto';
+import { UpdateInvestorProfileDto } from './dto/update-investor-profile.dto';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { RolesGuard } from 'src/auth/roles.guard';
+import throwInternalServer from 'src/shared/utils/exceptions.util';
+import { Roles } from 'src/auth/roles.decorator';
+import { Role } from 'src/auth/role.enum';
+import { FilterInvestorProfilesDto } from './dto/filter-investor-profile.dto';
+import { InvestorProfile } from './entities/investor-profile.entity';
 
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Controller('investor-profiles')
@@ -66,7 +66,7 @@ export class InvestorProfileController {
     return this.investorProfileService.findAll(page, limit);
   }
 
-  @Roles(Role.Admin, Role.Investor, Role.Advisor, Role.User)
+  @Roles(Role.Admin, Role.Investor, Role.Advisor, Role.User, Role.ContactPerson)
   @Get(':id')
   async findOne(@Request() req, @Param('id') id: string) {
     try {
@@ -102,11 +102,12 @@ export class InvestorProfileController {
   @Get('by-user/:userId')
   async findOneByUserId(@Request() req, @Param('userId') userId: string) {
     try {
-    const investorProfile = await this.investorProfileService.findOneByUserId(+userId);
+      const investorProfile =
+        await this.investorProfileService.findOneByUserId(+userId);
 
-    if (!investorProfile) {
-      throw new NotFoundException('Investor profile not found');
-    }
+      if (!investorProfile) {
+        throw new NotFoundException('Investor profile not found');
+      }
       const user = req.user;
       if (
         user.roles.includes('investor') &&
