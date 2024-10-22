@@ -17,6 +17,9 @@ export class SubscriptionTier {
   @Column('text', { nullable: true })
   description: string;
 
+  @Column('text', { array: true })
+  features: string[];
+
   @Column({ type: 'decimal', precision: 10, scale: 2 })
   price: number;
 

@@ -1,4 +1,4 @@
-import { IsBoolean, IsEnum, IsNumber, IsOptional, IsString } from "class-validator";
+import { IsArray, IsBoolean, IsEnum, IsNumber, IsOptional, IsString } from "class-validator";
 import { SubscriptionTierEnum } from "../../subscription/subscription-tier.enum";
 
 export class CreateSubscriptionTierDto {
@@ -8,6 +8,9 @@ export class CreateSubscriptionTierDto {
   @IsString()
   @IsOptional()
   description?: string;
+
+  @IsArray()
+  features: string[];
 
   @IsNumber()
   price: number;
