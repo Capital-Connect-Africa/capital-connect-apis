@@ -12,7 +12,7 @@ export class StatisticsController {
   constructor(private readonly statisticsService: StatisticsService) {}
 
   @Post('stats-filter')
-  @Roles(Role.Admin, Role.Investor)
+  @Roles(Role.Admin, Role.Investor, Role.ContactPerson)
   async filterStats(@Body() filterStatsDto: FilterStatsDto) {
     return this.statisticsService.statsFilter(filterStatsDto);
   }
@@ -30,7 +30,7 @@ export class StatisticsController {
   }
 
   @Get('matchmaking/:id')
-  @Roles(Role.Admin, Role.Investor, Role.User)
+  @Roles(Role.Admin, Role.Investor, Role.User, Role.ContactPerson)
   async getMatchMakingStatisticsPerCompany(
     @Param('id') id: number,
     @Query('role') role: 'company' | 'investor',
@@ -52,7 +52,7 @@ export class StatisticsController {
   }
 
   @Get('special-criteria/:id')
-  @Roles(Role.Admin, Role.Investor)
+  @Roles(Role.Admin, Role.Investor, Role.ContactPerson)
   async getSpecialCriteriaStatisticsInvestor(
     @Param('id') id: number,
   ) {
@@ -61,25 +61,25 @@ export class StatisticsController {
   }
 
   @Get('businesses')
-  @Roles(Role.Admin, Role.Investor)
+  @Roles(Role.Admin, Role.Investor, Role.ContactPerson)
   async getTotalBusinesses(){
     return await this.statisticsService.getBusinessesStatistics();
   }
 
   @Get('businesses-stage')
-  @Roles(Role.Admin, Role.Investor)
+  @Roles(Role.Admin, Role.Investor, Role.ContactPerson)
   async getBusinessesPerStage() {
     return await this.statisticsService.getBusinessesPerStage();
   }
 
   @Get('businesses-fund')
-  @Roles(Role.Admin, Role.Investor)
+  @Roles(Role.Admin, Role.Investor, Role.ContactPerson)
   async getBusinessesPerFunds() {
     return await this.statisticsService.getBusinessesPerFundRaise();
   }
 
   @Get('businesses-country')
-  @Roles(Role.Admin, Role.Investor)
+  @Roles(Role.Admin, Role.Investor, Role.ContactPerson)
   async getBusinessesPerCountry() {
     return await this.statisticsService.getCompaniesPerCountry();
   }
@@ -91,13 +91,13 @@ export class StatisticsController {
   }
 
   @Get('sectors-stats')
-  @Roles(Role.Admin, Role.User, Role.Investor)
+  @Roles(Role.Admin, Role.User, Role.Investor, Role.ContactPerson)
   async getStatsPerSector() {
     return await this.statisticsService.getInvestorsAndCompaniesPerSector();
   }
 
   @Get('funding-stats')
-  @Roles(Role.Admin, Role.User, Role.Investor)
+  @Roles(Role.Admin, Role.User, Role.Investor, Role.ContactPerson)
   async getStatsByFunding() {
     return await this.statisticsService.getInvestorsAndCompaniesByFunding();
   }
@@ -121,7 +121,7 @@ export class StatisticsController {
   }
 
   @Get('requests/:id')
-  @Roles(Role.Admin, Role.Investor)
+  @Roles(Role.Admin, Role.Investor, Role.ContactPerson)
   async getConnectionRequestStatistics(
     @Param('id') id: number,
   ) {
@@ -152,7 +152,7 @@ export class StatisticsController {
   }
 
   @Get('payments/:id')
-  @Roles(Role.Admin, Role.Investor, Role.User)
+  @Roles(Role.Admin, Role.Investor, Role.User, Role.ContactPerson)
   async getPaymentsStatisticsByUserId(
     @Param('id') id: number,
   ) {
