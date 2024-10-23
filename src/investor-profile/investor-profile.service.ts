@@ -83,6 +83,19 @@ export class InvestorProfileService {
     });
   }
 
+  async findOneByContactPersonId(id: number): Promise<InvestorProfile> {
+    return await this.investorProfileRepository.findOne({
+      where: { contactPersons: { id } },
+      relations: [
+        'investor',
+        'sectors',
+        'subSectors',
+        'contactPersons',
+        'specialCriteria',
+      ],
+    });
+  }  
+
   async update(
     id: number,
     updateInvestorProfileDto: UpdateInvestorProfileDto,
