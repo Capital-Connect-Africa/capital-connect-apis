@@ -120,37 +120,37 @@ export class UsersService {
   async requestPasswordReset(email: string): Promise<void> {
     try {
       const user = await this.usersRepository.findOne({
-        where: { username: email.toLocaleUpperCase() },
+        where: { username: email.toLowerCase() }, // Use toLowerCase for case-insensitive search
       });
-
+  
       if (!user) {
         throw new NotFoundException('User not found');
       }
-
+  
       // Generate reset token and set expiration
       user.resetPasswordToken = randomBytes(32).toString('hex');
       user.resetPasswordExpires = addHours(new Date(), 1); // Token valid for 1 hour
-
+  
       // Save the user with the reset token and expiration
       await this.usersRepository.save(user);
-
+  
       // Construct the reset password URL
       const resetPasswordUrl = `${process.env.FRONTEND_URL}/reset-password/${user.resetPasswordToken}`;
-
-      // Import the email content from template file.
+  
+      // Import the email content from the template file
       const msg = {
         to: user.username,
         from: process.env.FROM_EMAIL,
         subject: 'Password Reset',
         html: resetPasswordTemplate(resetPasswordUrl),
       };
-
+  
       // Send the reset email
       await this.sendResetEmailViaBrevo(msg, user);
     } catch (error) {
       throw error;
     }
-  }
+  }  
 
   async resetPassword(token: string, newPassword: string): Promise<void> {
     const user = await this.usersRepository.findOne({
