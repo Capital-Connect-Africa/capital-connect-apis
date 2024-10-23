@@ -129,6 +129,13 @@ export class InvestorProfileController {
     }
   }
 
+  @Get('contact/:contactPersonId')
+  async getInvestorProfileByContactPersonId(
+    @Param('contactPersonId') contactPersonId: number,
+  ): Promise<InvestorProfile> {
+    return await this.investorProfileService.findOneByContactPersonId(contactPersonId);
+  }
+
   @Roles(Role.Admin, Role.Investor)
   @Put(':id')
   async update(
