@@ -63,7 +63,7 @@ export class UsersController {
 
   @UseGuards(JwtAuthGuard)
   @Put(':id')
-  @Roles(Role.Admin, Role.Investor, Role.User)
+  @Roles(Role.Admin, Role.Investor, Role.User, Role.ContactPerson)
   async updateUser(
     @Request() req,
     @Param('id') id: string,
