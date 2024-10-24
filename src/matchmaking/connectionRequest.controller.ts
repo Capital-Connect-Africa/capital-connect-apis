@@ -25,7 +25,7 @@ export class ConnectionRequestController {
   constructor(private connectionRequestService: ConnectionRequestService) {}
   @Post()
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(Role.Investor)
+  @Roles(Role.Investor, Role.ContactPerson)
   async create(
     @Body() createConnectionRequestDto: CreateConnectionRequestDto,
   ): Promise<ConnectionRequest> {
@@ -44,7 +44,7 @@ export class ConnectionRequestController {
 
   @Get('investor/:investorProfileId')
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(Role.Investor, Role.Admin)
+  @Roles(Role.Investor, Role.Admin, Role.ContactPerson)
   async findAllByInvestorProfileId(
     @Param('investorProfileId') investorProfileId: number,
     @Query('page') page: number,
