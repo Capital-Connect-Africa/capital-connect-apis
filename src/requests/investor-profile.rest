@@ -50,6 +50,11 @@ GET http://localhost:3000/investor-profiles/contact/2
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
+### Get Investor Profile by contact person UserID
+GET http://localhost:3000/investor-profiles/contacts/9
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
 ### Update Investor Profile by ID
 PUT http://localhost:3000/investor-profiles/1
 Content-Type: application/json

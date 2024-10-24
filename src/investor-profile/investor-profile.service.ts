@@ -8,12 +8,17 @@ import { User } from '../users/entities/user.entity';
 import { Sector } from '../sector/entities/sector.entity';
 import { SubSector } from '../subsector/entities/subsector.entity';
 import { FilterInvestorProfilesDto } from './dto/filter-investor-profile.dto';
+import { ContactPerson } from 'src/contact-person/entities/contact-person.entity';
 
 @Injectable()
 export class InvestorProfileService {
   constructor(
     @InjectRepository(InvestorProfile)
     private investorProfileRepository: Repository<InvestorProfile>,
+    @InjectRepository(ContactPerson)
+    private contactPersonRepository: Repository<ContactPerson>,
+    @InjectRepository(User)
+    private usersRepository: Repository<User>,
     @InjectRepository(Sector)
     private sectorRepository: Repository<Sector>,
     @InjectRepository(SubSector)
@@ -82,6 +87,44 @@ export class InvestorProfileService {
       ],
     });
   }
+
+  async findOneByContactUserId(userId: number) {
+    // Step 1: Fetch the user with the given userId
+    const user = await this.usersRepository.findOne({
+      where: { id: userId, roles: 'contact_person' },
+      select: ['username'], // Fetch username
+    });
+    // Step 2: Ensure the user has the 'contact_person' role
+    if (!user) {
+      throw new NotFoundException('User with contact_person role not found');
+    }
+    // Step 3: Find the contact person based on email
+    const contactPerson = await this.contactPersonRepository.findOne({
+      where: { emailAddress: user.username },
+      select: ['id'], // Fetch only the contactPersonId
+    });
+  
+    if (!contactPerson) {
+      throw new NotFoundException('Contact person not found');
+    }
+    // Step 4: Find the investor profile associated with the contact person
+    const investorProfile = await this.investorProfileRepository.findOne({
+      where: { contactPersons: { id: contactPerson.id } },
+      relations: [
+        'investor',
+        'sectors',
+        'subSectors',
+        'contactPersons',
+        'specialCriteria',
+      ], 
+    });
+  
+    if (!investorProfile) {
+      throw new NotFoundException('Investor profile not found');
+    }
+  
+    return investorProfile;
+  }  
 
   async findOneByContactPersonId(id: number): Promise<InvestorProfile> {
     return await this.investorProfileRepository.findOne({
