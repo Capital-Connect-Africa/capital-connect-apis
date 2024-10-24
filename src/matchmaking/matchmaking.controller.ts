@@ -29,7 +29,7 @@ import { MatchStatus } from './MatchStatus.enum';
 export class MatchmakingController {
   constructor(private matchmakingService: MatchmakingService) {}
 
-  @Roles(Role.Investor)
+  @Roles(Role.Investor, Role.ContactPerson)
   @Get('companies')
   async getMatchingCompanies(@Request() req): Promise<Company[]> {
     try {
@@ -233,7 +233,7 @@ export class MatchmakingController {
   }
 
   @Post(':id/decline-reasons')
-  @Roles(Role.Investor)
+  @Roles(Role.Investor, Role.ContactPerson)
   addDeclineReason(
     @Param('id') id: number,
     @Body() createDeclineReasonDto: CreateDeclineReasonDto,
