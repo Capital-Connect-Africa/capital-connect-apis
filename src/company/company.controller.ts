@@ -46,7 +46,7 @@ export class CompanyController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Roles(Role.Advisor, Role.Admin, Role.Investor)
+  @Roles(Role.Advisor, Role.Admin, Role.Investor, Role.ContactPerson)
   @Get('search')
   async searchCompanies(@Query('query') query: string): Promise<Company[]> {
     console.log('query', query);
@@ -112,7 +112,7 @@ export class CompanyController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Roles(Role.Investor)
+  @Roles(Role.Investor, Role.ContactPerson)
   @Get('/invesetor-matches/:id')
   async getInvestorMatches(@Param('id') id: string) {
     try {
@@ -144,7 +144,7 @@ export class CompanyController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Roles(Role.Advisor, Role.Admin, Role.Investor)
+  @Roles(Role.Advisor, Role.Admin, Role.Investor, Role.ContactPerson)
   @Post('filter')
   async filterCompanies(
     @Body() filterDto: FilterCompanyDto,
@@ -153,7 +153,7 @@ export class CompanyController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Roles(Role.Advisor, Role.Admin, Role.Investor)
+  @Roles(Role.Advisor, Role.Admin, Role.Investor, Role.ContactPerson)
   @Post('filter/by-or')
   async filterCompaniesByOr(
     @Body() filterDto: FilterCompanyDto,
