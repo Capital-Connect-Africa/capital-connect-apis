@@ -128,14 +128,14 @@ export class InvestorProfileController {
       throwInternalServer(error);
     }
   }
-
+  @Roles(Role.Admin, Role.Investor, Role.Advisor, Role.ContactPerson)
   @Get('contact/:contactPersonId')
   async getInvestorProfileByContactPersonId(
     @Param('contactPersonId') contactPersonId: number,
   ): Promise<InvestorProfile> {
     return await this.investorProfileService.findOneByContactPersonId(contactPersonId);
   }
-
+  @Roles(Role.Admin, Role.Investor, Role.Advisor, Role.ContactPerson)
   @Get('contacts/:userId')
   async getProfileByContactUserId(
     @Param('userId') userId: number,
