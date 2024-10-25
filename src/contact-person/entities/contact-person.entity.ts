@@ -22,6 +22,9 @@ export class ContactPerson {
   phoneNumber: string;
 
   @Column({ default: false })
+  hasAccess: boolean;
+
+  @Column({ default: false })
   primaryContact: boolean;
 
   @ManyToOne(
