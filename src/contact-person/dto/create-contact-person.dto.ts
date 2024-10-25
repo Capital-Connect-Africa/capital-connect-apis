@@ -19,9 +19,6 @@ export class CreateContactPersonDto {
   @IsEmail()
   emailAddress: string;
 
-  @IsBoolean()
-  hasAccess: boolean;
-
   @IsPhoneNumber()
   phoneNumber: string;
 

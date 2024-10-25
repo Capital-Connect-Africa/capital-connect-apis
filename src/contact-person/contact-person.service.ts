@@ -72,9 +72,7 @@ export class ContactPersonService {
       where: { id: contactPersonId },
     });
     if (!contactPerson) {
-      throw new NotFoundException(
-        `Contact person with id ${contactPersonId} was not found`,
-      );
+      throw new NotFoundException(`Contact person with id ${contactPersonId} was not found`);
     }
 
     contactPerson.hasAccess = true;
@@ -85,9 +83,7 @@ export class ContactPersonService {
     });
 
     if (!investorProfile) {
-      throw new NotFoundException(
-        `Investor profile with id ${investorProfileId} was not found`,
-      );
+      throw new NotFoundException(`Investor profile with id ${investorProfileId} was not found`);
     }
 
     const password = Math.random().toString(36).slice(-10);
@@ -119,4 +115,30 @@ export class ContactPersonService {
     // await this.sendEmailVerificatioinMailViaSendGrid(msg);
     await this.authService.sendEmailVerificationMailViaBrevo(msg, user);
   }
+
+  async revokeAccess(revokeAccessDto: GrantAccessDto) {
+    const { contactPersonId, investorProfileId } = revokeAccessDto;
+    const contactPerson = await this.contactPersonRepository.findOne({
+      where: { id: contactPersonId },
+    });
+    if (!contactPerson) {
+      throw new NotFoundException(`Contact person with id ${contactPersonId} was not found`);
+    }
+    if (!contactPerson.hasAccess) {
+      return { message: `Contact person with id ${contactPersonId} does not have access to the profile` };
+    }
+
+    contactPerson.hasAccess = false;
+    await this.contactPersonRepository.save(contactPerson);
+
+    const investorProfile = await this.investorProfileRepository.findOne({
+      where: { id: investorProfileId },
+      relations: ['contactPersons'],
+    });
+    if (!investorProfile) {
+      throw new NotFoundException(`Investor profile with id ${investorProfileId} was not found`);
+    }
+      
+    return { message: `Access revoked for contact person with id ${contactPersonId}` };
+  }   
 }
