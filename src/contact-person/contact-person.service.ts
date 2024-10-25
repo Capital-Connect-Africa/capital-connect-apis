@@ -77,6 +77,9 @@ export class ContactPersonService {
       );
     }
 
+    contactPerson.hasAccess = true;
+    await this.contactPersonRepository.save(contactPerson);
+
     const investorProfile = await this.investorProfileRepository.findOne({
       where: { id: investorProfileId },
     });
