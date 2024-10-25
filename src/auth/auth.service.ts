@@ -9,6 +9,9 @@ import { randomBytes } from 'crypto';
 import { addHours } from 'date-fns';
 import { welcomeEmailTemplate } from '../templates/welcome-email';
 import { SubscriptionTierEnum } from '../subscription/subscription-tier.enum';
+import { InjectRepository } from '@nestjs/typeorm';
+import { ContactPerson } from 'src/contact-person/entities/contact-person.entity';
+import { Repository } from 'typeorm';
 const brevo = require('@getbrevo/brevo');
 
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
@@ -16,6 +19,8 @@ sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 @Injectable()
 export class AuthService {
   constructor(
+    @InjectRepository(ContactPerson)
+    private contactPersonRepository: Repository<ContactPerson>,
     private usersService: UsersService,
     private jwtService: JwtService,
   ) {}
@@ -43,6 +48,20 @@ export class AuthService {
       }
 
       const userRoles = user.roles?.split(',').map((role) => role.trim());
+
+      if (userRoles.includes(Role.ContactPerson)) {
+        const contactPerson = await this.contactPersonRepository.findOne({
+          where: { emailAddress: user.username },
+          select: ['hasAccess'],
+        });
+        
+        if (!contactPerson?.hasAccess) {
+          throw new BadRequestException(
+            'Access denied. Please contact the administrator to gain access.'
+          );
+        }
+      }
+
       const subscriptions = user.subscriptions;
       const subscriptionTier = subscriptions?.find(
         (subscription) => subscription.isActive,
