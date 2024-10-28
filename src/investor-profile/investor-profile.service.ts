@@ -100,12 +100,12 @@ export class InvestorProfileService {
     }
     // Step 3: Find the contact person based on email
     const contactPerson = await this.contactPersonRepository.findOne({
-      where: { emailAddress: user.username },
+      where: { emailAddress: user.username, hasAccess: true },
       select: ['id'], // Fetch only the contactPersonId
     });
   
     if (!contactPerson) {
-      throw new NotFoundException('Contact person not found');
+      throw new NotFoundException('Contact person not found or has no access to the investor profile.');
     }
     // Step 4: Find the investor profile associated with the contact person
     const investorProfile = await this.investorProfileRepository.findOne({

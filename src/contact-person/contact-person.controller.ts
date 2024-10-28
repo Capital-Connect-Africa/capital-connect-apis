@@ -54,6 +54,22 @@ export class ContactPersonController {
     }
   }
 
+  @Roles(Role.Investor, Role.Admin)
+  @Post('revoke-access')
+  async revokeAccess(@Body() revokeAccessDto: GrantAccessDto) {
+    try {
+      return await this.contactPersonService.revokeAccess(revokeAccessDto);
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw new BadRequestException(
+          error.message ||
+            `Contact person with id ${revokeAccessDto.contactPersonId} not found`,
+        );
+      }
+      throwInternalServer(error);
+    }
+  }
+
   @Roles(Role.Admin, Role.Investor, Role.Advisor)
   @Get()
   async findAll(@Query('page') page: number, @Query('limit') limit: number) {

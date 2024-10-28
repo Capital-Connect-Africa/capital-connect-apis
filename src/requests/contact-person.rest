@@ -6,11 +6,11 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 {
   "firstName": "Jane",
   "lastName": "Doe",
-  "designation": "Senior Manager",
-  "emailAddress": "jane.doe@example.com",
-  "phoneNumber": "+254771114712",
+  "designation": "HR Manager",
+  "emailAddress": "test6@gmail.com",
+  "phoneNumber": "+254770137226",
   "primaryContact": true,
-  "investorProfileId": 3
+  "investorProfileId": 2
 }
 
 ### Grant profile access ContactPerson
@@ -20,7 +20,17 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
 {
   "contactPersonId": 4,
-  "investorProfileId": 3
+  "investorProfileId": 2
+}
+
+### Revoke profile access ContactPerson
+POST http://localhost:3000/contact-persons/revoke-access
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+{
+  "contactPersonId": 4,
+  "investorProfileId": 2
 }
 
 ### Get all ContactPersons
@@ -42,7 +52,7 @@ Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
 {
-  "designation": "Senior Manager"
+  "hasAccess": true
 }
 
 ### Delete a ContactPerson

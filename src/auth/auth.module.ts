@@ -8,6 +8,8 @@ import { JwtStrategy } from './jwt.strategy';
 import { LocalStrategy } from './local.strategy';
 import { AuthController } from './auth.controller';
 import { UsersService } from 'src/users/users.service';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { ContactPerson } from 'src/contact-person/entities/contact-person.entity';
 
 @Module({
   imports: [
@@ -21,6 +23,9 @@ import { UsersService } from 'src/users/users.service';
       }),
       inject: [ConfigService],
     }),
+    TypeOrmModule.forFeature([
+      ContactPerson,
+    ]),
   ],
   providers: [AuthService, UsersService, LocalStrategy, JwtStrategy],
   controllers: [AuthController],
