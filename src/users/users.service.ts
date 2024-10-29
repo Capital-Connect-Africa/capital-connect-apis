@@ -78,6 +78,9 @@ export class UsersService {
         'subscriptions',
         'subscriptions.subscriptionTier',
       ],
+      order: {
+        id: 'DESC'
+      }
     });
   
     return users.map(user => {
