@@ -89,25 +89,24 @@ export class InvestorProfileService {
   }
 
   async findOneByContactUserId(userId: number) {
-    // Step 1: Fetch the user with the given userId
     const user = await this.usersRepository.findOne({
       where: { id: userId, roles: 'contact_person' },
-      select: ['username'], // Fetch username
+      select: ['username'], 
     });
-    // Step 2: Ensure the user has the 'contact_person' role
+
     if (!user) {
-      throw new NotFoundException('User with contact_person role not found');
+      throw new NotFoundException('Investor profile not found');
     }
-    // Step 3: Find the contact person based on email
+
     const contactPerson = await this.contactPersonRepository.findOne({
       where: { emailAddress: user.username, hasAccess: true },
-      select: ['id'], // Fetch only the contactPersonId
+      select: ['id'], 
     });
   
     if (!contactPerson) {
       throw new NotFoundException('Contact person not found or has no access to the investor profile.');
     }
-    // Step 4: Find the investor profile associated with the contact person
+    
     const investorProfile = await this.investorProfileRepository.findOne({
       where: { contactPersons: { id: contactPerson.id } },
       relations: [
