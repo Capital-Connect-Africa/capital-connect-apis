@@ -16,12 +16,14 @@ import { DeclineReason } from './entities/declineReasons.entity';
 import { MatchStatus } from './MatchStatus.enum';
 import { Readable } from 'stream';
 import { format } from 'fast-csv';
+import { UsersService } from 'src/users/users.service';
 
 @Injectable()
 export class MatchmakingService {
   constructor(
     private investorProfileService: InvestorProfileService,
     private companyService: CompanyService,
+    private usersService: UsersService,
     @InjectRepository(Sector)
     private sectorsRepository: Repository<Sector>,
     @InjectRepository(Matchmaking)
@@ -29,8 +31,16 @@ export class MatchmakingService {
   ) {}
 
   async getMatchingCompanies(id: number) {
-      const investorByUser = await this.investorProfileService.findOneByUserId(id);
-      const profileFound = investorByUser || await this.investorProfileService.findOneByContactUserId(id);
+    const user = await this.usersService.findOne(id);    
+    let profileFound;
+    
+    if (user.roles === 'investor') {
+        profileFound = await this.investorProfileService.findOneByUserId(id);
+    } else if (user.roles === 'contact_person') {
+        profileFound = await this.investorProfileService.findOneByContactUserId(id);
+    } else {
+        throw new NotFoundException('User role do not have access to Investor profiles.');
+    }
 
     if (!profileFound) {
       throw new NotFoundException('Investor profile not found');
