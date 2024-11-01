@@ -78,19 +78,18 @@ export class ContactPersonService {
     }
 
     const existingUser = await this.usersRepository.findOne({
-      where: { username: contactPerson.emailAddress, roles: 'contact_person' },
+      where: { username: contactPerson.emailAddress},
       relations: ['investorProfiles'],
    });
 
-   if (existingUser) {
-    if (existingUser.roles !== 'contact_person') {
-        throw new NotFoundException(`The email ${contactPerson.emailAddress} is already taken by another user.`);
+   if (existingUser && existingUser.roles !== 'contact_person') {
+    throw new NotFoundException(`The email ${contactPerson.emailAddress} is already taken by another user.`);
     }
-    if (!contactPerson.hasAccess) {
-        contactPerson.hasAccess = true;
+
+    if (existingUser) {
+        contactPerson.hasAccess ||= true; 
         await this.contactPersonRepository.save(contactPerson);
-    }
-    return existingUser;
+        return existingUser;
     }
 
     const investorProfile = await this.investorProfileRepository.findOne({
