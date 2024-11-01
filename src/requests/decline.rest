@@ -5,7 +5,8 @@ Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
 {
-    "reason": "No possibility for growth"
+    "reason": "No possibility for growth",
+    "declineRole": "investor"
 }
 
 ###
@@ -20,11 +21,12 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
 ###
 # Update Decline Reason by ID
-PUT http://localhost:3000/decline-reasons/1
+PUT http://localhost:3000/decline-reasons/2
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
 {
-    "reason": "Poor infrastructure"
+    "declineRole": ""
 }
 ###
 # Delete Decline Reason by ID
