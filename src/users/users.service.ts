@@ -115,9 +115,42 @@ export class UsersService {
     return this.usersRepository.findOneBy({ id });
   }
 
+  async updateByAdmin(id: number, updateUserDto: Partial<User>): Promise<User> {
+    if (updateUserDto.username){
+      const isEmailValid = this.validateEmail(updateUserDto.username);
+      if(!isEmailValid){
+        throw new BadRequestException('Invalid email format');
+      }
+      const isUsernameTaken = await this.isUsernameTaken(
+        updateUserDto.username,
+      );
+      if (isUsernameTaken) {
+        throw new BadRequestException('Username is already taken');
+      }
+    }
+    if (updateUserDto.password) {
+      const hash = await bcrypt.hash(updateUserDto.password, 10);
+      updateUserDto.password = hash;
+    }
+    if (updateUserDto.roles){
+      const isRoleValid = this.validateRoles(updateUserDto.roles);
+      if (!isRoleValid) {
+        throw new BadRequestException('Invalid role(s) provided');
+      }
+    }
+
+    await this.usersRepository.update(id, updateUserDto);
+    return this.usersRepository.findOneBy({ id }); 
+  }
+
   validateEmail(email: string): boolean {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email.toLowerCase());
+  }
+
+  validateRoles(role: string): boolean {
+    const validRoles = ['admin', 'user', 'investor', 'contact_person'];
+    return validRoles.includes(role);
   }
 
   async requestPasswordReset(email: string): Promise<void> {
