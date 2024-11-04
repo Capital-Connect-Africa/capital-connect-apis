@@ -91,7 +91,7 @@ export class UsersController {
     @Body() updateUserDto: UpdateUserAdminDto,
   ) {
     try {
-      return await this.userService.update(+id, updateUserDto);
+      return await this.userService.updateByAdmin(+id, updateUserDto);
     } catch (error) {
       if (error instanceof BadRequestException) {
         throw new BadRequestException(error.message);
