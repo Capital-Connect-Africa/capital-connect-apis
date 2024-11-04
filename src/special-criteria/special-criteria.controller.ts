@@ -59,6 +59,15 @@ export class SpecialCriteriaController {
     }
   }
 
+  @Get('global')
+  async findSharedCriteria(@Query('page') page: number, @Query('limit') limit: number) {
+    try {
+      return await this.specialCriteriaService.findGlobal(page, limit);
+    } catch (error) {
+      throwInternalServer(error);
+    }
+  }
+
   @Get(':id')
   async findOne(@Param('id') id: string) {
     try {

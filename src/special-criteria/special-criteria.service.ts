@@ -93,6 +93,17 @@ export class SpecialCriteriaService {
     });
   }
 
+  findGlobal(page: number = 1, limit: number = 10) {
+    const skip = (page - 1) * limit;
+    return this.specialCriteriaRepository.find({
+      where: {globalVisible: true},
+      skip,
+      take: limit,
+      relations: ['questions', 'questions.answers', 'investorProfile'],
+      order: {id: 'DESC'},
+    });
+  }
+
   async findOne(id: number) {
     const special = await this.specialCriteriaRepository.findOne({
       where: { id },
