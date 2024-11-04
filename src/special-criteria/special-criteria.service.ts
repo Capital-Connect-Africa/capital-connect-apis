@@ -108,10 +108,11 @@ export class SpecialCriteriaService {
     id: number,
     updateSpecialCriterionDto: UpdateSpecialCriterionDto,
   ) {
-    const { title, description } = updateSpecialCriterionDto;
+    const { title, description, globalVisible } = updateSpecialCriterionDto;
     const updates = {};
     if (title) updates['title'] = title;
     if (description) updates['description'] = description;
+    if (globalVisible) updates['globalVisible'] = globalVisible;
     if (Object.keys(updates).length > 0)
       await this.specialCriteriaRepository.update(id, updates);
     return this.specialCriteriaRepository.findOneBy({ id });
