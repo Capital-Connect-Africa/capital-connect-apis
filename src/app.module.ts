@@ -39,6 +39,7 @@ import { SpecialCriteriaModule } from './special-criteria/special-criteria.modul
 import { SubscriptionTierModule } from './subscription_tier/subscription_tier.module';
 import { BillingModule } from './billing/billing.module';
 import { SegmentModule } from './segment/segment.module';
+import { VoucherModule } from './voucher/voucher.module';
 
 @Module({
   imports: [
@@ -84,6 +85,7 @@ import { SegmentModule } from './segment/segment.module';
     SubscriptionTierModule,
     BillingModule,
     SegmentModule,
+    VoucherModule,
   ],
   providers: [
     AppService,
