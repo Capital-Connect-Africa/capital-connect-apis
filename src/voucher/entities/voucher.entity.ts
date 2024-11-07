@@ -1,6 +1,6 @@
 import { EligibilityRule } from "./eligibility-rule.entity";
 import { VoucherType } from "src/utils/enums/voucher.type.enum";
-import { Column, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 @Entity('vouchers')
 export class Voucher {
@@ -20,16 +20,16 @@ export class Voucher {
     @Column({ type: 'decimal', precision: 5, scale: 2 })
     percentageDiscount: number;
 
-    @Column()
+    @Column({type: 'decimal', scale: 2})
     maxAmount: number;
 
     @Column({ type: 'timestamp' })
     expiresAt: Date;
 
-    @Column({ type: 'timestamp' })
+    @CreateDateColumn({ type: 'timestamp' })
     createdAt: Date;
 
-    @Column({ type: 'timestamp' })
+    @UpdateDateColumn({ type: 'timestamp' })
     updatedAt: Date;
 
     @ManyToMany(() => EligibilityRule, rule => rule.vouchers)
