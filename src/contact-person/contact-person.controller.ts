@@ -70,7 +70,7 @@ export class ContactPersonController {
     }
   }
 
-  @Roles(Role.Admin, Role.Investor, Role.Advisor)
+  @Roles(Role.Admin, Role.Investor, Role.Advisor, Role.ContactPerson)
   @Get()
   async findAll(@Query('page') page: number, @Query('limit') limit: number) {
     try {
@@ -81,7 +81,7 @@ export class ContactPersonController {
     }
   }
 
-  @Roles(Role.Admin, Role.Investor, Role.Advisor)
+  @Roles(Role.Admin, Role.Investor, Role.Advisor, Role.ContactPerson)
   @Get(':id')
   findOne(@Param('id') id: string) {
     try {
@@ -94,7 +94,7 @@ export class ContactPersonController {
     }
   }
 
-  @Roles(Role.Admin, Role.Investor)
+  @Roles(Role.Admin, Role.Investor, Role.ContactPerson)
   @Patch(':id')
   async update(
     @Param('id') id: string,
