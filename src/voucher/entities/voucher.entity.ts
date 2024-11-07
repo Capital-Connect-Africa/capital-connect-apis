@@ -20,6 +20,9 @@ export class Voucher {
     @Column({ type: 'decimal', precision: 5, scale: 2 })
     percentageDiscount: number;
 
+    @Column()
+    maxAmount: number;
+
     @Column({ type: 'timestamp' })
     expiresAt: Date;
 
