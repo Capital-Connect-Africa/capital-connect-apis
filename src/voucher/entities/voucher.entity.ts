@@ -1,6 +1,7 @@
+import { UserVoucher } from "./user-voucher.entity";
 import { EligibilityRule } from "./eligibility-rule.entity";
 import { VoucherType } from "src/shared/enums/voucher.type.enum";
-import { Column, CreateDateColumn, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 @Entity('vouchers')
 export class Voucher {
@@ -39,4 +40,8 @@ export class Voucher {
         inverseJoinColumn: { name: 'rule', referencedColumnName: 'id' },
     })
     rules: EligibilityRule[];
+
+
+    @OneToMany(() => UserVoucher, userVoucher => userVoucher.voucher)
+    users: UserVoucher[];
 }

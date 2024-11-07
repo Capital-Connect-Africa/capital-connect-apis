@@ -10,6 +10,7 @@ import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { RolesGuard } from 'src/auth/roles.guard';
 import { Roles } from 'src/auth/roles.decorator';
 import { Role } from 'src/auth/role.enum';
+import { RedeemVoucherDto } from './dto/redeem-voucher.dto';
 
 @Controller('vouchers')
 export class VoucherController {
@@ -45,7 +46,8 @@ export class VoucherController {
         }
     }
 
-    @UseGuards(JwtAuthGuard)
+    @UseGuards(JwtAuthGuard, RolesGuard)
+    @Roles(Role.Admin)
     @Get('rules/list')
     async findRules(@Query('page') page:number, @Query('limit') limit:number){
         try {
@@ -89,7 +91,8 @@ export class VoucherController {
         }
     }
 
-    @UseGuards(JwtAuthGuard)
+    @UseGuards(JwtAuthGuard, RolesGuard)
+    @Roles(Role.Admin)
     @Get('list')
     async findVouchers(@Query('page') page:number, @Query('limit') limit:number){
         try {
@@ -147,4 +150,13 @@ export class VoucherController {
         }
     }
 
+    @UseGuards(JwtAuthGuard, RolesGuard)
+    @Roles(Role.Investor, Role.User)
+    async redeemVoucher(@Body() body: RedeemVoucherDto){
+        try {
+            
+        } catch (error) {
+            handleError(error, RequestMethod.POST)
+        }
+    }
 }

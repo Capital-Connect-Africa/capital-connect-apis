@@ -21,7 +21,7 @@ export class VoucherService {
         const vouchers =await this.voucherRepository.find({
             skip,
             take: limit,
-            relations: ['rules'],
+            relations: ['rules', 'users'],
             order: {
                 id: 'DESC'
             },
