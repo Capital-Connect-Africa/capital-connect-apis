@@ -1,7 +1,7 @@
 import { VoucherService } from './voucher.service';
 import { CreateVoucherDto } from './dto/create-voucher.dto';
-import { Body, Controller, Get, Post, Query } from '@nestjs/common';
-import { CreateEligibilityRuleDto } from './dto/eligibility-rules.dto';
+import { Body, Controller, Get, Param, Post, Put, Query } from '@nestjs/common';
+import { CreateEligibilityRuleDto } from './dto/create-eligibility-rules.dto';
 import { generateCryptCode } from 'src/utils/helpers/crypto-generator.helper';
 
 @Controller('vouchers')
@@ -25,14 +25,16 @@ export class VoucherController {
         return await this.service.createEligibilityRule(body)
     }
 
+    @Get('/eligibility-rule')
+    async findAllEligibilityRules(@Query('page') page:number, @Query('limit') limit:number){
+        return await this.service.findAllEligibilityRules(page, limit)
+    }
+
 
     @Get()
     async findallVouchers(@Query('page') page:number, @Query('limit') limit:number){
         return await this.service.findAllVouchers(page, limit);
     }
 
-    @Post()
-    redeemVoucher(){
-         
-    }
+    
 }

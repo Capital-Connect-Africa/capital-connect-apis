@@ -1,5 +1,5 @@
 import { In, Repository } from 'typeorm';
-import { Injectable, Query } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Voucher } from './entities/voucher.entity';
 import { EligibilityRule } from './entities/eligibility-rule.entity';
@@ -39,10 +39,7 @@ export class VoucherService {
         return await this.voucherRepository.save(newVoucher);
     }
 
-    async updateVoucher(voucherId:number, voucher: Partial<Voucher>): Promise<Voucher>{
-        await this.voucherRepository.update(voucherId, voucher);
-        return await this.voucherRepository.findOne({where: {id: voucherId}});
-    }
+    
 
     async createEligibilityRule(rule: Partial<EligibilityRule>){
         const newRule =this.eligibilityRuleRepository.create(rule);
