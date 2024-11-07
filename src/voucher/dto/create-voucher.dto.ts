@@ -1,4 +1,4 @@
-import { VoucherType } from "../../utils/enums/voucher.type.enum";
+import { VoucherType } from "../../shared/enums/voucher.type.enum";
 import { IsInt, IsNotEmpty, IsNumber, Max, Min } from "class-validator";
 
 export class CreateVoucherDto{

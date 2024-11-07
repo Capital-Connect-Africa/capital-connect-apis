@@ -1,5 +1,5 @@
 import { IsNotEmpty} from "class-validator";
-import { Operators } from "src/utils/enums/operators.enum";
+import { Operators } from "src/shared/enums/operators.enum";
 
 export class CreateEligibilityRuleDto{
 

@@ -1,5 +1,5 @@
 import { Voucher } from "./voucher.entity";
-import { Operators } from "src/utils/enums/operators.enum";
+import { Operators } from "src/shared/enums/operators.enum";
 import { Column, Entity, ManyToMany, PrimaryGeneratedColumn } from "typeorm";
 
 

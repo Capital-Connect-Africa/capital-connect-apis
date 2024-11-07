@@ -1,5 +1,5 @@
 import { EligibilityRule } from "./eligibility-rule.entity";
-import { VoucherType } from "src/utils/enums/voucher.type.enum";
+import { VoucherType } from "src/shared/enums/voucher.type.enum";
 import { Column, CreateDateColumn, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 @Entity('vouchers')

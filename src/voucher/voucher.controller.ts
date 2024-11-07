@@ -2,10 +2,10 @@ import { VoucherService } from './voucher.service';
 import { CreateVoucherDto } from './dto/create-voucher.dto';
 import { Body, Controller, Delete, Get, HttpCode, HttpStatus, NotFoundException, Param, Post, Put, Query, RequestMethod } from '@nestjs/common';
 import { CreateEligibilityRuleDto } from './dto/create-eligibility-rules.dto';
-import { generateCryptCode } from 'src/utils/helpers/crypto-generator.helper';
+import { generateCryptCode } from 'src/shared/helpers/crypto-generator.helper';
 import { UpdateEligibilityRuleDto } from './dto/update-eligibility-rules.dto';
 import { UpdateVoucherDto } from './dto/update-voucher.dto';
-import { handleError } from 'src/utils/helpers/error-handler.helper';
+import { handleError } from 'src/shared/helpers/error-handler.helper';
 
 @Controller('vouchers')
 export class VoucherController {
