@@ -4,7 +4,7 @@ import { PaymentController } from './payment.controller';
 import { Payment } from './entities/payment.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { HttpModule } from '@nestjs/axios';
-import { AuthMiddleware } from '../shared/auth.middleware';
+import { PesapalMiddleware } from '../shared/pesapal-middleware.service';
 import { TokenService } from '../shared/token.service';
 import { UserSubscription } from '../subscription_tier/entities/userSubscription.entity';
 import { SubscriptionTier } from '../subscription_tier/entities/subscription_tier.entity';
@@ -20,7 +20,7 @@ import { SubscriptionTier } from '../subscription_tier/entities/subscription_tie
 export class PaymentModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
-      .apply(AuthMiddleware)
+      .apply(PesapalMiddleware)
       .forRoutes(
         { path: 'payments/callback', method: RequestMethod.POST },
         { path: 'payments/status', method: RequestMethod.GET },
