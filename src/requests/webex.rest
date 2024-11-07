@@ -1,0 +1,17 @@
+POST http://localhost:3000/webex/create
+Content-Type: application/json
+
+{
+  "topic": "Advisory Session",
+  "startTime": "2024-10-10T10:00:00Z",
+  "duration": 60
+}
+
+### Authorize
+
+GET http://localhost:3000/webex/authorization/initiation
+
+
+### Get meeting
+
+http://localhost:3000/webex/1234567890
