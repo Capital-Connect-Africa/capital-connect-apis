@@ -1,10 +1,15 @@
 POST http://localhost:3000/webex/create
 Content-Type: application/json
+code: YmEwZTRlZGQtMzAxZS00MTE0LWE0OGEtZjYyNWMyMDkzYjJiMDhiMTE5NDQtNDFm_P0A1_bdd2aed2-da17-481d-bd6f-b43037ee90b7
 
 {
-  "topic": "Advisory Session",
-  "startTime": "2024-10-10T10:00:00Z",
-  "duration": 60
+  "title": "Project Meeting",
+  "start": "2024-11-09T07:00:00.000Z",
+  "end": "2024-11-09T08:00:00.000Z",
+  "timezone": "UTC",
+  "invitees": [
+    { "email": "attendee@example.com" }
+  ]
 }
 
 ### Authorize
@@ -14,4 +19,6 @@ GET http://localhost:3000/webex/authorization/initiation
 
 ### Get meeting
 
-http://localhost:3000/webex/1234567890
+http://localhost:3000/webex/cebd5c382d234975805723958efff95c
+Content-Type: application/json
+code: YmEwZTRlZGQtMzAxZS00MTE0LWE0OGEtZjYyNWMyMDkzYjJiMDhiMTE5NDQtNDFm_P0A1_bdd2aed2-da17-481d-bd6f-b43037ee90b7

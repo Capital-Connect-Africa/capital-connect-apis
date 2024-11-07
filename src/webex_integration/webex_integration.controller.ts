@@ -14,13 +14,8 @@ export class WebexIntegrationController {
 
   @Post('create')
   async createMeeting(@WebexToken() webexToken: string, @Body() body: any) {
-    const { topic, startTime, duration } = body;
-    return this.webexService.createMeeting(
-      webexToken,
-      topic,
-      new Date(startTime),
-      duration,
-    );
+    const { title, start, end } = body;
+    return this.webexService.createMeeting(webexToken, title, start, end);
   }
 
   @Get(':id')

@@ -8,17 +8,17 @@ export class WebexIntegrationService {
 
   async createMeeting(
     accessToken: string,
-    topic: string,
-    start: Date,
-    duration: number,
+    title: string,
+    start: string,
+    end: string,
   ) {
     try {
       const response = await axios.post(
         `${this.apiUrl}/meetings`,
         {
-          title: topic,
-          start: start.toISOString(),
-          durationMinutes: duration,
+          title: title,
+          start: start,
+          end: end,
         },
         {
           headers: {
@@ -29,15 +29,21 @@ export class WebexIntegrationService {
       );
       return response.data;
     } catch (error) {
+      console.log(error);
       throw new HttpException(error.response?.data || 'Webex API Error', 500);
     }
   }
 
   async getMeetingDetails(accessToken: string, meetingId: string) {
-    const response = await axios.get(`${this.apiUrl}/meetings/${meetingId}`, {
-      headers: { Authorization: `Bearer ${accessToken}` },
-    });
-    return response.data;
+    try {
+      const response = await axios.get(`${this.apiUrl}/meetings/${meetingId}`, {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      });
+      return response.data;
+    } catch (error) {
+      console.log(error);
+      throw new HttpException(error.response?.data || 'Webex API Error', 500);
+    }
   }
 
   authorize() {
