@@ -152,9 +152,12 @@ export class VoucherController {
 
     @UseGuards(JwtAuthGuard, RolesGuard)
     @Roles(Role.Investor, Role.User)
+    @Post('redeem-voucher')
+    @HttpCode(HttpStatus.OK)
     async redeemVoucher(@Body() body: RedeemVoucherDto){
         try {
-            
+            const {userId, voucherCode, purchase} =body;
+            return await this.service.reedemVoucher(userId, voucherCode, purchase)
         } catch (error) {
             handleError(error, RequestMethod.POST)
         }

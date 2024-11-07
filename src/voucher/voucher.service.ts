@@ -1,10 +1,14 @@
 import { In, Repository } from 'typeorm';
-import { BadRequestException, ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Voucher } from './entities/voucher.entity';
-import { EligibilityRule } from './entities/eligibility-rule.entity';
+import { User } from 'src/users/entities/user.entity';
 import { UpdateVoucherDto } from './dto/update-voucher.dto';
+import { EligibilityRule } from './entities/eligibility-rule.entity';
 import { UpdateEligibilityRuleDto } from './dto/update-eligibility-rules.dto';
+import { BadRequestException, ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import { VoucherType } from 'src/shared/enums/voucher.type.enum';
+import { Operators } from 'src/shared/enums/operators.enum';
+import { UserVoucher } from './entities/user-voucher.entity';
 
 @Injectable()
 export class VoucherService {
@@ -14,6 +18,11 @@ export class VoucherService {
         private readonly voucherRepository: Repository<Voucher>,
         @InjectRepository(EligibilityRule)
         private readonly eligibilityRuleRepository: Repository<EligibilityRule>,
+        @InjectRepository(User)
+        private readonly userRepository: Repository<User>,
+
+        @InjectRepository(UserVoucher)
+        private readonly userVoucherRepository: Repository<UserVoucher>
     ) {}
 
     async findVouchers(page:number =1, limit:number =10): Promise<Voucher[]>{
@@ -113,6 +122,75 @@ export class VoucherService {
         if(!existingRule) throw new NotFoundException('Rule with id not found');
         await this.eligibilityRuleRepository.delete(ruleId);
         return;
+    }
+
+    async reedemVoucher(userId:number, voucherCode:string, purchase: VoucherType){
+        const user =await this.userRepository.findOne({where: {id: userId}})
+        if(!user) throw new NotFoundException('unable to to pull your information')
+        const voucher =await this.findVoucherByCode(voucherCode);
+        const canRedeemVoucher =this._canRedeemVoucher(user, voucher, purchase)
+        if(canRedeemVoucher){
+            // const userVoucher =await this.userVoucherRepository.save(this.userVoucherRepository.create({
+            //     usedAt: new Date(),
+            //     user,
+            //     voucher
+            // }))
+            // voucher.users =voucher.users || [];
+            // voucher.users.push(userVoucher)
+            // await this.voucherRepository.update(voucher.id, voucher)
+        }
+        return {
+            code: voucher.code,
+            maxAmount: voucher.maxAmount,
+            discount: voucher.percentageDiscount
+        }
+    }
+
+    private _canRedeemVoucher(user:User, voucher:Voucher, purchase: VoucherType): boolean{
+        
+        if(purchase !==voucher.type) throw new ConflictException("Voucher not applicable for this purchase");
+        if(voucher.users && (voucher.users.length >=voucher.maxUses)) throw new ConflictException("Voucher has already been applied");
+        if(voucher.users && voucher.users.map(u =>u.id).includes(user.id)) throw new ConflictException("You already applied this voucher");
+        if(voucher.expiresAt.getTime() < new Date().getTime()) throw new ConflictException("Voucher validity expired");
+        if(!voucher.rules || !voucher.rules.length)
+        for (let rule of voucher.rules) {
+
+            switch (rule.operator) {
+                case Operators.EQUAL_TO:
+                    if(user[rule.userProperty] !=rule.value) 
+                        throw new ConflictException("You are not eligible to use apply the voucher");
+                    break;
+
+                case Operators.GREATER_THAN:  
+                    if(user[rule.userProperty] <= rule.value) 
+                        throw new ConflictException("You are not eligible to use apply the voucher");
+                    break;
+                
+                case Operators.LESS_THAN:  
+                    if(user[rule.userProperty] >= rule.value) 
+                        throw new ConflictException("You are not eligible to use apply the voucher");
+                    break;
+
+                case Operators.GREATER_THAN_OR_EQUAL_TO:  
+                    if(user[rule.userProperty] < rule.value) 
+                        throw new ConflictException("You are not eligible to use apply the voucher");
+                    break;
+                
+                case Operators.LESS_THAN_OR_EQUAL_TO:  
+                    if(user[rule.userProperty] > rule.value) 
+                        throw new ConflictException("You are not eligible to use apply the voucher");
+                    break;
+            
+            /*
+            * TODO: 
+            * add support for the between, exists operators
+            * handle non-numerical types i.e dates, lists
+            * hint: add another field to the rule type to track the data type
+            */ 
+        }
+            
+        }
+        return true;
     }
 
 }
