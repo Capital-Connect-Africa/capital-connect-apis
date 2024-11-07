@@ -2,6 +2,7 @@ import { Repository } from 'typeorm';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Voucher } from './entities/voucher.entity';
+import { EligibilityRule } from './entities/eligibility-rule.entity';
 
 @Injectable()
 export class VoucherService {
@@ -9,9 +10,13 @@ export class VoucherService {
     constructor(
         @InjectRepository(Voucher)
         private voucherRepository: Repository<Voucher>,
+
+        @InjectRepository(EligibilityRule)
+        private eligibilityRuleRepository: Repository<EligibilityRule>,
     ) {}
 
-    async findAll(): Promise<Voucher[]>{
+    async findAllVouchers(): Promise<Voucher[]>{
+
         const vouchers =await this.voucherRepository.find({
             relations: ['rules'],
             order: {
@@ -22,4 +27,20 @@ export class VoucherService {
 
         return vouchers
     }
+
+    async createVoucher(voucher: Partial<Voucher>): Promise<Voucher>{
+        const newVoucher = this.voucherRepository.create(voucher);
+        return await this.voucherRepository.save(newVoucher);
+    }
+
+    async updateVoucher(voucherId:number, voucher: Partial<Voucher>): Promise<Voucher>{
+        await this.voucherRepository.update(voucherId, voucher);
+        return await this.voucherRepository.findOne({where: {id: voucherId}})
+    }
+
+    async createEligibilityRule(rule: Partial<EligibilityRule>){
+        const newRule =this.eligibilityRuleRepository.create(rule);
+        return await this.eligibilityRuleRepository.save(newRule);
+    }
+    
 }
