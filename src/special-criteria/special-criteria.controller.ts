@@ -31,7 +31,7 @@ export class SpecialCriteriaController {
   ) {}
 
   @Post()
-  @Roles(Role.Admin, Role.Advisor, Role.Investor)
+  @Roles(Role.Admin, Role.Advisor, Role.Investor, Role.ContactPerson)
   create(@Body() createSpecialCriterionDto: CreateSpecialCriterionDto) {
     try {
       return this.specialCriteriaService.create(createSpecialCriterionDto);
@@ -110,7 +110,7 @@ export class SpecialCriteriaController {
   }
 
   @Put(':id')
-  @Roles(Role.Admin, Role.Advisor, Role.Investor)
+  @Roles(Role.Admin, Role.Advisor, Role.Investor, Role.ContactPerson)
   async update(
     @Param('id') id: string,
     @Body() updateSpecialCriterionDto: UpdateSpecialCriterionDto,
@@ -132,7 +132,7 @@ export class SpecialCriteriaController {
   }
 
   @Delete(':id')
-  @Roles(Role.Admin, Role.Advisor, Role.Investor)
+  @Roles(Role.Admin, Role.Advisor, Role.Investor, Role.ContactPerson)
   @HttpCode(HttpStatus.NO_CONTENT)
   async remove(@Param('id') id: string) {
     try {
