@@ -11,6 +11,8 @@ export class WebexIntegrationService {
     title: string,
     start: string,
     end: string,
+    timezone: string,
+    invitees: any
   ) {
     try {
       const response = await axios.post(
@@ -19,6 +21,8 @@ export class WebexIntegrationService {
           title: title,
           start: start,
           end: end,
+          timezone: timezone,
+          invitees: invitees
         },
         {
           headers: {
