@@ -15,10 +15,12 @@ export class EligibilityRule {
         type: 'enum',
         enum: Operators
     })
+    
     operator: Operators;
 
     @Column()
     value: string; // can be range i.e val1 - val2
+    
     @ManyToMany(() => Voucher, voucher => voucher.rules)
     vouchers: Voucher[];
 }
