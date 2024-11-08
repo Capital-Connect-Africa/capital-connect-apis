@@ -1,0 +1,96 @@
+### Create voucher
+POST http://localhost:3000/vouchers
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+{
+  "type": "advisory-session",                  
+  "maxUses": 5, 
+  "maxAmount": 10,                     
+  "expiresAt": "2024-12-31",          
+  "rules": [ 1, 2],                        
+  "percentageDiscount": 30           
+}
+
+### Create rules
+POST http://localhost:3000/vouchers/rules
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+{
+  "userProperty": "new rule",
+  "operator": "gte",
+  "value": 4000         
+}
+
+### Get all vouchers.
+GET http://localhost:3000/vouchers?page=1&limit=10
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+### Get voucher by code.
+GET http://localhost:3000/vouchers/code/BB450850
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+### Get voucher by id.
+GET http://localhost:3000/vouchers/2
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+### Get all rules.
+GET http://localhost:3000/vouchers/rules?page=1&limit=10
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+### Get a rule by id.
+GET http://localhost:3000/vouchers/rules/6
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+### Update a voucher by id
+PUT http://localhost:3000/vouchers/1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+{
+  "type": "advisory-session",                  
+  "maxUses": 5, 
+  "maxAmount": 10,                     
+  "expiresAt": "2024-12-31",          
+  "rules": [ 1, 2],                        
+  "percentageDiscount": 30           
+}
+
+### Update a rule by id.
+PUT http://localhost:3000/vouchers/rules/5
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+{
+  "userProperty": "Rule number 5",
+  "operator": "gte",
+  "value": 4000           
+}
+
+### Delete a voucher by id
+DELETE http://localhost:3000/vouchers/5
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+### Delete a rule by id
+DELETE http://localhost:3000/vouchers/rules/6
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+### Delete a rule by id
+POST http://localhost:3000/vouchers/redeem-voucher
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+{
+    "userId": 2,
+    "purchase": "advisory-session",
+    "voucherCode": "BB450850" 
+}
+
