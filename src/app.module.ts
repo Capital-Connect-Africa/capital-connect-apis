@@ -40,6 +40,7 @@ import { SubscriptionTierModule } from './subscription_tier/subscription_tier.mo
 import { BillingModule } from './billing/billing.module';
 import { SegmentModule } from './segment/segment.module';
 import { VoucherModule } from './voucher/voucher.module';
+import { WebexIntegrationModule } from './webex_integration/webex_integration.module';
 
 @Module({
   imports: [
@@ -86,6 +87,7 @@ import { VoucherModule } from './voucher/voucher.module';
     BillingModule,
     SegmentModule,
     VoucherModule,
+    WebexIntegrationModule,
   ],
   providers: [
     AppService,

@@ -13,6 +13,9 @@ export class SpecialCriterion {
     @Column({ type: 'text', nullable: true })
     description: string;
 
+    @Column({ default: false })
+    globalVisible: boolean;
+
     @ManyToMany(() => Question, (questions) => questions.specialcriteria)
     @JoinTable({ name: 'special_criteria_questions' })
     questions: Question[];

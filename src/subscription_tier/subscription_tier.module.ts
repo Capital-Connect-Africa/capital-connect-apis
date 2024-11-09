@@ -10,7 +10,7 @@ import { UserSubscription } from './entities/userSubscription.entity';
 import { PaymentService } from '../payment/payment.service';
 import { Payment } from '../payment/entities/payment.entity';
 import { HttpModule } from '@nestjs/axios';
-import { AuthMiddleware } from '../shared/auth.middleware';
+import { PesapalMiddleware } from '../shared/pesapal-middleware.service';
 import { TokenService } from '../shared/token.service';
 
 @Module({
@@ -34,7 +34,7 @@ import { TokenService } from '../shared/token.service';
 export class SubscriptionTierModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
-      .apply(AuthMiddleware)
+      .apply(PesapalMiddleware)
       .forRoutes(
         { path: 'subscriptions/subscribe', method: RequestMethod.POST },
         { path: 'subscriptions/upgrade', method: RequestMethod.POST },

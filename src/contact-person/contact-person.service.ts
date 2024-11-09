@@ -18,6 +18,8 @@ export class ContactPersonService {
     private contactPersonRepository: Repository<ContactPerson>,
     @InjectRepository(InvestorProfile)
     private investorProfileRepository: Repository<InvestorProfile>,
+    @InjectRepository(User)
+    private usersRepository: Repository<User>,
     private usersService: UsersService,
     private authService: AuthService
   ) {}
@@ -75,8 +77,20 @@ export class ContactPersonService {
       throw new NotFoundException(`Contact person with id ${contactPersonId} was not found`);
     }
 
-    contactPerson.hasAccess = true;
-    await this.contactPersonRepository.save(contactPerson);
+    const existingUser = await this.usersRepository.findOne({
+      where: { username: contactPerson.emailAddress},
+      relations: ['investorProfiles'],
+   });
+
+   if (existingUser && existingUser.roles !== 'contact_person') {
+    throw new NotFoundException(`The email ${contactPerson.emailAddress} is already taken by another user.`);
+    }
+
+    if (existingUser) {
+        contactPerson.hasAccess ||= true; 
+        await this.contactPersonRepository.save(contactPerson);
+        return existingUser;
+    }
 
     const investorProfile = await this.investorProfileRepository.findOne({
       where: { id: investorProfileId },
@@ -95,6 +109,9 @@ export class ContactPersonService {
       password: password,
       roles: 'contact_person',
     });
+
+    contactPerson.hasAccess = true;
+    await this.contactPersonRepository.save(contactPerson);
 
     user.investorProfiles = [investorProfile];
     user = await this.usersService.save(user);

@@ -7,7 +7,7 @@ import { Payment } from 'src/payment/entities/payment.entity';
 import { PaymentService } from 'src/payment/payment.service';
 import { HttpModule } from '@nestjs/axios';
 import { TokenService } from 'src/shared/token.service';
-import { AuthMiddleware } from 'src/shared/auth.middleware';
+import { PesapalMiddleware } from 'src/shared/pesapal-middleware.service';
 import { SubscriptionTier } from '../subscription_tier/entities/subscription_tier.entity';
 import { UserSubscription } from '../subscription_tier/entities/userSubscription.entity';
 
@@ -27,7 +27,7 @@ import { UserSubscription } from '../subscription_tier/entities/userSubscription
 export class BookingModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
-      .apply(AuthMiddleware)
+      .apply(PesapalMiddleware)
       .forRoutes(
         { path: 'bookings', method: RequestMethod.POST },
         { path: 'payments/:id', method: RequestMethod.GET },
