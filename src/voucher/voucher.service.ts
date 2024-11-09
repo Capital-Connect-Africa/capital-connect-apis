@@ -2,10 +2,9 @@ import { In, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Voucher } from './entities/voucher.entity';
 import { User } from 'src/users/entities/user.entity';
-import { UpdateVoucherDto } from './dto/update-voucher.dto';
 import { EligibilityRule } from './entities/eligibility-rule.entity';
 import { UpdateEligibilityRuleDto } from './dto/update-eligibility-rules.dto';
-import { BadRequestException, ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ConflictException, Injectable, NotFoundException, RequestMethod } from '@nestjs/common';
 import { VoucherType } from 'src/shared/enums/voucher.type.enum';
 import { Operators } from 'src/shared/enums/operators.enum';
 import { UserVoucher } from './entities/user-voucher.entity';
@@ -30,7 +29,7 @@ export class VoucherService {
         const vouchers =await this.voucherRepository.find({
             skip,
             take: limit,
-            relations: ['rules', 'users'],
+            relations: ['rules', 'users', 'users.user'],
             order: {
                 id: 'DESC'
             },
@@ -48,6 +47,8 @@ export class VoucherService {
         const existingVoucher =await this.voucherRepository.findOne({where: {code: voucher.code}});
         if(existingVoucher) throw new ConflictException('Voucher with code already exists');
         const rules = ruleIds ? await this.eligibilityRuleRepository.find({where: {id: In(ruleIds)}}) : [];
+        console.log(ruleIds);
+        console.log(rules);
         const newVoucher = this.voucherRepository.create({...voucher, rules});
         return await this.voucherRepository.save(newVoucher);
     }
@@ -152,11 +153,11 @@ export class VoucherService {
 
     async redeemVoucher(userId: number, voucherCode: string, purchase: VoucherType) {
         const user = await this.userRepository.findOne({ where: { id: userId } });
-        if (!user) throw new NotFoundException('Unable to pull your information');
-    
-        const voucher = await this.findVoucherByCode(voucherCode);
-        if (!voucher) throw new NotFoundException('Voucher not found');
-    
+        if (!user) throw new NotFoundException('Error retrieving your information');
+        
+        const voucher = await this.voucherRepository.findOne({where: {code: voucherCode,}, relations: ['rules', 'users', 'users.user']});
+        if (!voucher) throw new BadRequestException('Invalid voucher code');
+
         const canRedeemVoucher = this._canRedeemVoucher(user, voucher, purchase);
         if (!canRedeemVoucher) {
             throw new BadRequestException('Voucher cannot be redeemed');
@@ -168,15 +169,6 @@ export class VoucherService {
             voucher,
         });
         await this.userVoucherRepository.save(userVoucher);
-    
-        voucher.users = voucher.users || [];
-        voucher.users.push(userVoucher);
-    
-        if (voucher.maxAmount) {
-            voucher.maxAmount -= 1; 
-            await this.voucherRepository.update(voucher.id, { maxAmount: voucher.maxAmount });
-        }
-    
         return {
             code: voucher.code,
             maxAmount: voucher.maxAmount,
@@ -189,55 +181,63 @@ export class VoucherService {
         if (purchase !== voucher.type) throw new ConflictException("Voucher not applicable for this purchase");
     
         // Check if voucher is already fully used
+        console.log(voucher.users.length, voucher.maxUses);
+        
         if (voucher.users && voucher.users.length >= voucher.maxUses) 
             throw new ConflictException("Voucher has already been applied");
     
         // Check if user has already applied the voucher
-        if (voucher.users && voucher.users.map(u => u.id).includes(user.id)) 
+        if (voucher.users && voucher.users.map(userVoucher =>userVoucher.user.id).includes(user.id)) 
             throw new ConflictException("You already applied this voucher");
     
         // Check if the voucher is expired
         if (voucher.expiresAt.getTime() < new Date().getTime()) 
             throw new ConflictException("Voucher validity expired");
     
-        // Ensure rules exist
-        if (!voucher.rules || !voucher.rules.length) 
-            return true; // or throw an error if you want to disallow vouchers with no rules
-    
+        const rules =voucher.rules || [];
         // Process each rule
-        for (let rule of voucher.rules) {
+        for (let rule of rules) {
             let userPropertyValue = user[rule.userProperty];
-    
+            let errorMessage:string =null
+            
             switch (rule.operator) {
                 case Operators.EQUAL_TO:
                     if (userPropertyValue !== rule.value) 
-                        throw new ConflictException(`You are not eligible to apply the voucher: ${rule.userProperty} must equal ${rule.value}`);
+                        errorMessage =rule.description;
                     break;
     
                 case Operators.GREATER_THAN:  
                     if (userPropertyValue <= rule.value) 
-                        throw new ConflictException(`You are not eligible to apply the voucher: ${rule.userProperty} must be greater than ${rule.value}`);
+                        errorMessage =rule.description;
                     break;
     
                 case Operators.LESS_THAN:  
                     if (userPropertyValue >= rule.value) 
-                        throw new ConflictException(`You are not eligible to apply the voucher: ${rule.userProperty} must be less than ${rule.value}`);
+                        errorMessage =rule.description;
                     break;
     
                 case Operators.GREATER_THAN_OR_EQUAL_TO:  
                     if (userPropertyValue < rule.value) 
-                        throw new ConflictException(`You are not eligible to apply the voucher: ${rule.userProperty} must be greater than or equal to ${rule.value}`);
+                        errorMessage =rule.description;
                     break;
     
                 case Operators.LESS_THAN_OR_EQUAL_TO:  
                     if (userPropertyValue > rule.value) 
-                        throw new ConflictException(`You are not eligible to apply the voucher: ${rule.userProperty} must be less than or equal to ${rule.value}`);
+                        errorMessage =rule.description
                     break;
     
                 default:
-                    throw new ConflictException(`Invalid operator ${rule.operator} in voucher rules`);
+                    errorMessage ='You are not eligible to apply this voucher'
             }
+
+            if(errorMessage) throw new ConflictException(errorMessage);
         }
+
+        /**
+         * TODO: @meltus
+         *      implement checks for other types e.g dates, arrays
+         *      implement checks for value ranges
+        */
     
         return true; // If all checks pass, voucher can be redeemed
     }
