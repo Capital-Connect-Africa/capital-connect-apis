@@ -1,11 +1,15 @@
 import { BadRequestException, ConflictException, ForbiddenException, HttpException, HttpStatus, InternalServerErrorException, NotFoundException, RequestMethod, UnauthorizedException } from "@nestjs/common";
 
 export const handleError = (error: HttpException, method: RequestMethod):never =>{
-   const {message, getStatus} =error;
-
-   if(!getStatus) throw new InternalServerErrorException(message)
+   const {message} =error;
+   
+   try {
+      error.getStatus()
+   } catch (error) {
+      throw new InternalServerErrorException(message)
+   }
    const errorMessage = message;
-   const statusCode = getStatus();
+   const statusCode = error.getStatus();
 
    switch (statusCode) {
     case HttpStatus.BAD_REQUEST: throw new BadRequestException(errorMessage);
