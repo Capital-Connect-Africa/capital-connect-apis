@@ -47,8 +47,6 @@ export class VoucherService {
         const existingVoucher =await this.voucherRepository.findOne({where: {code: voucher.code}});
         if(existingVoucher) throw new ConflictException('Voucher with code already exists');
         const rules = ruleIds ? await this.eligibilityRuleRepository.find({where: {id: In(ruleIds)}}) : [];
-        console.log(ruleIds);
-        console.log(rules);
         const newVoucher = this.voucherRepository.create({...voucher, rules});
         return await this.voucherRepository.save(newVoucher);
     }
