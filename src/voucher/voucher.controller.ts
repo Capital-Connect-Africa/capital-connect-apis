@@ -33,7 +33,7 @@ export class VoucherController {
     }
 
     @Roles(Role.Admin)
-    @Post('rules')
+    @Post('rules/')
     async createRule(@Body() body: CreateEligibilityRuleDto){
         try {
             return await this.voucherService.createRule(body);
@@ -43,7 +43,7 @@ export class VoucherController {
         }
     }
 
-    @Get()
+    @Get('list')
     async findVouchers(@Query('page') page: number, @Query('limit') limit: number) {
         try {
             const vouchers = await this.voucherService.findVouchers(page, limit);
@@ -55,7 +55,7 @@ export class VoucherController {
     }  
     
     @Roles(Role.Admin)
-    @Get('rules')
+    @Get('rules/list')
     async findRules(@Query('page') page: number, @Query('limit') limit: number){
         try {
             const rules = await this.voucherService.findRules(page, limit);
@@ -66,7 +66,7 @@ export class VoucherController {
         }
     }
 
-    @Get('code/:code')
+    @Get('find-by-code/:code')
     async findVoucherByCode(@Param('code') code: string){
         if (!code) {
           throw new NotFoundException('Voucher code is required');
@@ -79,7 +79,7 @@ export class VoucherController {
         }
     }
 
-    @Get(':id')
+    @Get('find-by-id/:id')
     async findVoucherById(@Param('id') voucherId: number) {
         if (!voucherId) {
             throw new NotFoundException('Voucher ID is required');
@@ -93,7 +93,7 @@ export class VoucherController {
     }    
 
     @Roles(Role.Admin)
-    @Get('rules/:id')
+    @Get('rules/find-by-id/:id')
     async findRuleById(@Param('id') ruleId: number){
         try {
             const rule = await this.voucherService.findRuleById(ruleId);
@@ -104,7 +104,7 @@ export class VoucherController {
     }
 
     @Roles(Role.Admin)
-    @Put(':id')
+    @Put('update/:id')
     async updateVoucher(
       @Param('id') voucherId: number,
       @Body() updateData: UpdateVoucherDto, 
@@ -118,7 +118,7 @@ export class VoucherController {
     }
 
     @Roles(Role.Admin)
-    @Put('rules/:id')
+    @Put('rules/update/:id')
     async updateRule(@Param('id') ruleId: number, @Body() 
     updateEligibilityRuleDto: UpdateEligibilityRuleDto){
         try {
@@ -131,7 +131,7 @@ export class VoucherController {
     }
 
     @Roles(Role.Admin)
-    @Delete(':id')
+    @Delete('remove/:id')
     @HttpCode(HttpStatus.NO_CONTENT)
     async removeVoucher(@Param('id') id:number){
         try {
@@ -142,7 +142,7 @@ export class VoucherController {
     }
 
     @Roles(Role.Admin)
-    @Delete('rules/:id')
+    @Delete('rules/remove/:id')
     @HttpCode(HttpStatus.NO_CONTENT)
     async removeRule(@Param('id') id:number){
         try {
@@ -153,7 +153,7 @@ export class VoucherController {
     }
 
     @Roles(Role.Investor, Role.User)
-    @Post('redeem-voucher')
+    @Post('redeem')
     async redeemVoucher(@Body() body: RedeemVoucherDto) {
         
         try {
