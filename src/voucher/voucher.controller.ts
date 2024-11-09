@@ -1,15 +1,16 @@
-import { VoucherService } from './voucher.service';
-import { CreateVoucherDto } from './dto/create-voucher.dto';
-import { Body, Controller, Delete, Get, HttpCode, HttpStatus, NotFoundException, Param, Post, Put, Query, RequestMethod, UseGuards } from '@nestjs/common';
-import { CreateEligibilityRuleDto } from './dto/create-eligibility-rules.dto';
-import { generateCryptCode } from 'src/shared/helpers/crypto-generator.helper';
-import { UpdateEligibilityRuleDto } from './dto/update-eligibility-rules.dto';
-import { UpdateVoucherDto } from './dto/update-voucher.dto';
-import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
-import { RolesGuard } from 'src/auth/roles.guard';
-import { Roles } from 'src/auth/roles.decorator';
 import { Role } from 'src/auth/role.enum';
+import { Roles } from 'src/auth/roles.decorator';
+import { RolesGuard } from 'src/auth/roles.guard';
+import { VoucherService } from './voucher.service';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { RedeemVoucherDto } from './dto/redeem-voucher.dto';
+import { CreateVoucherDto } from './dto/create-voucher.dto';
+import { UpdateVoucherDto } from './dto/update-voucher.dto';
+import { CreateEligibilityRuleDto } from './dto/create-eligibility-rules.dto';
+import { UpdateEligibilityRuleDto } from './dto/update-eligibility-rules.dto';
+import { generateCryptCode } from 'src/shared/helpers/crypto-generator.helper';
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, NotFoundException, Param, Post, Put, Query, RequestMethod, UseGuards } from '@nestjs/common';
+import { handleError } from 'src/shared/helpers/error-handler.helper';
 
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Controller('vouchers')
@@ -27,7 +28,7 @@ export class VoucherController {
           rules
         );
       } catch (error) { 
-        throw new NotFoundException("An error occurred while creating the voucher.");
+        handleError(error, RequestMethod.POST);
       }
     }
 
@@ -38,20 +39,31 @@ export class VoucherController {
             return await this.voucherService.createRule(body);
             
         } catch (error) {
-            throw new NotFoundException("An error occurred while creating the rule.");
+            throw handleError(error, RequestMethod.POST);
         }
     }
 
     @Get()
     async findVouchers(@Query('page') page: number, @Query('limit') limit: number) {
-        const vouchers = await this.voucherService.findVouchers(page, limit);
-        return vouchers;
+        try {
+            const vouchers = await this.voucherService.findVouchers(page, limit);
+            return vouchers;
+            
+        } catch (error) {
+            handleError(error, RequestMethod.GET);
+        }
     }  
     
+    @Roles(Role.Admin)
     @Get('rules')
     async findRules(@Query('page') page: number, @Query('limit') limit: number){
-        const rules = await this.voucherService.findRules(page, limit);
-        return rules;
+        try {
+            const rules = await this.voucherService.findRules(page, limit);
+            return rules;
+            
+        } catch (error) {
+            handleError(error, RequestMethod.GET);
+        }
     }
 
     @Get('code/:code')
@@ -63,7 +75,7 @@ export class VoucherController {
           const voucher = await this.voucherService.findVoucherByCode(code);
           return voucher;
         } catch (error) {
-          throw new NotFoundException('Voucher code not found');
+            handleError(error, RequestMethod.GET);
         }
     }
 
@@ -76,17 +88,18 @@ export class VoucherController {
             const voucher = await this.voucherService.findVoucherById(voucherId);
             return voucher;
         } catch (error) {
-            throw new NotFoundException('Voucher with the specified ID not found');
+            handleError(error, RequestMethod.GET);
         }
     }    
 
+    @Roles(Role.Admin)
     @Get('rules/:id')
     async findRuleById(@Param('id') ruleId: number){
         try {
             const rule = await this.voucherService.findRuleById(ruleId);
             return rule;
         } catch (error) {
-            throw new NotFoundException('Rule with the specified ID not found');
+            handleError(error, RequestMethod.GET);
         }
     }
 
@@ -97,15 +110,24 @@ export class VoucherController {
       @Body() updateData: UpdateVoucherDto, 
       @Body('rules') rules: number[] 
     ) {
-      return await this.voucherService.updateVoucher(voucherId, updateData, rules);
+        try {
+            return await this.voucherService.updateVoucher(voucherId, updateData, rules);
+        } catch (error) {
+            handleError(error, RequestMethod.PUT);
+        }
     }
 
     @Roles(Role.Admin)
     @Put('rules/:id')
     async updateRule(@Param('id') ruleId: number, @Body() 
     updateEligibilityRuleDto: UpdateEligibilityRuleDto){
+        try {
+            return await this.voucherService.updateRule(ruleId, updateEligibilityRuleDto);
+            
+        } catch (error) {
+            handleError(error, RequestMethod.PUT);
+        }
 
-    return await this.voucherService.updateRule(ruleId, updateEligibilityRuleDto);
     }
 
     @Roles(Role.Admin)
@@ -115,7 +137,7 @@ export class VoucherController {
         try {
             return await this.voucherService.removeVoucher(id)
         } catch (error) { 
-            throw new NotFoundException('Voucher with the specified ID not found');
+            handleError(error, RequestMethod.DELETE);
         }
     }
 
@@ -126,23 +148,20 @@ export class VoucherController {
         try {
             return await this.voucherService.removeRule(id)
         } catch (error) { 
-            throw new NotFoundException('Rule with the specified ID not found');
+            handleError(error, RequestMethod.DELETE);
         }
     }
 
     @Roles(Role.Investor, Role.User)
     @Post('redeem-voucher')
     async redeemVoucher(@Body() body: RedeemVoucherDto) {
-        const { userId, voucherCode, purchase } = body;
-        if (!userId || !voucherCode) {
-            throw new NotFoundException('userId and voucherCode are required');
-        }
-
+        
         try {
+            const { userId, voucherCode, purchase } = body;
             const voucherDetails = await this.voucherService.redeemVoucher(userId, voucherCode, purchase);
             return voucherDetails;
         } catch (error) {
-            throw new NotFoundException('An error occurred while redeeming the voucher');
+            handleError(error, RequestMethod.POST);
         }
     }
 }
