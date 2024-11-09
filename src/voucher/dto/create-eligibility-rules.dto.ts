@@ -9,6 +9,9 @@ export class CreateEligibilityRuleDto{
     @IsNotEmpty({message: 'operator is required*'})
     operator: Operators;
 
+    @IsNotEmpty({message: 'description required*'})
+    description: string;
+    
     @IsNotEmpty({message: 'value required*'})
     value: any;
 

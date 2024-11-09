@@ -15,8 +15,13 @@ export class EligibilityRule {
         type: 'enum',
         enum: Operators
     })
-    
     operator: Operators;
+
+    @Column({
+        type: 'varchar',
+        length: 255
+    })
+    description: string;
 
     @Column()
     value: string; // can be range i.e val1 - val2
@@ -30,4 +35,4 @@ export class EligibilityRule {
 // 3. roles
 // 4. package
 
-// 5 .150
+// 5 max amount: price
