@@ -59,7 +59,7 @@ export class QuestionController {
   }
 
   @Post('special-criteria')
-  @Roles(Role.Admin, Role.Advisor, Role.Investor)
+  @Roles(Role.Admin, Role.Advisor, Role.Investor, Role.ContactPerson)
   async createSpecialCriteriaQuestion(
     @Body() createSpecialCriteriaQuestionDto: CreateSpecialCriteriaQuestionDto,
   ) {
@@ -109,7 +109,7 @@ export class QuestionController {
   }
 
   @Put(':id')
-  @Roles(Role.Admin, Role.Investor, Role.Advisor)
+  @Roles(Role.Admin, Role.Investor, Role.Advisor, Role.ContactPerson)
   async update(
     @Param('id') id: string,
     @Body() updateQuestionDto: UpdateQuestionDto,
