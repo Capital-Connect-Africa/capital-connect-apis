@@ -14,6 +14,8 @@ import { handleError } from 'src/shared/helpers/error-handler.helper';
 import { ApiBadRequestResponse, ApiConflictResponse, ApiCreatedResponse, ApiForbiddenResponse, ApiInternalServerErrorResponse, ApiNoContentResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiResponse, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
 import { Voucher } from './entities/voucher.entity';
 import { EligibilityRule } from './entities/eligibility-rule.entity';
+import { ErrorDto } from 'src/shared/generic/error.dto';
+import { RedeemedVoucherDto } from './dto/redeemed-code-response.dto';
 
 @UseGuards(JwtAuthGuard, RolesGuard)
 @ApiTags('billing vouchers')
@@ -25,10 +27,10 @@ export class VoucherController {
     @Post()
     @ApiOperation({ summary: 'Creates a new voucher'  })
     @ApiCreatedResponse({ description: 'New voucher created successfully', type: Voucher})
-    @ApiUnauthorizedResponse({ description: 'Login required. Possibly user session expired'})
-    @ApiForbiddenResponse({description: 'User access not allowed'})
-    @ApiBadRequestResponse({description: 'Invalid data provided'})
-    @ApiInternalServerErrorResponse({description: 'A little server oopsy occured! Not your bad 😃'})
+    @ApiUnauthorizedResponse({ description: 'Login required. Possibly user session expired', type: ErrorDto})
+    @ApiForbiddenResponse({description: 'User access not allowed', type: ErrorDto})
+    @ApiBadRequestResponse({description: 'Invalid data provided', type: ErrorDto})
+    @ApiInternalServerErrorResponse({description: 'A little server oopsy occured! Not your bad 😃', type: ErrorDto})
     async createVoucher(@Body() body: CreateVoucherDto) {
       try {
         const { type, percentageDiscount, maxUses, expiresAt, rules, maxAmount } = body;
@@ -46,10 +48,10 @@ export class VoucherController {
     @Post('rules/')
     @ApiOperation({ summary: 'Creates a new rule applied when reediming a voucher'  })
     @ApiCreatedResponse({ description: 'New rule created successfully', type: EligibilityRule})
-    @ApiUnauthorizedResponse({ description: 'Login required. Possibly user session expired!'})
-    @ApiForbiddenResponse({description: 'User access not allowed'})
-    @ApiBadRequestResponse({description: 'Invalid data provided'})
-    @ApiInternalServerErrorResponse({description: 'A little server oopsy occured! Not your bad 😃'})
+    @ApiUnauthorizedResponse({ description: 'Login required. Possibly user session expired!', type: ErrorDto})
+    @ApiForbiddenResponse({description: 'User access not allowed', type: ErrorDto})
+    @ApiBadRequestResponse({description: 'Invalid data provided', type: ErrorDto})
+    @ApiInternalServerErrorResponse({description: 'A little server oopsy occured! Not your bad 😃', type: ErrorDto})
     async createRule(@Body() body: CreateEligibilityRuleDto){
         try {
             return await this.voucherService.createRule(body);
@@ -62,8 +64,8 @@ export class VoucherController {
     @Get('list')
     @ApiOperation({ summary: 'Fetch a paginated list of vouchers.'  })
     @ApiOkResponse({ description: 'Vouchers retrieved successfully', type: Voucher, isArray: true})
-    @ApiUnauthorizedResponse({ description: 'Login required. Possibly user session expired'})
-    @ApiInternalServerErrorResponse({description: 'A little server oopsy occured! Not your bad 😃'})
+    @ApiUnauthorizedResponse({ description: 'Login required. Possibly user session expired', type: ErrorDto})
+    @ApiInternalServerErrorResponse({description: 'A little server oopsy occured! Not your bad 😃', type: ErrorDto})
     async findVouchers(@Query('page') page: number, @Query('limit') limit: number) {
         try {
             const vouchers = await this.voucherService.findVouchers(page, limit);
@@ -78,8 +80,8 @@ export class VoucherController {
     @Get('rules/list')
     @ApiOperation({ summary: 'Fetch a paginated list of voucher application rules.' })
     @ApiOkResponse({ description: 'Rules retrieved successfully', type: EligibilityRule, isArray: true})
-    @ApiUnauthorizedResponse({ description: 'Login required. Possibly user session expired'})
-    @ApiInternalServerErrorResponse({description: 'A little server oopsy occured! Not your bad 😃'})
+    @ApiUnauthorizedResponse({ description: 'Login required. Possibly user session expired', type: ErrorDto})
+    @ApiInternalServerErrorResponse({description: 'A little server oopsy occured! Not your bad 😃', type: ErrorDto})
     async findRules(@Query('page') page: number, @Query('limit') limit: number){
         try {
             const rules = await this.voucherService.findRules(page, limit);
@@ -93,9 +95,9 @@ export class VoucherController {
     @Get('find-by-code/:code')
     @ApiOperation({ summary: 'Fetch a single voucher by code'  })
     @ApiOkResponse({ description: 'Voucher retrieved successfully', type: Voucher})
-    @ApiUnauthorizedResponse({ description: 'Login required. Possibly user session expired'})
-    @ApiNotFoundResponse({description: 'Voucher with code not found'})
-    @ApiInternalServerErrorResponse({description: 'A little server oopsy occured! Not your bad 😃'})
+    @ApiUnauthorizedResponse({ description: 'Login required. Possibly user session expired', type: ErrorDto})
+    @ApiNotFoundResponse({description: 'Voucher with code not found', type: ErrorDto})
+    @ApiInternalServerErrorResponse({description: 'A little server oopsy occured! Not your bad 😃', type: ErrorDto})
     async findVoucherByCode(@Param('code') code: string){
         if (!code) {
           throw new NotFoundException('Voucher code is required');
@@ -111,8 +113,8 @@ export class VoucherController {
     @Get('find-by-id/:id')
     @ApiOperation({ summary: 'Fetch a single voucher by id'  })
     @ApiOkResponse({ description: 'Voucher retrieved successfully', type: Voucher})
-    @ApiUnauthorizedResponse({ description: 'Login required. Possibly user session expired'})
-    @ApiNotFoundResponse({description: 'Voucher with code not found'})
+    @ApiUnauthorizedResponse({ description: 'Login required. Possibly user session expired', type: ErrorDto})
+    @ApiNotFoundResponse({description: 'Voucher with code not found', type: ErrorDto})
     @ApiInternalServerErrorResponse({description: 'A little server oopsy occured! Not your bad 😃'})
     async findVoucherById(@Param('id') voucherId: number) {
         if (!voucherId) {
@@ -130,10 +132,10 @@ export class VoucherController {
     @Get('rules/find-by-id/:id')
     @ApiOperation({ summary: 'Fetch a single voucher rule by id'  })
     @ApiOkResponse({ description: 'Voucher retrieved successfully', type: EligibilityRule})
-    @ApiUnauthorizedResponse({ description: 'Login required. Possibly user session expired'})
-    @ApiForbiddenResponse({description: 'User access not allowed'})
-    @ApiNotFoundResponse({description: 'Rule with code not found'})
-    @ApiInternalServerErrorResponse({description: 'A little server oopsy occured! Not your bad 😃'})
+    @ApiUnauthorizedResponse({ description: 'Login required. Possibly user session expired', type: ErrorDto})
+    @ApiForbiddenResponse({description: 'User access not allowed', type: ErrorDto})
+    @ApiNotFoundResponse({description: 'Rule with code not found', type: ErrorDto})
+    @ApiInternalServerErrorResponse({description: 'A little server oopsy occured! Not your bad 😃', type: ErrorDto})
     async findRuleById(@Param('id') ruleId: number){
         try {
             const rule = await this.voucherService.findRuleById(ruleId);
@@ -147,10 +149,10 @@ export class VoucherController {
     @Put('update/:id')
     @ApiOperation({ summary: 'Update voucher details'  })
     @ApiOkResponse({ description: 'Voucher details updated successfully', type: Voucher})
-    @ApiUnauthorizedResponse({ description: 'Login required. Possibly user session expired'})
-    @ApiForbiddenResponse({description: 'User access not allowed'})
-    @ApiNotFoundResponse({description: 'Voucher with id not found'})
-    @ApiInternalServerErrorResponse({description: 'A little server oopsy occured! Not your bad 😃'})
+    @ApiUnauthorizedResponse({ description: 'Login required. Possibly user session expired', type: ErrorDto})
+    @ApiForbiddenResponse({description: 'User access not allowed', type: ErrorDto})
+    @ApiNotFoundResponse({description: 'Voucher with id not found', type: ErrorDto})
+    @ApiInternalServerErrorResponse({description: 'A little server oopsy occured! Not your bad 😃', type: ErrorDto})
     async updateVoucher(
       @Param('id') voucherId: number,
       @Body() updateData: UpdateVoucherDto, 
@@ -166,11 +168,11 @@ export class VoucherController {
     @Roles(Role.Admin)
     @Put('rules/update/:id')
     @ApiOperation({ summary: 'Update voucher rule details'  })
-    @ApiOkResponse({ description: 'Rule details updated successfully'})
-    @ApiUnauthorizedResponse({ description: 'Login required. Possibly user session expired', type: EligibilityRule})
-    @ApiForbiddenResponse({description: 'User access not allowed'})
-    @ApiNotFoundResponse({description: 'Ruel with id not found'})
-    @ApiInternalServerErrorResponse({description: 'A little server oopsy occured! Not your bad 😃'})
+    @ApiOkResponse({ description: 'Rule details updated successfully', type: EligibilityRule})
+    @ApiUnauthorizedResponse({ description: 'Login required. Possibly user session expired', type: ErrorDto})
+    @ApiForbiddenResponse({description: 'User access not allowed', type: ErrorDto})
+    @ApiNotFoundResponse({description: 'Ruel with id not found', type: ErrorDto})
+    @ApiInternalServerErrorResponse({description: 'A little server oopsy occured! Not your bad 😃', type: ErrorDto})
     async updateRule(@Param('id') ruleId: number, @Body() 
     updateEligibilityRuleDto: UpdateEligibilityRuleDto){
         try {
@@ -187,10 +189,10 @@ export class VoucherController {
     @HttpCode(HttpStatus.NO_CONTENT)
     @ApiOperation({ summary: 'Remove voucher'  })
     @ApiNoContentResponse({ description: 'Voucher removed successfully', type: null})
-    @ApiUnauthorizedResponse({ description: 'Login required. Possibly user session expired'})
-    @ApiForbiddenResponse({description: 'User access not allowed'})
-    @ApiNotFoundResponse({description: 'Voucher with id not found'})
-    @ApiInternalServerErrorResponse({description: 'A little server oopsy occured! Not your bad 😃'})
+    @ApiUnauthorizedResponse({ description: 'Login required. Possibly user session expired', type: ErrorDto})
+    @ApiForbiddenResponse({description: 'User access not allowed', type: ErrorDto})
+    @ApiNotFoundResponse({description: 'Voucher with id not found', type: ErrorDto})
+    @ApiInternalServerErrorResponse({description: 'A little server oopsy occured! Not your bad 😃', type: ErrorDto})
     async removeVoucher(@Param('id') id:number){
         try {
             return await this.voucherService.removeVoucher(id)
@@ -203,11 +205,11 @@ export class VoucherController {
     @Delete('rules/remove/:id')
     @HttpCode(HttpStatus.NO_CONTENT)
     @ApiOperation({ summary: 'Remove voucher rule'  })
-    @ApiNoContentResponse({ description: 'Rule removed successfully'})
-    @ApiUnauthorizedResponse({ description: 'Login required. Possibly user session expired', type: null})
-    @ApiForbiddenResponse({description: 'User access not allowed'})
-    @ApiNotFoundResponse({description: 'Rule with id not found'})
-    @ApiInternalServerErrorResponse({description: 'A little server oopsy occured! Not your bad 😃'})
+    @ApiNoContentResponse({ description: 'Rule removed successfully', type: null})
+    @ApiUnauthorizedResponse({ description: 'Login required. Possibly user session expired',  type: ErrorDto})
+    @ApiForbiddenResponse({description: 'User access not allowed', type: ErrorDto})
+    @ApiNotFoundResponse({description: 'Rule with id not found', type: ErrorDto})
+    @ApiInternalServerErrorResponse({description: 'A little server oopsy occured! Not your bad 😃', type: ErrorDto})
     async removeRule(@Param('id') id:number){
         try {
             return await this.voucherService.removeRule(id)
@@ -220,13 +222,13 @@ export class VoucherController {
     @Post('redeem')
     @HttpCode(HttpStatus.OK)
     @ApiOperation({ summary: 'Redeem voucher'  })
-    @ApiOkResponse({ description: 'Voucher was applied successfully'})
-    @ApiBadRequestResponse({description: 'Invalid data provided'})
-    @ApiUnauthorizedResponse({ description: 'Login required. Possibly user session expired'})
-    @ApiForbiddenResponse({description: 'User access not allowed'})
-    @ApiNotFoundResponse({description: 'Rule with id / voucher with code / user with id not found'})
-    @ApiConflictResponse({description: 'User not eligible to apply the voucher'})
-    @ApiInternalServerErrorResponse({description: 'A little server oopsy occured! Not your bad 😃'})
+    @ApiOkResponse({ description: 'Voucher was applied successfully', type: RedeemedVoucherDto})
+    @ApiBadRequestResponse({description: 'Invalid data provided', type: ErrorDto})
+    @ApiUnauthorizedResponse({ description: 'Login required. Possibly user session expired', type: ErrorDto})
+    @ApiForbiddenResponse({description: 'User access not allowed', type: ErrorDto})
+    @ApiNotFoundResponse({description: 'Rule with id / voucher with code / user with id not found', type: ErrorDto})
+    @ApiConflictResponse({description: 'User not eligible to apply the voucher', type: ErrorDto})
+    @ApiInternalServerErrorResponse({description: 'A little server oopsy occured! Not your bad 😃', type: ErrorDto})
     async redeemVoucher(@Body() body: RedeemVoucherDto) {
         
         try {
