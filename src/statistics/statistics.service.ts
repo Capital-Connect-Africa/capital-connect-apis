@@ -180,6 +180,12 @@ export class StatisticsService {
     };
   }
 
+  async getTotalMatchmakingStatistics(){
+    const matchmaking = await this.matchMakingRepository.count();
+
+    return {matchmaking};
+  }
+
   async getMatchMakingStatisticsPerInvestor(investorId: number): Promise<{
     interesting: number;
     declined: number;
