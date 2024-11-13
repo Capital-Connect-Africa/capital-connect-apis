@@ -2,11 +2,13 @@ import { File } from 'src/files/entities/file.entity';
 import { User } from 'src/users/entities/user.entity';
 import {
   Column,
+  CreateDateColumn,
   Entity,
   JoinColumn,
   OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 import { NumberOfEmployees, YearsOfOperation } from '../company.type';
 import { ConnectionRequest } from 'src/matchmaking/entities/connectionRequest.entity';
@@ -68,6 +70,12 @@ export class Company {
 
   @Column()
   fullTimeBusiness: boolean;
+
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
 
   @OneToOne(() => User, {
     onDelete: 'CASCADE',
