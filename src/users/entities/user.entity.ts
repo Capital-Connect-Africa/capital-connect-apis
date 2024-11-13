@@ -8,6 +8,8 @@ import {
   OneToOne,
   ManyToMany,
   JoinTable,
+  CreateDateColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 import * as bcrypt from 'bcryptjs';
 import { Submission } from 'src/submission/entities/submission.entity';
@@ -57,6 +59,12 @@ export class User {
 
   @Column({ type: 'timestamp', nullable: true })
   termsAcceptedAt: Date;
+
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
 
   @OneToMany(() => Submission, (submission) => submission.user)
   submissions: Submission[];
