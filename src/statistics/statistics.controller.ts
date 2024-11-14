@@ -29,6 +29,12 @@ export class StatisticsController {
     return this.statisticsService.getMatchMakingStatistics();
   }
 
+  @Get('matchmaking/totals')
+  @Roles(Role.Admin)
+  async getTotalMatchMakingStatistics() {
+    return this.statisticsService.getTotalMatchmakingStatistics();
+  }
+
   @Get('matchmaking/:id')
   @Roles(Role.Admin, Role.Investor, Role.User, Role.ContactPerson)
   async getMatchMakingStatisticsPerCompany(
