@@ -1,10 +1,13 @@
 import { HttpException, Injectable } from '@nestjs/common';
 import { WebexConfig } from '../shared/webex.config';
 import axios from 'axios';
+import { BookingService } from '../booking/booking.service';
 
 @Injectable()
 export class WebexIntegrationService {
   private readonly apiUrl = WebexConfig.apiBaseUrl;
+
+  constructor(private readonly bookingService: BookingService) {}
 
   async createMeeting(
     accessToken: string,
@@ -12,7 +15,8 @@ export class WebexIntegrationService {
     start: string,
     end: string,
     timezone: string,
-    invitees: any
+    invitees: any,
+    bookingId: number,
   ) {
     try {
       const response = await axios.post(
@@ -22,7 +26,7 @@ export class WebexIntegrationService {
           start: start,
           end: end,
           timezone: timezone,
-          invitees: invitees
+          invitees: invitees,
         },
         {
           headers: {
@@ -31,6 +35,9 @@ export class WebexIntegrationService {
           },
         },
       );
+      await this.bookingService.update(bookingId, {
+        calendlyEventId: response.data.id,
+      });
       return response.data;
     } catch (error) {
       console.log(error);
