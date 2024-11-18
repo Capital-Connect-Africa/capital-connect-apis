@@ -45,7 +45,7 @@ export class VoucherController {
     }
 
     @Roles(Role.Admin)
-    @Post('rules/')
+    @Post('rules')
     @ApiOperation({ summary: 'Creates a new rule applied when reediming a voucher'  })
     @ApiCreatedResponse({ description: 'New rule created successfully', type: EligibilityRule})
     @ApiUnauthorizedResponse({ description: 'Login required. Possibly user session expired!', type: ErrorDto})
@@ -61,7 +61,7 @@ export class VoucherController {
         }
     }
 
-    @Get('list')
+    @Get()
     @ApiOperation({ summary: 'Fetch a paginated list of vouchers.'  })
     @ApiOkResponse({ description: 'Vouchers retrieved successfully', type: Voucher, isArray: true})
     @ApiUnauthorizedResponse({ description: 'Login required. Possibly user session expired', type: ErrorDto})
@@ -77,7 +77,7 @@ export class VoucherController {
     }  
     
     @Roles(Role.Admin)
-    @Get('rules/list')
+    @Get('rules')
     @ApiOperation({ summary: 'Fetch a paginated list of voucher application rules.' })
     @ApiOkResponse({ description: 'Rules retrieved successfully', type: EligibilityRule, isArray: true})
     @ApiUnauthorizedResponse({ description: 'Login required. Possibly user session expired', type: ErrorDto})
@@ -92,7 +92,7 @@ export class VoucherController {
         }
     }
 
-    @Get('find-by-code/:code')
+    @Get('code/:code')
     @ApiOperation({ summary: 'Fetch a single voucher by code'  })
     @ApiOkResponse({ description: 'Voucher retrieved successfully', type: Voucher})
     @ApiUnauthorizedResponse({ description: 'Login required. Possibly user session expired', type: ErrorDto})
@@ -110,7 +110,7 @@ export class VoucherController {
         }
     }
 
-    @Get('find-by-id/:id')
+    @Get(':id')
     @ApiOperation({ summary: 'Fetch a single voucher by id'  })
     @ApiOkResponse({ description: 'Voucher retrieved successfully', type: Voucher})
     @ApiUnauthorizedResponse({ description: 'Login required. Possibly user session expired', type: ErrorDto})
@@ -129,7 +129,7 @@ export class VoucherController {
     }    
 
     @Roles(Role.Admin)
-    @Get('rules/find-by-id/:id')
+    @Get('rules/:id')
     @ApiOperation({ summary: 'Fetch a single voucher rule by id'  })
     @ApiOkResponse({ description: 'Voucher retrieved successfully', type: EligibilityRule})
     @ApiUnauthorizedResponse({ description: 'Login required. Possibly user session expired', type: ErrorDto})
@@ -146,7 +146,7 @@ export class VoucherController {
     }
 
     @Roles(Role.Admin)
-    @Put('update/:id')
+    @Put(':id')
     @ApiOperation({ summary: 'Update voucher details'  })
     @ApiOkResponse({ description: 'Voucher details updated successfully', type: Voucher})
     @ApiUnauthorizedResponse({ description: 'Login required. Possibly user session expired', type: ErrorDto})
@@ -166,7 +166,7 @@ export class VoucherController {
     }
 
     @Roles(Role.Admin)
-    @Put('rules/update/:id')
+    @Put('rules/:id')
     @ApiOperation({ summary: 'Update voucher rule details'  })
     @ApiOkResponse({ description: 'Rule details updated successfully', type: EligibilityRule})
     @ApiUnauthorizedResponse({ description: 'Login required. Possibly user session expired', type: ErrorDto})
@@ -185,7 +185,7 @@ export class VoucherController {
     }
 
     @Roles(Role.Admin)
-    @Delete('remove/:id')
+    @Delete(':id')
     @HttpCode(HttpStatus.NO_CONTENT)
     @ApiOperation({ summary: 'Remove voucher'  })
     @ApiNoContentResponse({ description: 'Voucher removed successfully', type: null})
@@ -202,7 +202,7 @@ export class VoucherController {
     }
 
     @Roles(Role.Admin)
-    @Delete('rules/remove/:id')
+    @Delete('rules/:id')
     @HttpCode(HttpStatus.NO_CONTENT)
     @ApiOperation({ summary: 'Remove voucher rule'  })
     @ApiNoContentResponse({ description: 'Rule removed successfully', type: null})
@@ -219,7 +219,7 @@ export class VoucherController {
     }
 
     @Roles(Role.Investor, Role.User)
-    @Post('redeem')
+    @Post('redeem-voucher')
     @HttpCode(HttpStatus.OK)
     @ApiOperation({ summary: 'Redeem voucher'  })
     @ApiOkResponse({ description: 'Voucher was applied successfully', type: RedeemedVoucherDto})

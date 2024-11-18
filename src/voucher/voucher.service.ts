@@ -4,7 +4,7 @@ import { Voucher } from './entities/voucher.entity';
 import { User } from 'src/users/entities/user.entity';
 import { EligibilityRule } from './entities/eligibility-rule.entity';
 import { UpdateEligibilityRuleDto } from './dto/update-eligibility-rules.dto';
-import { BadRequestException, ConflictException, Injectable, NotFoundException, RequestMethod } from '@nestjs/common';
+import { BadRequestException, ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { VoucherType } from 'src/shared/enums/voucher.type.enum';
 import { Operators } from 'src/shared/enums/operators.enum';
 import { UserVoucher } from './entities/user-voucher.entity';
@@ -39,15 +39,32 @@ export class VoucherService {
 
     async findRules(page:number =1, limit:number =10): Promise<EligibilityRule[]>{
         const skip =(page - 1) * limit;
-        const eligibilityRules =await this.eligibilityRuleRepository.find({ skip, take: limit, order: {id: 'DESC'}})
+        const eligibilityRules =await this.eligibilityRuleRepository.find({
+            skip, 
+            take: limit, 
+            order: {id: 'DESC'}
+        })
+
         return eligibilityRules;
     }
 
     async createVoucher(voucher: Partial<Voucher>, ruleIds:number[] =[]): Promise<Voucher>{
-        const existingVoucher =await this.voucherRepository.findOne({where: {code: voucher.code}});
-        if(existingVoucher) throw new ConflictException('Voucher with code already exists');
-        const rules = ruleIds ? await this.eligibilityRuleRepository.find({where: {id: In(ruleIds)}}) : [];
-        const newVoucher = this.voucherRepository.create({...voucher, rules});
+        const existingVoucher =await this.voucherRepository.findOne({
+            where: {code: voucher.code}
+        });
+
+        if(existingVoucher) {
+            throw new ConflictException('Voucher with code already exists');
+        }
+
+        const rules = ruleIds ? await this.eligibilityRuleRepository.find({
+            where: {id: In(ruleIds)}
+        }) : [];
+
+        const newVoucher = this.voucherRepository.create({
+            ...voucher, rules
+        });
+
         return await this.voucherRepository.save(newVoucher);
     }
 
@@ -56,7 +73,10 @@ export class VoucherService {
             where: { id: voucherId }, 
             relations: ['rules'] 
         });
-        if (!voucher) throw new NotFoundException('Voucher not found');
+
+        if (!voucher) {
+            throw new NotFoundException('Voucher not found');
+        }
     
         voucher.type = updateData.type;
         voucher.percentageDiscount = updateData.percentageDiscount;
@@ -72,21 +92,32 @@ export class VoucherService {
 
             const notFoundRules = ruleEntities.filter(rule => !rule);
             if (notFoundRules.length > 0) {
-                throw new NotFoundException('One or more rules not found');
+                throw new NotFoundException('One or more rules required');
             }
     
             voucher.rules = ruleEntities as EligibilityRule[];
         } else {
             voucher.rules = [];
         }
-    
-        return await this.voucherRepository.save(voucher);
+        await this.voucherRepository.update(voucherId, {...voucher});
+
+        return await this.voucherRepository.findOne({
+            where: {id: voucherId},
+            relations: ['rules', 'users', 'users.user']
+        });
     }    
 
     async createRule(rule: Partial<EligibilityRule>){
-        const existingRule =await this.eligibilityRuleRepository.findOne({where: rule});
-        if(existingRule) throw new ConflictException('Rule already added');
+        const existingRule =await this.eligibilityRuleRepository.findOne({
+            where: rule
+        });
+
+        if(existingRule) {
+            throw new ConflictException('Rule already added');
+        }
+
         const newRule =this.eligibilityRuleRepository.create(rule);
+
         try {
             return await this.eligibilityRuleRepository.save(newRule);
         } catch (error) {
@@ -106,7 +137,10 @@ export class VoucherService {
             await this.eligibilityRuleRepository.update(ruleId, updates);
         }
     
-        return this.eligibilityRuleRepository.findOneBy({ id: ruleId });
+        return await this.eligibilityRuleRepository.findOneBy({
+            id: ruleId,
+            
+        });
     }       
 
     async findVoucherById(voucherId: number): Promise<Voucher> {
@@ -121,8 +155,14 @@ export class VoucherService {
     }    
 
     async findRuleById(ruleId: number): Promise<EligibilityRule> {
-        const rule = await this.eligibilityRuleRepository.findOne({where: {id: ruleId}});
-        if(!rule) throw new NotFoundException('Rule with id not found');
+        const rule = await this.eligibilityRuleRepository.findOne({
+            where: {id: ruleId}
+        });
+
+        if(!rule) {
+            throw new NotFoundException('Rule with id not found');
+        }
+
         return rule;
     }
 
@@ -131,30 +171,57 @@ export class VoucherService {
           where: { code },
           relations: ['rules'],
         });
-        if (!voucher) throw new NotFoundException('Voucher code not found');
+
+        if (!voucher) {
+            throw new NotFoundException('Voucher code not found');
+        }
+
         return voucher;
     }
 
-    async removeVoucher(voucherId:number): Promise<void>{
-        const existingVoucher =await this.voucherRepository.findOne({where: {id: voucherId}})
-        if(!existingVoucher) throw new NotFoundException('Voucher with id not found');
+    async removeVoucher(voucherId:number){
+        const existingVoucher =await this.voucherRepository.findOne({
+            where: {id: voucherId}
+        });
+
+        if(!existingVoucher) {
+            throw new NotFoundException('Voucher with id not found');
+        }
+
         await this.voucherRepository.delete(voucherId);
         return;
     }
 
-    async removeRule(ruleId:number): Promise<void>{
-        const existingRule =await this.eligibilityRuleRepository.findOne({where: {id: ruleId}})
-        if(!existingRule) throw new NotFoundException('Rule with id not found');
+    async removeRule(ruleId:number){
+        const existingRule =await this.eligibilityRuleRepository.findOne({
+            where: {id: ruleId}
+        })
+
+        if(!existingRule) {
+            throw new NotFoundException('Rule with id not found');
+        }
+
         await this.eligibilityRuleRepository.delete(ruleId);
         return;
     }
 
     async redeemVoucher(userId: number, voucherCode: string, purchase: VoucherType) {
-        const user = await this.userRepository.findOne({ where: { id: userId } });
-        if (!user) throw new NotFoundException('Error retrieving your information');
+        const user = await this.userRepository.findOne({
+            where: { id: userId } 
+        });
+
+        if (!user) {
+            throw new NotFoundException('Error retrieving your information');
+        }
         
-        const voucher = await this.voucherRepository.findOne({where: {code: voucherCode,}, relations: ['rules', 'users', 'users.user']});
-        if (!voucher) throw new BadRequestException('Invalid voucher code');
+        const voucher = await this.voucherRepository.findOne({
+            where: {code: voucherCode,}, 
+            relations: ['rules', 'users', 'users.user']
+        });
+        
+        if (!voucher) {
+            throw new BadRequestException('Invalid voucher code');
+        }
 
         const canRedeemVoucher = this._canRedeemVoucher(user, voucher, purchase);
         if (!canRedeemVoucher) {
@@ -167,6 +234,7 @@ export class VoucherService {
             voucher,
         });
         await this.userVoucherRepository.save(userVoucher);
+
         return {
             code: voucher.code,
             maxAmount: voucher.maxAmount,
@@ -176,22 +244,23 @@ export class VoucherService {
 
     private _canRedeemVoucher(user: User, voucher: Voucher, purchase: VoucherType): boolean {
         // Check if the purchase type matches
-        if (purchase !== voucher.type) throw new ConflictException("Voucher not applicable for this purchase");
-    
-        // Check if voucher is already fully used
-        console.log(voucher.users.length, voucher.maxUses);
+        if (purchase !== voucher.type) {
+            throw new ConflictException("Voucher not applicable for this purchase");
+        }
         
-        if (voucher.users && voucher.users.length >= voucher.maxUses) 
+        if (voucher.users && voucher.users.length >= voucher.maxUses) {
             throw new ConflictException("Voucher has already been applied");
+        }
     
         // Check if user has already applied the voucher
-        if (voucher.users && voucher.users.map(userVoucher =>userVoucher.user.id).includes(user.id)) 
+        if (voucher.users && voucher.users.map(userVoucher =>userVoucher.user.id).includes(user.id)) {
             throw new ConflictException("You already applied this voucher");
-    
+        }
+        
         // Check if the voucher is expired
-        if (voucher.expiresAt.getTime() < new Date().getTime()) 
+        if (voucher.expiresAt.getTime() < new Date().getTime()) {
             throw new ConflictException("Voucher validity expired");
-    
+        }
         const rules =voucher.rules || [];
         // Process each rule
         for (let rule of rules) {
