@@ -58,7 +58,7 @@ export class VoucherService {
         }
 
         const rules = ruleIds ? await this.eligibilityRuleRepository.find({
-            where: {id: In(ruleIds)}
+            where: { id: In(ruleIds) }
         }) : [];
 
         const newVoucher = this.voucherRepository.create({
@@ -86,6 +86,7 @@ export class VoucherService {
         voucher.maxAmount = updateData.maxAmount;
     
         if (rules && rules.length > 0) {
+
             const ruleEntities = await Promise.all(rules.map(ruleId => 
                 this.eligibilityRuleRepository.findOne({ where: { id: ruleId } })
             ));
@@ -99,6 +100,7 @@ export class VoucherService {
         } else {
             voucher.rules = [];
         }
+
         await this.voucherRepository.update(voucherId, {...voucher});
 
         return await this.voucherRepository.findOne({
@@ -126,6 +128,7 @@ export class VoucherService {
     }
 
     async updateRule(ruleId: number, updateEligibilityRuleDto: UpdateEligibilityRuleDto): Promise<EligibilityRule> {
+
         const { userProperty, operator, value } = updateEligibilityRuleDto;
         const updates = {};
     
@@ -206,6 +209,7 @@ export class VoucherService {
     }
 
     async redeemVoucher(userId: number, voucherCode: string, purchase: VoucherType) {
+
         const user = await this.userRepository.findOne({
             where: { id: userId } 
         });
@@ -233,6 +237,7 @@ export class VoucherService {
             user,
             voucher,
         });
+
         await this.userVoucherRepository.save(userVoucher);
 
         return {
@@ -297,7 +302,9 @@ export class VoucherService {
                     errorMessage ='You are not eligible to apply this voucher'
             }
 
-            if(errorMessage) throw new ConflictException(errorMessage);
+            if(errorMessage) {
+                throw new ConflictException(errorMessage);
+            }
         }
 
         /**
