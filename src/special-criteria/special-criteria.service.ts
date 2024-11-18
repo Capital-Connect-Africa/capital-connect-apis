@@ -93,6 +93,17 @@ export class SpecialCriteriaService {
     });
   }
 
+  findGlobal(page: number = 1, limit: number = 10) {
+    const skip = (page - 1) * limit;
+    return this.specialCriteriaRepository.find({
+      where: {globalVisible: true},
+      skip,
+      take: limit,
+      relations: ['questions', 'questions.answers', 'investorProfile'],
+      order: {id: 'DESC'},
+    });
+  }
+
   async findOne(id: number) {
     const special = await this.specialCriteriaRepository.findOne({
       where: { id },
@@ -108,10 +119,11 @@ export class SpecialCriteriaService {
     id: number,
     updateSpecialCriterionDto: UpdateSpecialCriterionDto,
   ) {
-    const { title, description } = updateSpecialCriterionDto;
+    const { title, description, globalVisible } = updateSpecialCriterionDto;
     const updates = {};
     if (title) updates['title'] = title;
     if (description) updates['description'] = description;
+    if (globalVisible) updates['globalVisible'] = globalVisible;
     if (Object.keys(updates).length > 0)
       await this.specialCriteriaRepository.update(id, updates);
     return this.specialCriteriaRepository.findOneBy({ id });

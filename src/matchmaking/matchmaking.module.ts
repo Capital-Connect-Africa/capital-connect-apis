@@ -21,6 +21,7 @@ import { ConnectionRequestService } from './connectionRequest.service';
 import { ConnectionRequestController } from './connectionRequest.controller';
 import { ConnectionRequest } from './entities/connectionRequest.entity';
 import { BrevoService } from '../shared/brevo.service';
+import { UsersService } from 'src/users/users.service';
 
 @Module({
   imports: [
@@ -46,6 +47,7 @@ import { BrevoService } from '../shared/brevo.service';
     MatchmakingService,
     DeclineService,
     ConnectionRequestService,
+    UsersService,
   ],
   controllers: [
     MatchmakingController,

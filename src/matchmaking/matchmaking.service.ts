@@ -16,12 +16,14 @@ import { DeclineReason } from './entities/declineReasons.entity';
 import { MatchStatus } from './MatchStatus.enum';
 import { Readable } from 'stream';
 import { format } from 'fast-csv';
+import { UsersService } from 'src/users/users.service';
 
 @Injectable()
 export class MatchmakingService {
   constructor(
     private investorProfileService: InvestorProfileService,
     private companyService: CompanyService,
+    private usersService: UsersService,
     @InjectRepository(Sector)
     private sectorsRepository: Repository<Sector>,
     @InjectRepository(Matchmaking)
@@ -29,27 +31,33 @@ export class MatchmakingService {
   ) {}
 
   async getMatchingCompanies(id: number) {
-    const profileFound = await this.investorProfileService.findOneByUserId(id);
+    const user = await this.usersService.findOne(id);    
+    let profileFound;
+    
+    if (user.roles === 'investor') {
+        profileFound = await this.investorProfileService.findOneByUserId(id);
+    } else if (user.roles === 'contact_person') {
+        profileFound = await this.investorProfileService.findOneByContactUserId(id);
+    } else {
+        throw new NotFoundException('User role do not have access to Investor profiles.');
+    }
+
     if (!profileFound) {
       throw new NotFoundException('Investor profile not found');
     }
-
+  
     const filterDto = new FilterCompanyDto();
     filterDto.countries = profileFound.countriesOfInvestmentFocus;
-    filterDto.businessSectors = profileFound.sectors.map(
-      (sector) => sector.name,
-    );
+    filterDto.businessSectors = profileFound.sectors.map(sector => sector.name);
     filterDto.growthStages = profileFound.businessGrowthStages;
     filterDto.registrationStructures = profileFound.registrationStructures;
+  
     const companies = await this.companyService.filterCompanies(filterDto);
-    const matchingCompanies = await this.getMatchedCompaniesForFiltering(
-      profileFound.id,
-    );
-    const companyIds = matchingCompanies.map((match) => match.company.id);
-    return companies.filter(
-      (company) => companyIds.includes(company.id) === false,
-    );
-  }
+    const matchingCompanies = await this.getMatchedCompaniesForFiltering(profileFound.id);
+    const companyIds = matchingCompanies.map(match => match.company.id);
+  
+    return companies.filter(company => !companyIds.includes(company.id));
+  }  
 
   async getMatchingCompaniesByInvestorProfileId(id: number) {
     const profileFound = await this.investorProfileService.findOne(id);

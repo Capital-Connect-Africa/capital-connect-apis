@@ -4,3 +4,8 @@ export enum MatchStatus {
   CONNECTED = 'connected',
   REQUESTED = 'requested',
 }
+
+export enum DeclineRole {
+  Business = 'business',
+  Investor = 'investor',
+}

@@ -13,6 +13,7 @@ import { AuthModule } from "../auth/auth.module";
 import { PassportModule } from "@nestjs/passport";
 import { JwtModule } from "@nestjs/jwt";
 import { ConfigModule, ConfigService } from "@nestjs/config";
+import { User } from 'src/users/entities/user.entity';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { ConfigModule, ConfigService } from "@nestjs/config";
       InvestorProfile,
       Sector,
       SubSector,
+      User,
     ]),
   ],
   controllers: [ContactPersonController],
