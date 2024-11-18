@@ -29,6 +29,12 @@ import { MatchStatus } from './MatchStatus.enum';
 export class MatchmakingController {
   constructor(private matchmakingService: MatchmakingService) {}
 
+  @Roles(Role.Admin)
+  @Get('counts')
+  async getTotalMatchingCompaniesCount() {
+    return await this.matchmakingService.getAllMatchMakingCompaniesCount();
+  }
+
   @Roles(Role.Investor, Role.ContactPerson)
   @Get('companies')
   async getMatchingCompanies(@Request() req): Promise<Company[]> {
