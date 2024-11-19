@@ -71,6 +71,9 @@ export class Company {
   @Column()
   fullTimeBusiness: boolean;
 
+  @Column({default: false})
+  isHidden: boolean;
+
   @CreateDateColumn()
   createdAt: Date;
 
