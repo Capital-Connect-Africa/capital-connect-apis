@@ -30,6 +30,31 @@ export class MatchmakingService {
     private readonly matchmakingRepository: Repository<Matchmaking>,
   ) {}
 
+  async getAllMatchMakingCompaniesCount() {
+    const users = await this.usersService.findAll();  
+    let totalCount = 0;
+  
+    for (const user of users) {
+      if (user.roles === 'investor') {
+        try {
+          const matchingCompanies = await this.getMatchingCompanies(user.id); 
+          totalCount += matchingCompanies.length;  
+        } catch (error) {
+          if (error instanceof NotFoundException) {
+            continue;  
+          } else {
+            throw error;  
+          }
+        }
+      }
+    }
+  
+    const matchmaking = await this.matchmakingRepository.count();
+    const total = matchmaking + totalCount;
+  
+    return { total }; 
+  }    
+
   async getMatchingCompanies(id: number) {
     const user = await this.usersService.findOne(id);    
     let profileFound;
