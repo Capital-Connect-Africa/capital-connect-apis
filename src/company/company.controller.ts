@@ -31,7 +31,7 @@ import { RolesGuard } from 'src/auth/roles.guard';
 export class CompanyController {
   constructor(private readonly companyService: CompanyService) {}
 
-  @Roles(Role.Admin)
+  @Roles(Role.Admin, Role.User)
   @Post()
   create(@Request() req, @Body() createCompanyDto: CreateCompanyDto) {
     return this.companyService.create(req.user.id, createCompanyDto);
