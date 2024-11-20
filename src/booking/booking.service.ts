@@ -15,10 +15,12 @@ export class BookingService {
 
   async createBooking(
     calendlyEventId: string,
+    notes: string,
     userId: number,
   ): Promise<Booking> {
     const bookingObj = new Booking();
     bookingObj.calendlyEventId = calendlyEventId;
+    bookingObj.notes = notes;
     bookingObj.user = { id: userId } as User;
     return await this.bookingRepository.save(bookingObj);
   }
@@ -54,9 +56,10 @@ export class BookingService {
   }
 
   async update(id: number, updateBookingDto: UpdateBookingDto) {
-    const { calendlyEventId } = updateBookingDto;
+    const { calendlyEventId, notes } = updateBookingDto;
     const updates = {};
     if (calendlyEventId) updates['calendlyEventId'] = calendlyEventId;
+    if (notes) updates['notes'] = notes;
     if (Object.keys(updates).length > 0)
       await this.bookingRepository.update(id, updateBookingDto);
     return this.bookingRepository.findOneBy({ id });

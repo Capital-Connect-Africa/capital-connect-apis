@@ -4,4 +4,8 @@ export class CreateBookingDto {
     @IsString()
     @IsOptional()
     calendlyEventId: string;
+
+    @IsString()
+    @IsOptional()
+    notes: string;
 }  
