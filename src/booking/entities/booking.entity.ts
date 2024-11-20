@@ -18,6 +18,9 @@ export class Booking {
   @Column({ nullable: true })
   calendlyEventId: string;
 
+  @Column('text', { nullable: true })
+  notes: string;
+
   @CreateDateColumn()
   createdAt: Date;
 
