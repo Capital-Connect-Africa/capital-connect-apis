@@ -18,6 +18,7 @@ import { Payment } from 'src/payment/entities/payment.entity';
 import { MobileNumber } from 'src/mobile/entities/mobile-number.entity';
 import { InvestorProfile } from '../../investor-profile/entities/investor-profile.entity';
 import { UserSubscription } from '../../subscription_tier/entities/userSubscription.entity';
+import { FinanceSubmission} from 'src/finances/entities/finance_submission.entity';
 
 @Entity('users')
 export class User {
@@ -88,6 +89,9 @@ export class User {
   async hashPassword() {
     this.password = await bcrypt.hash(this.password, 10);
   }
+
+  @OneToMany(() => FinanceSubmission, (financeSubmission) => financeSubmission.userId)
+  financeSubmissions: FinanceSubmission[];
 
   @OneToMany(
     () => UserSubscription,
