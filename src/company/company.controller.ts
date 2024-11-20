@@ -55,13 +55,10 @@ export class CompanyController {
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: string, @Request() req: any) {
+  async findOne(@Param('id') id: number) {
     try {
-      const company = await this.companyService.findOne(+id);
-      if (req.user.role !== 'admin' && company.user.id !== req.user.id) {
-        throw new NotFoundException('You are not authorized to view this company');
-      }
-  
+      const company = await this.companyService.findOne(id);
+      
       return company; 
     } catch (error) {
       if (error instanceof NotFoundException) {
