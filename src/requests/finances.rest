@@ -1,76 +1,40 @@
-### Create financial information question.
+### Create a new financial information record.
 POST http://localhost:3000/finances
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
 {
-    "question": "six",
-    "description": "test 6"
+    "companyId": 1,
+    "year": 2023,
+    "description": "Test 4",
+    "income": 20000,
+    "expenses": 5000,
+    "profits": 15000
 }
 
-### Create a submission.
-POST http://localhost:3000/finances/submission
-Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
-
-{
-    "userId": 3,
-    "questionId": 5,
-    "year": 2011,
-    "amount": 5000
-}
-
-### Find All financial information questions.
+### Find All financial information.
 GET http://localhost:3000/finances
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
-### Find all financial information submissions.
-GET http://localhost:3000/finances/submission
+### Find financial information by id.
+GET http://localhost:3000/finances/8
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
-### Find financial information question by id.
-GET http://localhost:3000/finances/5
-Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
-
-### Find financial information submission by id.
-GET http://localhost:3000/finances/submission/15
-Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
-
-### Find all submissions by userId.
-GET http://localhost:3000/finances/submissions/3
-Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
-
-### Update financial information question.
-PUT http://localhost:3000/finances/6
+### Update financial information record.
+PUT http://localhost:3000/finances/1
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
 {
-    "question": "fives",
-    "description": "test 5"  
+    "description": "New record",
+    "income": 20000,
+    "expenses": 1000,
+    "profits": 19000 
 }
 
-### Update financial information submission.
-PUT http://localhost:3000/finances/submission/15
-Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
-
-{
-    "year": 2011,
-    "amount": 10000
-}
-
-### Delete a financial information question.
+### Delete a financial information record.
 DELETE http://localhost:3000/finances/6
-Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
-
-### DElete a financial information submission by id.
-DELETE http://localhost:3000/finances/submission/12
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9

@@ -1,9 +1,24 @@
-import { IsString} from "class-validator";
+import { IsNotEmpty, IsNumber, IsOptional, IsString} from "class-validator";
 
 export class CreateFinanceDto {
     @IsString()
-    question: string;
-
-    @IsString()
     description: string;
+
+    @IsNumber()
+    @IsNotEmpty()
+    year: number;
+
+    @IsNumber()
+    income: number;
+
+    @IsNumber()
+    @IsOptional()
+    expenses: number;
+
+    @IsNumber()
+    @IsOptional()
+    profits: number;
+
+    @IsNumber()
+    companyId: number;
 }
