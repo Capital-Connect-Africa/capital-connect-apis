@@ -50,7 +50,7 @@ export class WebexIntegrationService {
       const response = await axios.get(`${this.apiUrl}/meetings/${meetingId}`, {
         headers: { Authorization: `Bearer ${accessToken}` },
       });
-      return response.data;
+      return { ...response.data, accessToken };
     } catch (error) {
       console.log(error);
       throw new HttpException(error.response?.data || 'Webex API Error', 500);
