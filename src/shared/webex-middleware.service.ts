@@ -36,7 +36,8 @@ export class WebexTokenMiddleware implements NestMiddleware {
         } = await this.generateToken(req.headers.code);
         const newAccessToken = access_token;
         const newRefreshToken = refresh_token;
-        const accessTokenExpiryTime = new Date(Date.now() + expires_in * 1000);
+        console.log('Expires in', expires_in);
+        const accessTokenExpiryTime = new Date(Date.now() + expires_in);
 
         // Store new tokens and expiry times in Redis
         await redisClient.set(accessTokenKey, newAccessToken);
@@ -61,7 +62,7 @@ export class WebexTokenMiddleware implements NestMiddleware {
           const newAccessToken = response.data.access_token;
           const newRefreshToken = response.data.refresh_token;
           const accessTokenExpiryTime = new Date(
-            Date.now() + response.data.expires_in * 1000,
+            Date.now() + response.data.expires_in,
           );
 
           // Store new tokens and expiry times in Redis
@@ -75,6 +76,8 @@ export class WebexTokenMiddleware implements NestMiddleware {
           // Use the new access token for the request
           accessToken = newAccessToken;
         } catch (error) {
+          await redisClient.del(refreshTokenKey);
+          await redisClient.del(accessToken);
           return res.status(401).json({ error: 'Failed to refresh token' });
         }
       }
