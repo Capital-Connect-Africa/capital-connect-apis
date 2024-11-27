@@ -6,8 +6,10 @@ export const handleError = (error: HttpException, method: RequestMethod):never =
    try {
       error.getStatus()
    } catch (error) {
+      if([RequestMethod.POST, RequestMethod.PUT, RequestMethod.PATCH].includes(method)) throw new BadRequestException(message);
       throw new InternalServerErrorException(message)
    }
+   
    const errorMessage = message;
    const statusCode = error.getStatus();
 

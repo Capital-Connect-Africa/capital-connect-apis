@@ -77,14 +77,9 @@ export class VoucherService {
         if (!voucher) {
             throw new NotFoundException('Voucher not found');
         }
-    
-        voucher.type = updateData.type;
-        voucher.percentageDiscount = updateData.percentageDiscount;
-        voucher.maxUses = updateData.maxUses;
-        voucher.expiresAt = updateData.expiresAt;
-        voucher.code = updateData.code;
-        voucher.maxAmount = updateData.maxAmount;
-    
+
+        Object.assign(voucher, updateData);
+        
         if (rules && rules.length > 0) {
 
             const ruleEntities = await Promise.all(rules.map(ruleId => 
@@ -95,17 +90,17 @@ export class VoucherService {
             if (notFoundRules.length > 0) {
                 throw new NotFoundException('One or more rules required');
             }
-    
+            
             voucher.rules = ruleEntities as EligibilityRule[];
+
         } else {
             voucher.rules = [];
         }
 
-        await this.voucherRepository.update(voucherId, {...voucher});
-
-        return await this.voucherRepository.findOne({
-            where: {id: voucherId},
-            relations: ['rules', 'users', 'users.user']
+        await this.voucherRepository.save(voucher);
+        return this.voucherRepository.findOne({
+            where: { id: voucherId },
+            relations: ['rules', 'users', 'users.user'], 
         });
     }    
 
@@ -149,7 +144,7 @@ export class VoucherService {
     async findVoucherById(voucherId: number): Promise<Voucher> {
         const voucher = await this.voucherRepository.findOne({
             where: { id: voucherId }, 
-            relations: ['rules']
+            relations: ['rules', 'users', 'users.user'],
         });
         if (!voucher) {
             throw new NotFoundException(`Voucher with id ${voucherId} not found`);
@@ -172,7 +167,7 @@ export class VoucherService {
     async findVoucherByCode(code: string): Promise<Voucher> {
         const voucher = await this.voucherRepository.findOne({
           where: { code },
-          relations: ['rules'],
+          relations: ['rules', 'users', 'users.user'],
         });
 
         if (!voucher) {
