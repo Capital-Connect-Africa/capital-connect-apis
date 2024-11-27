@@ -1,29 +1,20 @@
 import { 
-    Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn 
+    Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn 
 } from "typeorm";
 import { FinanceStatus } from "../finance.enum";
 import { Company } from "src/company/entities/company.entity";
 import { File } from "src/files/entities/file.entity";
+import { Revenue } from "./revenue.entity";
+import { Opex } from "./opex.entity";
+import { User } from "src/users/entities/user.entity";
 
 @Entity('finances')
 export class Finances {
     @PrimaryGeneratedColumn()
     id: number;
-  
-    @Column({ type: 'text' })
-    description: string;
 
     @Column()
     year: number; 
-  
-    @Column()
-    income: number; 
-
-    @Column()
-    expenses: number;
-
-    @Column()
-    profits:number;
   
     @CreateDateColumn()
     createdAt: Date; 
@@ -37,11 +28,21 @@ export class Finances {
     @Column('text', { nullable: true })
     notes: string;
 
+    @OneToMany(() => Revenue, (revenue) => revenue.finances, { cascade: true })
+    revenues: Revenue[];
+
+    @OneToMany(() => Opex, (opex) => opex.finances, { cascade: true })
+    opex: Opex[];
+
     @OneToOne(() => File)
     @JoinColumn()
     attachments: File;
 
     @ManyToOne(() => Company, (company) => company.finances)
     @JoinColumn({ name: 'companyId' })
-    company: Company; 
+    company: Company;
+    
+    @ManyToOne(() => User, (user) => user.finances)
+    @JoinColumn({ name: 'userId' })
+    user: User; 
 }

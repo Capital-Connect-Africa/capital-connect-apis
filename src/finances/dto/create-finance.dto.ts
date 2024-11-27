@@ -1,23 +1,17 @@
-import { IsNotEmpty, IsNumber, IsOptional, IsString} from "class-validator";
+import { IsArray, IsNotEmpty, IsNumber, IsOptional} from "class-validator";
+import { Type } from "class-transformer";
 
 export class CreateFinanceDto {
-    @IsString()
-    description: string;
 
     @IsNumber()
     @IsNotEmpty()
     year: number;
 
-    @IsNumber()
-    income: number;
+    @IsArray()
+    revenues: number[];
 
-    @IsNumber()
-    @IsOptional()
-    expenses: number;
-
-    @IsNumber()
-    @IsOptional()
-    profits: number;
+    @IsArray()
+    opex: number[];
 
     @IsNumber()
     companyId: number;

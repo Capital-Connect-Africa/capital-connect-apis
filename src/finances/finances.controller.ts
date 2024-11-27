@@ -1,5 +1,6 @@
 import { 
-  Controller, Get, Post, Body, Param, Delete, Put, HttpCode, HttpStatus, UseGuards
+  Controller, Get, Post, Body, Param, Delete, Put, HttpCode, HttpStatus, UseGuards,
+  Request
 } from '@nestjs/common';
 import { FinancesService } from './finances.service';
 import { CreateFinanceDto } from './dto/create-finance.dto';
@@ -16,12 +17,10 @@ export class FinancesController {
   ) {}
 
   @Post()
-  async createFinance(@Body() createFinanceDto: CreateFinanceDto) {
-      const finance = await this.financesService.create(createFinanceDto);
-      return {
-        message: 'Finance record created successfully',
-        data: finance,
-      };
+  async createFinance(@Body() createFinanceDto: CreateFinanceDto, @Request() req) {
+      const user = req.user;
+      const finance = await this.financesService.create(createFinanceDto, user);
+      return {finance};
   }
 
   @Get()
