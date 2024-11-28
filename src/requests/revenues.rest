@@ -1,0 +1,34 @@
+### Create a new revenue record.
+POST http://localhost:3000/revenues
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+{
+    "description": "Company 12",
+    "value": 50000
+}
+
+### Find all revenue records
+GET http://localhost:3000/revenues
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+### Find revenue record by Id
+GET http://localhost:3000/revenues/16
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+### Update a revenue record.
+PUT http://localhost:3000/revenues/17
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+{
+    "description": "Company 12",
+    "value": 50000
+}
+
+### Delete a revenue record
+DELETE http://localhost:3000/revenues/5
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9

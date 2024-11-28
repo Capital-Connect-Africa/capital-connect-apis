@@ -40,6 +40,7 @@ import { SubscriptionTierModule } from './subscription_tier/subscription_tier.mo
 import { BillingModule } from './billing/billing.module';
 import { SegmentModule } from './segment/segment.module';
 import { WebexIntegrationModule } from './webex_integration/webex_integration.module';
+import { FinancesModule } from './finances/finances.module';
 
 @Module({
   imports: [
@@ -86,6 +87,7 @@ import { WebexIntegrationModule } from './webex_integration/webex_integration.mo
     BillingModule,
     SegmentModule,
     WebexIntegrationModule,
+    FinancesModule,
   ],
   providers: [
     AppService,

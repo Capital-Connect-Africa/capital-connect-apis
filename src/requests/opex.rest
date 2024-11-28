@@ -1,0 +1,34 @@
+### Create a new opex record.
+POST http://localhost:3000/opex
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+{
+    "description": "opex 1",
+    "value": 50000
+}
+
+### Find all opex records
+GET http://localhost:3000/opex
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+### Find opex record by Id
+GET http://localhost:3000/opex/1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+### Update an opex record.
+PUT http://localhost:3000/opex/1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+{
+    "description": "Company 12",
+    "value": 50000
+}
+
+### Delete a opex record
+DELETE http://localhost:3000/opex/1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9

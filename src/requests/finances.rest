@@ -1,0 +1,35 @@
+### Create a new financial information record.
+POST http://localhost:3000/finances
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+{
+    "companyId": 12,
+    "year": 2024,
+    "revenues": [ 16, 17 ],
+    "opex": [ 8, 9 ]
+}
+
+### Find All financial information.
+GET http://localhost:3000/finances
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+### Find financial information by id.
+GET http://localhost:3000/finances/8
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+### Update financial information record.
+PUT http://localhost:3000/finances/1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+{
+    "year": 2024
+}
+
+### Delete a financial information record.
+DELETE http://localhost:3000/finances/8
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9

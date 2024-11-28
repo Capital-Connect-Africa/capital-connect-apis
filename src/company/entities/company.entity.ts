@@ -12,6 +12,7 @@ import {
 } from 'typeorm';
 import { NumberOfEmployees, YearsOfOperation } from '../company.type';
 import { ConnectionRequest } from 'src/matchmaking/entities/connectionRequest.entity';
+import { Finances } from 'src/finances/entities/finance.entity';
 
 @Entity('companies')
 export class Company {
@@ -90,6 +91,11 @@ export class Company {
     onDelete: 'CASCADE',
   })
   connectionRequests: ConnectionRequest[];
+
+  @OneToMany(() => Finances, (finances) => finances.company,{
+    onDelete: 'CASCADE',
+  })
+  finances: Finances[]; 
 
   @OneToOne(() => File)
   @JoinColumn()

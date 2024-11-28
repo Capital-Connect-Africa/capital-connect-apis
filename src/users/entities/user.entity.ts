@@ -18,6 +18,7 @@ import { Payment } from 'src/payment/entities/payment.entity';
 import { MobileNumber } from 'src/mobile/entities/mobile-number.entity';
 import { InvestorProfile } from '../../investor-profile/entities/investor-profile.entity';
 import { UserSubscription } from '../../subscription_tier/entities/userSubscription.entity';
+import { Finances } from 'src/finances/entities/finance.entity';
 
 @Entity('users')
 export class User {
@@ -95,6 +96,11 @@ export class User {
     { onDelete: 'CASCADE' },
   )
   subscriptions: UserSubscription[];
+
+  @OneToMany(() => Finances, (finances) => finances.user,{
+    onDelete: 'CASCADE',
+  })
+  finances: Finances[]; 
 
   @ManyToMany(() => InvestorProfile, (profile) => profile.users)
   @JoinTable({
