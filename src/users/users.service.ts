@@ -149,7 +149,7 @@ export class UsersService {
   }
 
   validateRoles(role: string): boolean {
-    const validRoles = ['admin', 'user', 'investor', 'contact_person'];
+    const validRoles = ['admin', 'user', 'investor', 'contact_person', 'advisor'];
     return validRoles.includes(role);
   }
 
