@@ -83,12 +83,13 @@ export class PaymentService {
   }
 
   async createBookingPayment(createPaymentDto: CreatePaymentDto) {
-    const { orderTrackingId, bookingId, userSubscriptionId, userId } =
+    const { orderTrackingId, bookingId, userSubscriptionId, userId, discount } =
       createPaymentDto;
     const paymentObj = new Payment();
     paymentObj.currency = process.env.CURRENCY || 'KES';
     paymentObj.amount = Number(process.env.ADVISORY_SESSIONS_COST) || 10000;
     paymentObj.status = 'initiated';
+    paymentObj.discount =discount ?? 0,
     paymentObj.description = 'Advisory session payment';
     paymentObj.orderTrackingId = orderTrackingId;
     paymentObj.user = { id: userId } as User;
@@ -104,12 +105,13 @@ export class PaymentService {
     amount: number,
     description: string,
   ) {
-    const { orderTrackingId, bookingId, userSubscriptionId, userId } =
+    const { orderTrackingId, bookingId, userSubscriptionId, userId, discount } =
       createPaymentDto;
     const paymentObj = new Payment();
     paymentObj.currency = process.env.CURRENCY || 'KES';
     paymentObj.amount = amount;
     paymentObj.status = 'initiated';
+    paymentObj.discount =discount ?? 0,
     paymentObj.description = description;
     paymentObj.orderTrackingId = orderTrackingId;
     paymentObj.user = { id: userId } as User;

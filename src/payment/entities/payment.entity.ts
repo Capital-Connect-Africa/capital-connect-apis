@@ -21,6 +21,9 @@ export class Payment {
   @Column()
   amount: number;
 
+  @Column({default: 0})
+  discount: number;
+
   @Column({ type: 'text', nullable: true })
   description: string;
 
