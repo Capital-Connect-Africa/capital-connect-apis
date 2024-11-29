@@ -1,14 +1,17 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { UpdateBookingDto } from './dto/update-booking.dto';
 
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Booking } from './entities/booking.entity';
 import { User } from 'src/users/entities/user.entity';
+import { VoucherService } from 'src/voucher/voucher.service';
+import { VoucherType } from 'src/shared/enums/voucher.type.enum';
 
 @Injectable()
 export class BookingService {
   constructor(
+    private voucherService:VoucherService,
     @InjectRepository(Booking)
     private readonly bookingRepository: Repository<Booking>,
   ) {}
@@ -61,5 +64,31 @@ export class BookingService {
 
   remove(id: number) {
     this.bookingRepository.delete(id);
+  }
+
+  async redeemVoucher(userId:number, voucherCode:string, amount:number){ /* Thank you CTRL+C / CTRL+V 😀*/
+    try {
+      const { 
+        maxAmount,  
+        discount 
+        
+      } = await this.voucherService.redeemVoucher(
+        userId, 
+        voucherCode, 
+        VoucherType.AdvisorySession
+      );
+  
+      const amountDiscounted = Math.min(
+        maxAmount, 
+        (discount / 100) * amount
+      );
+  
+      return { 
+        discount: amountDiscounted, 
+        amount: amount - amountDiscounted 
+      }
+    } catch (error) {
+      throw error as BadRequestException;
+    }
   }
 }
