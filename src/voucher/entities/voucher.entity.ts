@@ -48,11 +48,11 @@ export class Voucher {
         joinColumn: { name: 'voucher', referencedColumnName: 'id' },
         inverseJoinColumn: { name: 'rule', referencedColumnName: 'id' },
     })
-    @ApiProperty({type: [EligibilityRule], description: 'Rules applicable to this voucher'})
+    @ApiProperty({type: [EligibilityRule], description: 'An array of Rules applicable to this voucher',})
     rules: EligibilityRule[];
 
 
     @OneToMany(() => UserVoucher, userVoucher => userVoucher.voucher)
-    @ApiProperty({type: [UserVoucher], description: 'Users who already redeemed the voucher'})
+    @ApiProperty({type: [UserVoucher], description: 'An array of users who already redeemed the voucher'})
     users: UserVoucher[];
 }

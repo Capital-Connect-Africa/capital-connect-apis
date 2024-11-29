@@ -22,15 +22,20 @@ import { IsNumber, IsOptional, IsString } from 'class-validator';
 import { PaymentService } from '../payment/payment.service';
 import { SubscriptionTierService } from './subscription_tier.service';
 import { SubscriptionTierEnum } from '../subscription/subscription-tier.enum';
-import { VoucherService } from 'src/voucher/voucher.service';
+import { ApiOperation, ApiUnauthorizedResponse, ApiForbiddenResponse, ApiBadRequestResponse, ApiInternalServerErrorResponse, ApiOkResponse, ApiProperty } from '@nestjs/swagger';
+import { ErrorDto } from 'src/shared/generic/error.dto';
+import { SubscriptionResponseDto } from './dto/subscription-response.dto';
+import { UserSubscription } from './entities/userSubscription.entity';
 
 class SubscribeDto {
   @IsNumber()
+  @ApiProperty({description: 'Subscription tier\'s unique identifier'})
   subscriptionTierId: number;
 
   @IsString()
   @IsOptional()
-  voucherCode: string
+  @ApiProperty({description: 'Discount voucher code to be applied', required: false})
+  voucherCode?: string
 }
 
 @UseGuards(JwtAuthGuard, RolesGuard)
@@ -60,11 +65,23 @@ export class SubscriptionController {
   }
 
   @Get('user/:userId')
+  @ApiOperation({ summary: 'Fetches user subscriptions'  })
+  @ApiOkResponse({ description: 'A list of user subscriptions retrieved successfully', type: SubscriptionResponseDto})
+  @ApiUnauthorizedResponse({ description: 'Login required. Possibly user session expired', type: ErrorDto})
+  @ApiForbiddenResponse({description: 'User access not allowed', type: ErrorDto})
+  @ApiBadRequestResponse({description: 'Invalid data provided', type: ErrorDto})
+  @ApiInternalServerErrorResponse({description: 'A little server oopsy occured! Not your bad 😃', type: ErrorDto})
   async fetchSubscription(@Param('userId', ParseIntPipe) userId: number) {
     return await this.subscriptionService.fetchSubscription(userId);
   }
 
   @Post('subscribe')
+  @ApiOperation({ summary: 'User purchases a subscription'  })
+  @ApiOkResponse({ description: 'Package bought successfully', type: SubscriptionResponseDto})
+  @ApiUnauthorizedResponse({ description: 'Login required. Possibly user session expired', type: ErrorDto})
+  @ApiForbiddenResponse({description: 'User access not allowed', type: ErrorDto})
+  @ApiBadRequestResponse({description: 'Invalid data provided', type: ErrorDto})
+  @ApiInternalServerErrorResponse({description: 'A little server oopsy occured! Not your bad 😃', type: ErrorDto})
   async subscribe(
     @PesapalToken() pesapalToken: string,
     @Body() subscribeDto: SubscribeDto,
@@ -169,6 +186,12 @@ export class SubscriptionController {
   }
 
   @Post('upgrade')
+  @ApiOperation({ summary: 'User upgrades to a new subscription'  })
+  @ApiOkResponse({ description: 'Upgrade successful', type: SubscriptionResponseDto})
+  @ApiUnauthorizedResponse({ description: 'Login required. Possibly user session expired', type: ErrorDto})
+  @ApiForbiddenResponse({description: 'User access not allowed', type: ErrorDto})
+  @ApiBadRequestResponse({description: 'Invalid data provided', type: ErrorDto})
+  @ApiInternalServerErrorResponse({description: 'A little server oopsy occured! Not your bad 😃', type: ErrorDto})
   async upgradeUserSubscription(
     @PesapalToken() pesapalToken: string,
     @Body() subscribeDto: SubscribeDto,
@@ -287,12 +310,24 @@ export class SubscriptionController {
 
   @Get()
   @Roles(Role.Admin)
+  @ApiOperation({ summary: 'Lists all subscription tiers'  })
+  @ApiOkResponse({ description: 'Subscriptions fetched successfully'})
+  @ApiUnauthorizedResponse({ description: 'Login required. Possibly user session expired', type: ErrorDto})
+  @ApiForbiddenResponse({description: 'User access not allowed', type: ErrorDto})
+  @ApiBadRequestResponse({description: 'Invalid data provided', type: ErrorDto})
+  @ApiInternalServerErrorResponse({description: 'A little server oopsy occured! Not your bad 😃', type: ErrorDto})
   async findAll(@Query('page') page: number, @Query('limit') limit: number) {
     return this.subscriptionService.findAll(page, limit);
   }
 
   @Get(':id')
   @Roles(Role.Admin)
+  @ApiOperation({ summary: 'Get single subscription'  })
+  @ApiOkResponse({ description: 'Subscription retrieved successfully'})
+  @ApiUnauthorizedResponse({ description: 'Login required. Possibly user session expired', type: ErrorDto})
+  @ApiForbiddenResponse({description: 'User access not allowed', type: ErrorDto})
+  @ApiBadRequestResponse({description: 'Invalid data provided', type: ErrorDto})
+  @ApiInternalServerErrorResponse({description: 'A little server oopsy occured! Not your bad 😃', type: ErrorDto})
   async findOne(@Param('id') id: number) {
     return this.subscriptionService.findOne(id);
   }
