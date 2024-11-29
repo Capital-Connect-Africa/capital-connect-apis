@@ -18,14 +18,19 @@ import { Roles } from 'src/auth/roles.decorator';
 import { Role } from 'src/auth/role.enum';
 import { PesapalToken } from '../shared/headers.decorators';
 import { HttpService } from '@nestjs/axios';
-import { IsNumber } from 'class-validator';
+import { IsNumber, IsOptional, IsString } from 'class-validator';
 import { PaymentService } from '../payment/payment.service';
 import { SubscriptionTierService } from './subscription_tier.service';
 import { SubscriptionTierEnum } from '../subscription/subscription-tier.enum';
+import { VoucherService } from 'src/voucher/voucher.service';
 
 class SubscribeDto {
   @IsNumber()
   subscriptionTierId: number;
+
+  @IsString()
+  @IsOptional()
+  voucherCode: string
 }
 
 @UseGuards(JwtAuthGuard, RolesGuard)
@@ -71,22 +76,36 @@ export class SubscriptionController {
     if (subscriptionStatus) {
       throw new HttpException('User already has an active subscription', 400);
     }
+
+    const {subscriptionTierId, voucherCode} =subscribeDto;
     const userSubscription = await this.subscriptionService.assignSubscription(
       user.id,
-      subscribeDto.subscriptionTierId,
+      subscriptionTierId,
     );
     const description = `Subscription ${userSubscription.subscriptionTier.name} payment`;
     const subscriptionResponse = {} as any;
     subscriptionResponse.subscriptionId = userSubscription.id;
+    
+    let amountDiscounted =0;
+    let amount = userSubscription.subscriptionTier.price;
+
+    if(voucherCode) { // redeem voucher if provided
+      const result =await this.subscriptionService.redeemVoucher(user.id as number, voucherCode, amount);
+      amountDiscounted =result.discount
+      amount =result.amount; 
+
+      // @NOTE: code implemented outside try/catch to throw errors due to voucher service 💀
+    }
 
     try {
+
       const response = await this.httpService
         .post(
           `${process.env.PESAPAL_BASE_URL}/Transactions/SubmitOrderRequest`,
           {
             id: userSubscription.id,
             currency: 'KES',
-            amount: userSubscription.subscriptionTier.price,
+            amount,
             description: description,
             callback_url: process.env.PESAPAL_CALLBACK_URL,
             redirect_mode: 'TOP_WINDOW',
@@ -131,6 +150,7 @@ export class SubscriptionController {
           userSubscriptionId: userSubscription.id,
           orderTrackingId: res.order_tracking_id,
           userId: user.id,
+          discount: amountDiscounted
         },
         Number(userSubscription.subscriptionTier.price),
         description,
@@ -155,8 +175,9 @@ export class SubscriptionController {
     @Req() req,
   ) {
     const user = req.user;
+    const { subscriptionTierId, voucherCode } =subscribeDto
     const upgradeTier = await this.subscriptionTierService.findOne(
-      subscribeDto.subscriptionTierId,
+      subscriptionTierId,
     );
 
     if (!upgradeTier) {
@@ -185,7 +206,16 @@ export class SubscriptionController {
     const description = `Subscription ${userSubscription.subscriptionTier.name} payment`;
     const subscriptionResponse = {} as any;
     subscriptionResponse.subscriptionId = userSubscription.id;
+    let amountDiscounted =0;
+    let amount = userSubscription.subscriptionTier.price - currentTier.price; // 😀 discount will be applied on this amount
 
+    
+    if(voucherCode) { // redeem voucher if provided
+      const result =await this.subscriptionService.redeemVoucher(user.id as number, voucherCode, amount);
+      amountDiscounted =result.discount
+      amount =result.amount; 
+      // @NOTE: code implemented outside try/catch to throw errors due to voucher service 💀
+    }
     try {
       const response = await this.httpService
         .post(
@@ -193,7 +223,7 @@ export class SubscriptionController {
           {
             id: userSubscription.id,
             currency: 'KES',
-            amount: userSubscription.subscriptionTier.price - currentTier.price,
+            amount,
             description: description,
             callback_url: process.env.PESAPAL_CALLBACK_URL,
             redirect_mode: 'TOP_WINDOW',
