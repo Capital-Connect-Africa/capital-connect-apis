@@ -8,6 +8,7 @@ import { Company } from 'src/company/entities/company.entity';
 import { User } from 'src/users/entities/user.entity';
 import { Revenue } from './entities/revenue.entity';
 import { Opex } from './entities/opex.entity';
+import { FinanceStatus } from './finance.enum';
 
 @Injectable()
 export class FinancesService {
@@ -96,17 +97,72 @@ export class FinancesService {
       return finance;
   }
 
-  async update(id: number, updateFinanceDto: UpdateFinanceDto): 
-  Promise<Finances> {
-    const { year } = updateFinanceDto;
-    const updates = {};
-
-    if (year) updates['year'] = year;
-    if (Object.keys(updates).length > 0) {
-      await this.financeRepository.update(id, updates);
+  async update(id: number, updateFinanceDto: any): Promise<Finances> {
+    const { year, revenues, opex } = updateFinanceDto;
+  
+    const finance = await this.financeRepository.findOne({
+      where: { id },
+      relations: ['revenues', 'opex'], 
+    });
+  
+    if (!finance) {
+      throw new NotFoundException(`Finance record with ID ${id} not found`);
     }
   
-    return this.financeRepository.findOne({ where: { id } });
+    if (year) finance.year = year;
+  
+    if (revenues && revenues.length > 0) {
+      finance.revenues = await this.revenueRepository.find({
+        where: { id: In(revenues) },  
+      });
+    }
+  
+    if (opex && opex.length > 0) {
+      finance.opex = await this.opexRepository.find({
+        where: { id: In(opex) },  
+      });
+    }
+    
+    return await this.financeRepository.save(finance);
+  }  
+  
+  async addNotes(id: number, updateData: any): Promise<Finances> {
+    const { notes } = updateData; 
+    const updates = {};
+  
+    if (notes) updates['notes'] = notes;  
+    if (Object.keys(updates).length > 0) {
+      await this.financeRepository.update(id, updates);  
+    }
+  
+    return this.financeRepository.findOne({ where: { id } });  
+  }
+
+  async updateFinancialRecordStatus(id: number, newStatus: FinanceStatus): 
+  Promise<Finances> {
+    const finance = await this.financeRepository.findOne({ where: { id } });
+  
+    if (!finance) {
+      throw new NotFoundException(`Finance record with ID ${id} not found`);
+    }
+  
+    if (finance.status !== FinanceStatus.PENDING) {
+      throw new NotFoundException('Only pending records can be updated');
+    }
+  
+    finance.status = newStatus;
+    await this.financeRepository.save(finance);
+  
+    return finance; 
+  }
+  
+  // Helper methods
+  async approveRecord(id: number): Promise<Finances> {
+    return this.updateFinancialRecordStatus(id, FinanceStatus.APPROVED);
+  }
+  
+  async rejectRecord(id: number): Promise<Finances> {
+    return this.updateFinancialRecordStatus(id, FinanceStatus.REJECTED);
   }  
 
   async remove(id: number): Promise<void> {

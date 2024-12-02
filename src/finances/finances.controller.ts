@@ -8,6 +8,8 @@ import { UpdateFinanceDto } from './dto/update-finance.dto';
 import { RolesGuard } from 'src/auth/roles.guard';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import throwInternalServer from 'src/shared/utils/exceptions.util';
+import { Role } from 'src/auth/role.enum';
+import { Roles } from 'src/auth/roles.decorator';
 
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Controller('finances')
@@ -36,6 +38,24 @@ export class FinancesController {
   @Put(':id')
   async update(@Param('id') id: number, @Body() updateFinanceDto: UpdateFinanceDto){
     return this.financesService.update(id, updateFinanceDto);
+  }
+
+  @Roles(Role.Admin, Role.Advisor)
+  @Put(':id/notes')
+  async updateNotes( @Param('id') id: number, @Body() updateData: any ) {
+    return this.financesService.addNotes(id, updateData);
+  }
+
+  @Roles(Role.Admin, Role.Advisor)
+  @Put(':id/approve')
+  async approveFinacialRecord(@Param('id') id: number) {
+    return this.financesService.approveRecord(id);
+  }
+
+  @Roles(Role.Admin, Role.Advisor)
+  @Put(':id/revoke')
+  async rejectFinancialRecord(@Param('id') id: number) {
+    return this.financesService.rejectRecord(id);
   }
 
   @Delete(':id')

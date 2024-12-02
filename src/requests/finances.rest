@@ -21,13 +21,34 @@ Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
 ### Update financial information record.
-PUT http://localhost:3000/finances/1
+PUT http://localhost:3000/finances/3
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
 {
-    "year": 2024
+    "year": 2024,
+    "revenues": [ 6 , 7 ],
+    "opex": [ 7 ]
 }
+
+### Add notes to the financial information record.
+PUT http://localhost:3000/finances/1/notes
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+{
+    "notes": ""
+}
+
+### Approve a financial information record.
+PUT http://localhost:3000/finances/1/approve
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+### Reject a financial information record.
+PUT http://localhost:3000/finances/1/revoke
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
 ### Delete a financial information record.
 DELETE http://localhost:3000/finances/8
