@@ -39,6 +39,7 @@ import { SpecialCriteriaModule } from './special-criteria/special-criteria.modul
 import { SubscriptionTierModule } from './subscription_tier/subscription_tier.module';
 import { BillingModule } from './billing/billing.module';
 import { SegmentModule } from './segment/segment.module';
+import { VoucherModule } from './voucher/voucher.module';
 import { WebexIntegrationModule } from './webex_integration/webex_integration.module';
 import { FinancesModule } from './finances/finances.module';
 
@@ -86,6 +87,7 @@ import { FinancesModule } from './finances/finances.module';
     SubscriptionTierModule,
     BillingModule,
     SegmentModule,
+    VoucherModule,
     WebexIntegrationModule,
     FinancesModule,
   ],

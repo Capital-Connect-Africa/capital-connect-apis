@@ -9,10 +9,13 @@ import { SubscriptionTier } from './entities/subscription_tier.entity';
 import { User } from '../users/entities/user.entity';
 import { UserSubscription } from './entities/userSubscription.entity';
 import { SubscriptionTierEnum } from '../subscription/subscription-tier.enum';
+import { VoucherService } from 'src/voucher/voucher.service';
+import { VoucherType } from 'src/shared/enums/voucher.type.enum';
 
 @Injectable()
 export class SubscriptionService {
   constructor(
+    private readonly voucherService:VoucherService,
     @InjectRepository(UserSubscription)
     private readonly userSubscriptionRepository: Repository<UserSubscription>,
     @InjectRepository(User)
@@ -189,5 +192,35 @@ export class SubscriptionService {
       { id: id },
       { isActive: isActive },
     );
+  }
+
+  async redeemVoucher(userId:number, voucherCode:string, amount:number){ // 4 coffee cups later 😮‍💨
+    try {
+      const { 
+        maxAmount,  
+        discount 
+        
+      } = await this.voucherService.redeemVoucher(
+        userId, 
+        voucherCode, 
+        VoucherType.subscriptionPlan
+      );
+      const discountRate = (discount / 100)
+      const dicountedPrice =discountRate * amount;
+
+      const amountDiscounted = Math.min(
+        maxAmount, 
+        dicountedPrice
+      );
+      
+      const amountToBePaid = Math.max(amount - amountDiscounted, +process.env.PESAPAL_MIN_PAYABLE_AMOUNT)
+      
+      return { 
+        discount: amountDiscounted, 
+        amount: amountToBePaid
+      }
+    } catch (error) {
+      throw error as BadRequestException;
+    }
   }
 }

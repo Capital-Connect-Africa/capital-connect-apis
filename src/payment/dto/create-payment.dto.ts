@@ -31,6 +31,10 @@ export class CreatePaymentDto {
     @IsNumber()
     userId: number;
 
+    @IsNumber()
+    @IsOptional()
+    discount?: number;
+
     @IsDate()
     @IsOptional()
     createdAt?: Date;

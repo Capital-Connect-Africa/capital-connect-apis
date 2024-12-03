@@ -12,6 +12,10 @@ import { Payment } from '../payment/entities/payment.entity';
 import { HttpModule } from '@nestjs/axios';
 import { PesapalMiddleware } from '../shared/pesapal-middleware.service';
 import { TokenService } from '../shared/token.service';
+import { VoucherService } from 'src/voucher/voucher.service';
+import { Voucher } from 'src/voucher/entities/voucher.entity';
+import { EligibilityRule } from 'src/voucher/entities/eligibility-rule.entity';
+import { UserVoucher } from 'src/voucher/entities/user-voucher.entity';
 
 @Module({
   imports: [
@@ -20,6 +24,9 @@ import { TokenService } from '../shared/token.service';
       User,
       UserSubscription,
       Payment,
+      Voucher,
+      EligibilityRule,
+      UserVoucher,
     ]),
     HttpModule,
   ],
@@ -29,6 +36,7 @@ import { TokenService } from '../shared/token.service';
     SubscriptionService,
     PaymentService,
     TokenService,
+    VoucherService,
   ],
 })
 export class SubscriptionTierModule {

@@ -19,34 +19,45 @@ import { MobileNumber } from 'src/mobile/entities/mobile-number.entity';
 import { InvestorProfile } from '../../investor-profile/entities/investor-profile.entity';
 import { UserSubscription } from '../../subscription_tier/entities/userSubscription.entity';
 import { Finances } from 'src/finances/entities/finance.entity';
+import { UserVoucher } from 'src/voucher/entities/user-voucher.entity';
+import { ApiProperty } from '@nestjs/swagger';
 
 @Entity('users')
 export class User {
   @PrimaryGeneratedColumn()
+  @ApiProperty({description: 'User unique identofier'})
   id: number;
 
   @Column({ unique: true })
+  @ApiProperty({description: 'A unique user email id'})
   username: string;
 
   @Column()
+  @ApiProperty({description: 'An encripted user password'})
   password: string;
 
   @Column({ nullable: true })
+  @ApiProperty({description: 'User\'s initial name', required: false})
   firstName: string;
 
   @Column({ nullable: true })
+  @ApiProperty({description: 'User\'s last name', required: false})
   lastName: string;
 
   @Column({ default: Role.User.toString() })
+  @ApiProperty({description: 'User role', enum: Role})
   roles: string;
 
   @Column({ nullable: true })
+  @ApiProperty({description: 'A password reset token', required: false})
   resetPasswordToken: string;
 
   @Column({ type: 'timestamp', nullable: true })
+  @ApiProperty({description: 'A date time when the validity of the password reset token ceases', required: false, })
   resetPasswordExpires: Date;
 
   @Column({ default: false })
+  @ApiProperty({description: 'Whether user email was validated', required: false, type: Boolean})
   isEmailVerified: boolean;
 
   @Column({ nullable: true })
@@ -101,6 +112,12 @@ export class User {
     onDelete: 'CASCADE',
   })
   finances: Finances[]; 
+
+  @OneToMany(
+    () => UserVoucher,
+    (voucher) => voucher.user,
+  )
+  vouchers: UserVoucher[];
 
   @ManyToMany(() => InvestorProfile, (profile) => profile.users)
   @JoinTable({

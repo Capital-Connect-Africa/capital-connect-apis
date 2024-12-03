@@ -18,11 +18,13 @@ import { CreateBookingDto } from './dto/create-booking.dto';
 import { UpdateBookingDto } from './dto/update-booking.dto';
 import { PesapalToken } from 'src/shared/headers.decorators';
 import { HttpService } from '@nestjs/axios';
+import { VoucherService } from 'src/voucher/voucher.service';
 
 @Controller('bookings')
 @UseGuards(JwtAuthGuard)
 export class BookingController {
   constructor(
+    private readonly voucherService: VoucherService,
     private readonly bookingService: BookingService,
     private readonly paymentService: PaymentService,
     private readonly httpService: HttpService,
@@ -34,7 +36,7 @@ export class BookingController {
     @Body() createBookingDto: CreateBookingDto,
     @Req() req,
   ) {
-    const { calendlyEventId, notes } = createBookingDto;
+    const { calendlyEventId, notes, voucherCode } = createBookingDto;
     const user = req.user;
     const booking = await this.bookingService.createBooking(
       calendlyEventId,
@@ -45,6 +47,17 @@ export class BookingController {
     const bookingResponse = {} as any;
     bookingResponse.bookingId = booking.id;
 
+    /* Thank you CTRL+C / CTRL+V 😀*/
+    let amountDiscounted =0;
+    let amount = +process.env.ADVISORY_SESSIONS_COST;
+
+    if(voucherCode) { // redeem voucher if provided
+      const result =await this.bookingService.redeemVoucher(user.id as number, voucherCode, amount);
+      amountDiscounted =result.discount
+      amount =result.amount; 
+
+      // @NOTE: code implemented outside try/catch to throw errors due to voucher service 💀
+    }
     try {
       const response = await this.httpService
         .post(
@@ -52,7 +65,7 @@ export class BookingController {
           {
             id: booking.id,
             currency: 'KES',
-            amount: process.env.ADVISORY_SESSIONS_COST,
+            amount,
             description: 'Advisory session booking fee.',
             callback_url: process.env.BOOKING_CALLBACK_URL,
             redirect_mode: 'TOP_WINDOW',

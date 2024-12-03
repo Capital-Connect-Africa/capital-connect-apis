@@ -19,7 +19,7 @@ import { MobileNumberService } from './mobile-number.service';
 import { InjectRepository } from '@nestjs/typeorm';
 import { MobileNumber } from './entities/mobile-number.entity';
 import { Repository } from 'typeorm';
-import { generateOtp } from '../shared/utils/otp.util';
+import { generateOtp } from '../shared/otp.util';
 import { OtpService } from './otp.service';
 import { VerifyMobileNumberDto } from './dto/verify-mobile-number.dto';
 

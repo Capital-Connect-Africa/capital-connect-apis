@@ -18,14 +18,24 @@ import { Roles } from 'src/auth/roles.decorator';
 import { Role } from 'src/auth/role.enum';
 import { PesapalToken } from '../shared/headers.decorators';
 import { HttpService } from '@nestjs/axios';
-import { IsNumber } from 'class-validator';
+import { IsNumber, IsOptional, IsString } from 'class-validator';
 import { PaymentService } from '../payment/payment.service';
 import { SubscriptionTierService } from './subscription_tier.service';
 import { SubscriptionTierEnum } from '../subscription/subscription-tier.enum';
+import { ApiOperation, ApiUnauthorizedResponse, ApiForbiddenResponse, ApiBadRequestResponse, ApiInternalServerErrorResponse, ApiOkResponse, ApiProperty } from '@nestjs/swagger';
+import { ErrorDto } from 'src/shared/generic/error.dto';
+import { SubscriptionResponseDto } from './dto/subscription-response.dto';
+import { UserSubscription } from './entities/userSubscription.entity';
 
 class SubscribeDto {
   @IsNumber()
+  @ApiProperty({description: 'Subscription tier\'s unique identifier'})
   subscriptionTierId: number;
+
+  @IsString()
+  @IsOptional()
+  @ApiProperty({description: 'Discount voucher code to be applied', required: false})
+  voucherCode?: string
 }
 
 @UseGuards(JwtAuthGuard, RolesGuard)
@@ -55,11 +65,23 @@ export class SubscriptionController {
   }
 
   @Get('user/:userId')
+  @ApiOperation({ summary: 'Fetches user subscriptions'  })
+  @ApiOkResponse({ description: 'A list of user subscriptions retrieved successfully', type: SubscriptionResponseDto})
+  @ApiUnauthorizedResponse({ description: 'Login required. Possibly user session expired', type: ErrorDto})
+  @ApiForbiddenResponse({description: 'User access not allowed', type: ErrorDto})
+  @ApiBadRequestResponse({description: 'Invalid data provided', type: ErrorDto})
+  @ApiInternalServerErrorResponse({description: 'A little server oopsy occured! Not your bad 😃', type: ErrorDto})
   async fetchSubscription(@Param('userId', ParseIntPipe) userId: number) {
     return await this.subscriptionService.fetchSubscription(userId);
   }
 
   @Post('subscribe')
+  @ApiOperation({ summary: 'User purchases a subscription'  })
+  @ApiOkResponse({ description: 'Package bought successfully', type: SubscriptionResponseDto})
+  @ApiUnauthorizedResponse({ description: 'Login required. Possibly user session expired', type: ErrorDto})
+  @ApiForbiddenResponse({description: 'User access not allowed', type: ErrorDto})
+  @ApiBadRequestResponse({description: 'Invalid data provided', type: ErrorDto})
+  @ApiInternalServerErrorResponse({description: 'A little server oopsy occured! Not your bad 😃', type: ErrorDto})
   async subscribe(
     @PesapalToken() pesapalToken: string,
     @Body() subscribeDto: SubscribeDto,
@@ -71,22 +93,36 @@ export class SubscriptionController {
     if (subscriptionStatus) {
       throw new HttpException('User already has an active subscription', 400);
     }
+
+    const {subscriptionTierId, voucherCode} =subscribeDto;
     const userSubscription = await this.subscriptionService.assignSubscription(
       user.id,
-      subscribeDto.subscriptionTierId,
+      subscriptionTierId,
     );
     const description = `Subscription ${userSubscription.subscriptionTier.name} payment`;
     const subscriptionResponse = {} as any;
     subscriptionResponse.subscriptionId = userSubscription.id;
+    
+    let amountDiscounted =0;
+    let amount = userSubscription.subscriptionTier.price;
 
+    if(voucherCode) { // redeem voucher if provided
+      const result =await this.subscriptionService.redeemVoucher(user.id as number, voucherCode, amount);
+      amountDiscounted =result.discount
+      amount =result.amount; 
+
+      // @NOTE: code implemented outside try/catch to throw errors due to voucher service 💀
+    }
+    
     try {
+
       const response = await this.httpService
         .post(
           `${process.env.PESAPAL_BASE_URL}/Transactions/SubmitOrderRequest`,
           {
             id: userSubscription.id,
             currency: 'KES',
-            amount: userSubscription.subscriptionTier.price,
+            amount,
             description: description,
             callback_url: process.env.PESAPAL_CALLBACK_URL,
             redirect_mode: 'TOP_WINDOW',
@@ -131,6 +167,7 @@ export class SubscriptionController {
           userSubscriptionId: userSubscription.id,
           orderTrackingId: res.order_tracking_id,
           userId: user.id,
+          discount: amountDiscounted
         },
         Number(userSubscription.subscriptionTier.price),
         description,
@@ -149,14 +186,21 @@ export class SubscriptionController {
   }
 
   @Post('upgrade')
+  @ApiOperation({ summary: 'User upgrades to a new subscription'  })
+  @ApiOkResponse({ description: 'Upgrade successful', type: SubscriptionResponseDto})
+  @ApiUnauthorizedResponse({ description: 'Login required. Possibly user session expired', type: ErrorDto})
+  @ApiForbiddenResponse({description: 'User access not allowed', type: ErrorDto})
+  @ApiBadRequestResponse({description: 'Invalid data provided', type: ErrorDto})
+  @ApiInternalServerErrorResponse({description: 'A little server oopsy occured! Not your bad 😃', type: ErrorDto})
   async upgradeUserSubscription(
     @PesapalToken() pesapalToken: string,
     @Body() subscribeDto: SubscribeDto,
     @Req() req,
   ) {
     const user = req.user;
+    const { subscriptionTierId, voucherCode } =subscribeDto
     const upgradeTier = await this.subscriptionTierService.findOne(
-      subscribeDto.subscriptionTierId,
+      subscriptionTierId,
     );
 
     if (!upgradeTier) {
@@ -185,7 +229,16 @@ export class SubscriptionController {
     const description = `Subscription ${userSubscription.subscriptionTier.name} payment`;
     const subscriptionResponse = {} as any;
     subscriptionResponse.subscriptionId = userSubscription.id;
+    let amountDiscounted =0;
+    let amount = userSubscription.subscriptionTier.price - currentTier.price; // 😀 discount will be applied on this amount
 
+    
+    if(voucherCode) { // redeem voucher if provided
+      const result =await this.subscriptionService.redeemVoucher(user.id as number, voucherCode, amount);
+      amountDiscounted =result.discount
+      amount =result.amount; 
+      // @NOTE: code implemented outside try/catch to throw errors due to voucher service 💀
+    }
     try {
       const response = await this.httpService
         .post(
@@ -193,7 +246,7 @@ export class SubscriptionController {
           {
             id: userSubscription.id,
             currency: 'KES',
-            amount: userSubscription.subscriptionTier.price - currentTier.price,
+            amount,
             description: description,
             callback_url: process.env.PESAPAL_CALLBACK_URL,
             redirect_mode: 'TOP_WINDOW',
@@ -257,12 +310,24 @@ export class SubscriptionController {
 
   @Get()
   @Roles(Role.Admin)
+  @ApiOperation({ summary: 'Lists all subscription tiers'  })
+  @ApiOkResponse({ description: 'Subscriptions fetched successfully'})
+  @ApiUnauthorizedResponse({ description: 'Login required. Possibly user session expired', type: ErrorDto})
+  @ApiForbiddenResponse({description: 'User access not allowed', type: ErrorDto})
+  @ApiBadRequestResponse({description: 'Invalid data provided', type: ErrorDto})
+  @ApiInternalServerErrorResponse({description: 'A little server oopsy occured! Not your bad 😃', type: ErrorDto})
   async findAll(@Query('page') page: number, @Query('limit') limit: number) {
     return this.subscriptionService.findAll(page, limit);
   }
 
   @Get(':id')
   @Roles(Role.Admin)
+  @ApiOperation({ summary: 'Get single subscription'  })
+  @ApiOkResponse({ description: 'Subscription retrieved successfully'})
+  @ApiUnauthorizedResponse({ description: 'Login required. Possibly user session expired', type: ErrorDto})
+  @ApiForbiddenResponse({description: 'User access not allowed', type: ErrorDto})
+  @ApiBadRequestResponse({description: 'Invalid data provided', type: ErrorDto})
+  @ApiInternalServerErrorResponse({description: 'A little server oopsy occured! Not your bad 😃', type: ErrorDto})
   async findOne(@Param('id') id: number) {
     return this.subscriptionService.findOne(id);
   }
