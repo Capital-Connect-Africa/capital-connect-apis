@@ -205,15 +205,19 @@ export class SubscriptionService {
         voucherCode, 
         VoucherType.subscriptionPlan
       );
-  
+      const discountRate = (discount / 100)
+      const dicountedPrice =discountRate * amount;
+
       const amountDiscounted = Math.min(
         maxAmount, 
-        (discount / 100) * amount
+        dicountedPrice
       );
-  
+      
+      const amountToBePaid = Math.max(amount - amountDiscounted, +process.env.PESAPAL_MIN_PAYABLE_AMOUNT)
+      
       return { 
         discount: amountDiscounted, 
-        amount: amount - amountDiscounted 
+        amount: amountToBePaid
       }
     } catch (error) {
       throw error as BadRequestException;

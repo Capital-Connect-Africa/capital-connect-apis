@@ -113,7 +113,7 @@ export class SubscriptionController {
 
       // @NOTE: code implemented outside try/catch to throw errors due to voucher service 💀
     }
-
+    
     try {
 
       const response = await this.httpService
