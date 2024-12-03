@@ -3,11 +3,14 @@ import { WebexIntegrationService } from './webex_integration.service';
 import { WebexIntegrationController } from './webex_integration.controller';
 import { WebexTokenMiddleware } from '../shared/webex-middleware.service';
 import { HttpModule } from '@nestjs/axios';
+import { BookingService } from '../booking/booking.service';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { Booking } from '../booking/entities/booking.entity';
 
 @Module({
-  imports: [HttpModule],
+  imports: [TypeOrmModule.forFeature([Booking]), HttpModule],
   controllers: [WebexIntegrationController],
-  providers: [WebexIntegrationService],
+  providers: [WebexIntegrationService, BookingService],
 })
 export class WebexIntegrationModule {
   configure(consumer: MiddlewareConsumer) {

@@ -53,17 +53,19 @@ export class CompanyService {
     });
   }
 
-  async findOne(id: number) {
-    const company = await this.companyRepository.findOne({
+  async findOne(id: number){
+    const company = await this.companyRepository.findOne({ 
       where: { id },
-      relations: ['companyLogo', 'user'],
+      relations: ['user'],
     });
-    if (company) {
-      return company;
-    } else {
-      throw new NotFoundException('company not available');
+  
+    if (!company) {
+      throw new NotFoundException('Company not found');
     }
+  
+    return company;
   }
+  
 
   async findOneByOwnerId(id: number) {
     const company = await this.companyRepository.findOne({
@@ -530,4 +532,42 @@ export class CompanyService {
   
     return {completeness};
   }  
+
+  async hideCompanyProfile(companyId: number, currentUser: User): Promise<Company> {
+    const company = await this.companyRepository.findOne({
+      where: { id: companyId },
+      relations: ['user'], 
+    });
+
+    if (!company) {
+      throw new Error('Company not found');
+    }
+
+    if (currentUser.roles.includes('admin') || company.user.id === currentUser.id) {
+      company.isHidden = true;
+      await this.companyRepository.save(company);
+      return company;
+    }
+
+    throw new Error('You are not authorized to hide this company profile');
+  }
+
+  async unhideCompanyProfile( companyId: number, currentUser: User ): Promise<Company> {
+    const company = await this.companyRepository.findOne({
+      where: { id: companyId },
+      relations: ['user'], 
+    });
+
+    if (!company) {
+      throw new Error('Company not found');
+    }
+
+    if (currentUser.roles.includes('admin') || company.user.id === currentUser.id) {
+      company.isHidden = false;
+      await this.companyRepository.save(company);
+      return company;
+    }
+
+    throw new Error('You are not authorized to unhide this company profile');
+  }
 }

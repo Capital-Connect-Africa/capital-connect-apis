@@ -23,6 +23,10 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 GET http://localhost:3000/statistics/matchmaking
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
+### Get Total matchmaking statistics
+GET http://localhost:3000/statistics/matchmaking/totals
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
 ### Get matchmaking statistics
 GET https://capitalconnect-0060e0fb0eb4.herokuapp.com/statistics/matchmaking
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9

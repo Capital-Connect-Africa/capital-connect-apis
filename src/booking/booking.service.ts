@@ -18,16 +18,21 @@ export class BookingService {
 
   async createBooking(
     calendlyEventId: string,
+    notes: string,
     userId: number,
   ): Promise<Booking> {
     const bookingObj = new Booking();
     bookingObj.calendlyEventId = calendlyEventId;
+    bookingObj.notes = notes;
     bookingObj.user = { id: userId } as User;
     return await this.bookingRepository.save(bookingObj);
   }
 
-  async findAll(user: User, page: number = 1, limit: number = 10): 
-  Promise<{ data: Booking[], total: number }> {
+  async findAll(
+    user: User,
+    page: number = 1,
+    limit: number = 10,
+  ): Promise<{ data: Booking[]; total: number }> {
     const skip = (page - 1) * limit;
     const query: any = {
       skip,
@@ -35,15 +40,15 @@ export class BookingService {
       order: { id: 'DESC' },
       relations: ['payments'],
     };
-  
+
     if (!user.roles.includes('admin')) {
       query.where = { user: { id: user.id } };
     }
-  
+
     const [data, total] = await this.bookingRepository.findAndCount(query);
-  
+
     return { data, total };
-  }  
+  }
 
   async findOne(id: number) {
     const booking = await this.bookingRepository.findOneBy({ id });
@@ -54,9 +59,10 @@ export class BookingService {
   }
 
   async update(id: number, updateBookingDto: UpdateBookingDto) {
-    const { calendlyEventId } = updateBookingDto;
+    const { calendlyEventId, notes } = updateBookingDto;
     const updates = {};
     if (calendlyEventId) updates['calendlyEventId'] = calendlyEventId;
+    if (notes) updates['notes'] = notes;
     if (Object.keys(updates).length > 0)
       await this.bookingRepository.update(id, updateBookingDto);
     return this.bookingRepository.findOneBy({ id });

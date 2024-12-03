@@ -89,16 +89,17 @@ export class ConnectionRequestController {
   @Put(':id/decline')
   async declineConnectionRequest(
     @Param('id') id: string,
+    @Body('declineReasons') declineReasons?: string[],
   ): Promise<ConnectionRequest> {
     try {
-      return this.connectionRequestService.declineConnectionRequest(id);
+      return this.connectionRequestService.declineConnectionRequest(id, declineReasons);
     } catch (error) {
       if (error instanceof NotFoundException) {
         throw new NotFoundException(error.message);
       }
       throwInternalServer(error);
     }
-  }
+  }  
 
   @Get(':id')
   @UseGuards(JwtAuthGuard, RolesGuard)

@@ -8,6 +8,8 @@ import {
   OneToOne,
   ManyToMany,
   JoinTable,
+  CreateDateColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 import * as bcrypt from 'bcryptjs';
 import { Submission } from 'src/submission/entities/submission.entity';
@@ -16,6 +18,7 @@ import { Payment } from 'src/payment/entities/payment.entity';
 import { MobileNumber } from 'src/mobile/entities/mobile-number.entity';
 import { InvestorProfile } from '../../investor-profile/entities/investor-profile.entity';
 import { UserSubscription } from '../../subscription_tier/entities/userSubscription.entity';
+import { Finances } from 'src/finances/entities/finance.entity';
 import { UserVoucher } from 'src/voucher/entities/user-voucher.entity';
 import { ApiProperty } from '@nestjs/swagger';
 
@@ -69,6 +72,12 @@ export class User {
   @Column({ type: 'timestamp', nullable: true })
   termsAcceptedAt: Date;
 
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
+
   @OneToMany(() => Submission, (submission) => submission.user)
   submissions: Submission[];
 
@@ -98,6 +107,11 @@ export class User {
     { onDelete: 'CASCADE' },
   )
   subscriptions: UserSubscription[];
+
+  @OneToMany(() => Finances, (finances) => finances.user,{
+    onDelete: 'CASCADE',
+  })
+  finances: Finances[]; 
 
   @OneToMany(
     () => UserVoucher,

@@ -19,7 +19,7 @@ export class AnswerController {
   ) {}
 
   @Post()
-  @Roles(Role.Admin, Role.Advisor, Role.Investor)
+  @Roles(Role.Admin, Role.Advisor, Role.Investor, Role.ContactPerson)
   async create(@Body() createAnswerDto: CreateAnswerDto) {
     const { text, weight, questionId, recommendation } = createAnswerDto;
     try {
@@ -57,7 +57,7 @@ export class AnswerController {
   }
 
   @Put(':id')
-  @Roles(Role.Admin, Role.Investor, Role.Advisor)
+  @Roles(Role.Admin, Role.Investor, Role.Advisor, Role.ContactPerson)
   async update(@Param('id') id: string, @Body() updateAnswerDto: UpdateAnswerDto) {
     try {
       await this.answerService.findOne(+id);

@@ -154,21 +154,24 @@ export class ConnectionRequestService {
     return this.update(approvalRequest.id, { isApproved: true });
   }
 
-  async declineConnectionRequest(id: string) {
+  async declineConnectionRequest(id: string, declineReasons: string[] = ['Declined by business owner.']) {
     const approvalRequest = await this.connectionRequestRepository.findOne({
-      where: { uuid: id, isApproved: IsNull()  },
+      where: { uuid: id, isApproved: IsNull() },
       relations: ['investorProfile', 'company'],
     });
+  
     if (!approvalRequest) {
       throw new NotFoundException(`Valid connection request with ID ${id} not found`);
     }
+  
     await this.matchmakingService.markAsDeclined(
       approvalRequest.investorProfile.id,
       approvalRequest.company.id,
-      ['Declined by business owner.'],
+      declineReasons,
     );
+  
     return this.update(approvalRequest.id, { isApproved: false });
-  }
+  }  
 
   async findOne(id: number): Promise<ConnectionRequest> {
     const connectionRequest = await this.connectionRequestRepository.findOne({

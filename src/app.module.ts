@@ -41,6 +41,7 @@ import { BillingModule } from './billing/billing.module';
 import { SegmentModule } from './segment/segment.module';
 import { VoucherModule } from './voucher/voucher.module';
 import { WebexIntegrationModule } from './webex_integration/webex_integration.module';
+import { FinancesModule } from './finances/finances.module';
 
 @Module({
   imports: [
@@ -88,6 +89,7 @@ import { WebexIntegrationModule } from './webex_integration/webex_integration.mo
     SegmentModule,
     VoucherModule,
     WebexIntegrationModule,
+    FinancesModule,
   ],
   providers: [
     AppService,

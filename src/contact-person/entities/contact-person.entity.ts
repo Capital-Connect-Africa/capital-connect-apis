@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 import { InvestorProfile } from '../../investor-profile/entities/investor-profile.entity';
 
 @Entity('contact_persons')
@@ -26,6 +26,12 @@ export class ContactPerson {
 
   @Column({ default: false })
   primaryContact: boolean;
+
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
 
   @ManyToOne(
     () => InvestorProfile,

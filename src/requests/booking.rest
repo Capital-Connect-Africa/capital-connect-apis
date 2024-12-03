@@ -5,12 +5,13 @@ Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
 {
-    "calendlyEventId": "82348"
+    "calendlyEventId": "82348",
+    "notes": "This is a test note"
 }
 
 ### Get booking
 
-GET http://localhost:3000/bookings/4
+GET http://localhost:3000/bookings/8
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
 
@@ -31,7 +32,8 @@ Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
 {
-    "calendlyEventId": "76098"
+    "calendlyEventId": "76098",
+    "notes": "This is an updated test note"
 }
 
 ### Delete booking

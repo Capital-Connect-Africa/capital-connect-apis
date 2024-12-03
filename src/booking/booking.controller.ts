@@ -36,10 +36,11 @@ export class BookingController {
     @Body() createBookingDto: CreateBookingDto,
     @Req() req,
   ) {
-    const { calendlyEventId, voucherCode } = createBookingDto;
+    const { calendlyEventId, notes, voucherCode } = createBookingDto;
     const user = req.user;
     const booking = await this.bookingService.createBooking(
       calendlyEventId,
+      notes,
       user.id,
     );
 

@@ -2,14 +2,17 @@ import { File } from 'src/files/entities/file.entity';
 import { User } from 'src/users/entities/user.entity';
 import {
   Column,
+  CreateDateColumn,
   Entity,
   JoinColumn,
   OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 import { NumberOfEmployees, YearsOfOperation } from '../company.type';
 import { ConnectionRequest } from 'src/matchmaking/entities/connectionRequest.entity';
+import { Finances } from 'src/finances/entities/finance.entity';
 
 @Entity('companies')
 export class Company {
@@ -69,6 +72,15 @@ export class Company {
   @Column()
   fullTimeBusiness: boolean;
 
+  @Column({default: false})
+  isHidden: boolean;
+
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
+
   @OneToOne(() => User, {
     onDelete: 'CASCADE',
   })
@@ -79,6 +91,11 @@ export class Company {
     onDelete: 'CASCADE',
   })
   connectionRequests: ConnectionRequest[];
+
+  @OneToMany(() => Finances, (finances) => finances.company,{
+    onDelete: 'CASCADE',
+  })
+  finances: Finances[]; 
 
   @OneToOne(() => File)
   @JoinColumn()

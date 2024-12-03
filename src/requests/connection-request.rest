@@ -4,8 +4,8 @@ Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
 {
-    "investorProfileId": 3,
-    "companyId": 4
+    "investorProfileId": 1,
+    "companyId": 10
 }
 
 ### Get Connection Request by Id
@@ -48,5 +48,10 @@ PUT http://localhost:3000/connection-requests/f2d670a3-ebe7-4bad-b4f9-56453fbff6
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
 ### Decline Connection Request (uuid)
-PUT http://localhost:3000/connection-requests/f6cb222e-02d1-43d8-a7ed-86df7e37c708/decline
+PUT http://localhost:3000/connection-requests/e7a7f8d4-f73b-48e0-826e-fe11dc6c6a1a/decline
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+Content-Type: application/json
+
+{
+    "declineReasons": ["Already have an investor."]
+}

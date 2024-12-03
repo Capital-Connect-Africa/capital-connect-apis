@@ -6,6 +6,8 @@ import {
   JoinColumn,
   ManyToMany,
   OneToMany,
+  CreateDateColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 import { User } from '../../users/entities/user.entity';
 import { Sector } from '../../sector/entities/sector.entity';
@@ -70,6 +72,12 @@ export class InvestorProfile {
 
   @Column('text', { array: true })
   registrationStructures: string[];
+
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
 
   @OneToOne(() => User, { onDelete: 'CASCADE' })
   @JoinColumn()

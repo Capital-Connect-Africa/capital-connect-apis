@@ -40,7 +40,7 @@ export class SubmissionController {
   ) {}
 
   @Post()
-  @Roles(Role.User, Role.Investor)
+  @Roles(Role.User, Role.Investor, Role.ContactPerson)
   async create(
     @Request() req,
     @Body() createSubmissionDto: CreateSubmissionDto,
@@ -77,7 +77,7 @@ export class SubmissionController {
   }
 
   @Post('bulk')
-  @Roles(Role.User, Role.Investor)
+  @Roles(Role.User, Role.Investor, Role.ContactPerson)
   async createMultiple(
     @Request() req,
     @Body() createMultipleSubmissionsDto: CreateMultipleSubmissionsDto,
@@ -123,7 +123,7 @@ export class SubmissionController {
   }
 
   @Put(':id')
-  @Roles(Role.User, Role.Investor)
+  @Roles(Role.User, Role.Investor, Role.ContactPerson)
   async update(
     @Param('id') id: string,
     @Body() updateSubmissionDto: UpdateSubmissionDto,

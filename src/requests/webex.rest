@@ -2,18 +2,20 @@
 
 POST http://localhost:3000/webex/create
 Content-Type: application/json
-code: YmEwZTRlZGQtMzAxZS00MTE0LWE0OGEtZjYyNWMyMDkzYjJiMDhiMTE5NDQtNDFm_P0A1_bdd2aed2-da17-481d-bd6f-b43037ee90b7
+code: YmQ1NTA0YjgtZDRjNS00YTAyLTlhMTctZTQ4MjNiZjI4OGI4NWRlYTNiNzEtYzVh_P0A1_bdd2aed2-da17-481d-bd6f-b43037ee90b7
 
 {
   "title": "Project Meeting",
-  "start": "2024-11-09T08:00:00.000Z",
-  "end": "2024-11-09T09:00:00.000Z",
+  "start": "2024-12-25T08:00:00.000Z",
+  "end": "2024-12-25T09:00:00.000Z",
   "timezone": "UTC",
   "invitees": [
     { "email": "attendee@example.com",  "displayName": "Attendee One test" },
     { "email": "attendee1@example.com", "displayName": "Attendee One" },
-    { "email": "attendee2@example.com", "displayName": "Attendee Two" }
-  ]
+    { "email": "attendee2@example.com", "displayName": "Attendee Two" },
+    { "email": "vickyjr88@gmail.com", "displayName": "Vicky Junior" }
+  ],
+  "bookingId": 8
 }
 
 ### Authorize
@@ -23,7 +25,7 @@ GET http://localhost:3000/webex/authorization/initiation
 
 ### Get meeting
 
-http://localhost:3000/webex/cebd5c382d234975805723958efff95c
+http://localhost:3000/webex/865ca0f68b694cebb0025f4084435723
 Content-Type: application/json
 code: YmEwZTRlZGQtMzAxZS00MTE0LWE0OGEtZjYyNWMyMDkzYjJiMDhiMTE5NDQtNDFm_P0A1_bdd2aed2-da17-481d-bd6f-b43037ee90b7
 
@@ -31,18 +33,20 @@ code: YmEwZTRlZGQtMzAxZS00MTE0LWE0OGEtZjYyNWMyMDkzYjJiMDhiMTE5NDQtNDFm_P0A1_bdd2
 
 POST https://capitalconnect-0060e0fb0eb4.herokuapp.com/webex/create
 Content-Type: application/json
-code: YmEwZTRlZGQtMzAxZS00MTE0LWE0OGEtZjYyNWMyMDkzYjJiMDhiMTE5NDQtNDFm_P0A1_bdd2aed2-da17-481d-bd6f-b43037ee90b7
+code: NjgxOTBhZmMtYTg1My00NDlmLTgwZmQtOWEwM2Y5OGFjMGZiMTdjMTk2Y2QtNjk0_P0A1_bdd2aed2-da17-481d-bd6f-b43037ee90b7
 
 {
   "title": "Project Meeting",
-  "start": "2024-11-09T08:00:00.000Z",
-  "end": "2024-11-09T09:00:00.000Z",
+  "start": "2024-12-25T08:00:00.000Z",
+  "end": "2024-12-25T09:00:00.000Z",
   "timezone": "UTC",
   "invitees": [
     { "email": "attendee@example.com",  "displayName": "Attendee One test" },
     { "email": "attendee1@example.com", "displayName": "Attendee One" },
-    { "email": "attendee2@example.com", "displayName": "Attendee Two" }
-  ]
+    { "email": "attendee2@example.com", "displayName": "Attendee Two" },
+    { "email": "vickyjr88@gmail.com", "displayName": "Vicky Junior" }
+  ],
+  "bookingId": 8
 }
 
 ### Authorize prod
@@ -50,8 +54,8 @@ code: YmEwZTRlZGQtMzAxZS00MTE0LWE0OGEtZjYyNWMyMDkzYjJiMDhiMTE5NDQtNDFm_P0A1_bdd2
 GET https://capitalconnect-0060e0fb0eb4.herokuapp.com/webex/authorization/initiation
 
 
-### Get meeting prod
+### Get meeting prod (meeting id)
 
-https://capitalconnect-0060e0fb0eb4.herokuapp.com/webex/cebd5c382d234975805723958efff95c
+GET https://capitalconnect-0060e0fb0eb4.herokuapp.com/webex/cebd5c382d234975805723958efff95c
 Content-Type: application/json
-code: YmEwZTRlZGQtMzAxZS00MTE0LWE0OGEtZjYyNWMyMDkzYjJiMDhiMTE5NDQtNDFm_P0A1_bdd2aed2-da17-481d-bd6f-b43037ee90b7
+code: NjgxOTBhZmMtYTg1My00NDlmLTgwZmQtOWEwM2Y5OGFjMGZiMTdjMTk2Y2QtNjk0_P0A1_bdd2aed2-da17-481d-bd6f-b43037ee90b7
