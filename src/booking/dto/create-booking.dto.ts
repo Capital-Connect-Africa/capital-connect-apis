@@ -8,4 +8,8 @@ export class CreateBookingDto {
     @IsString()
     @IsOptional()
     voucherCode?: string
+
+    @IsString()
+    @IsOptional()
+    notes?: string
 }  
