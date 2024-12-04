@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   HttpException,
+  NotFoundException,
   Param,
   Post,
   Put,
@@ -146,4 +147,13 @@ export class BookingController {
   remove(@Param('id') id: string) {
     return this.bookingService.remove(+id);
   }
+
+  @Put(':bookingId/assign-advisor')
+  async assignAdvisorToBooking(
+    @Param('bookingId') bookingId: number, 
+    @Body('userId') userId: number,
+  ): Promise<any> {
+      return await this.bookingService.assignAdvisorToBooking(bookingId, userId);  
+  }
+
 }
