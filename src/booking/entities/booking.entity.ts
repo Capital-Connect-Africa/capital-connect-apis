@@ -8,6 +8,7 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   OneToMany,
+  JoinColumn,
 } from 'typeorm';
 
 @Entity()
@@ -32,4 +33,8 @@ export class Booking {
 
   @OneToMany(() => Payment, (payment) => payment.booking)
   payments: Payment[];
+
+  @ManyToOne(() => User, (user) => user.bookings)
+  @JoinColumn({name: 'advisor'})
+  advisor: User;
 }

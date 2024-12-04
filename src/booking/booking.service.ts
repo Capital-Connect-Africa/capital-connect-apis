@@ -14,6 +14,8 @@ export class BookingService {
     private voucherService:VoucherService,
     @InjectRepository(Booking)
     private readonly bookingRepository: Repository<Booking>,
+    @InjectRepository(User)
+    private readonly usersRepository: Repository<User>,
   ) {}
 
   async createBooking(
@@ -32,23 +34,29 @@ export class BookingService {
     user: User,
     page: number = 1,
     limit: number = 10,
-  ): Promise<{ data: Booking[]; total: number }> {
+  ): Promise<Booking[]> {
     const skip = (page - 1) * limit;
+  
     const query: any = {
       skip,
       take: limit,
       order: { id: 'DESC' },
-      relations: ['payments'],
+      relations: ['payments', 'user'],
     };
+  
+    if (user.roles.includes('admin')) {
 
-    if (!user.roles.includes('admin')) {
+    } else if (user.roles.includes('advisor')) {
+      query.where = { advisor: { id: user.id } };
+
+    } else {
       query.where = { user: { id: user.id } };
     }
-
-    const [data, total] = await this.bookingRepository.findAndCount(query);
-
-    return { data, total };
-  }
+  
+    const bookings = await this.bookingRepository.find(query);
+  
+    return bookings ;
+  }  
 
   async findOne(id: number) {
     const booking = await this.bookingRepository.findOneBy({ id });
@@ -97,4 +105,32 @@ export class BookingService {
       throw error as BadRequestException;
     }
   }
+
+  async assignAdvisorToBooking(
+    bookingId: number,
+    userId: number, 
+  ): Promise<Booking> {
+    const booking = await this.bookingRepository.findOne({
+      where: { id: bookingId },
+      relations: ['user'],
+    });
+  
+    if (!booking) {
+      throw new NotFoundException('Booking not found');
+    }
+  
+    const advisor = await this.usersRepository.findOne({
+      where: { id: userId, roles: 'advisor' }, 
+    });
+  
+    if (!advisor) {
+      throw new NotFoundException('No advisor found with the given userId');
+    }
+  
+    booking.advisor = advisor;
+
+    return await this.bookingRepository.save(booking);
+  }
+  
+  
 }

@@ -90,6 +90,9 @@ export class User {
   @OneToMany(() => MobileNumber, (mobile) => mobile.user)
   mobileNumbers: MobileNumber[];
 
+  @OneToMany(() => Booking, (booking) => booking.advisor) 
+  advisedBookings: Booking[];
+
   @OneToOne(
     () => InvestorProfile,
     (investorProfile) => investorProfile.investor,
