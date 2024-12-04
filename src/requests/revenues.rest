@@ -4,12 +4,19 @@ Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
 {
-    "description": "Company 12",
+    "companyId": 1,
+    "year": 2023,
+    "description": "Company",
     "value": 50000
 }
 
 ### Find all revenue records
 GET http://localhost:3000/revenues
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+### Find all revenue records by CompanyId
+GET http://localhost:3000/revenues/company/1
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 

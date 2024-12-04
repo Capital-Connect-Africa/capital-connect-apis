@@ -21,6 +21,11 @@ export class OpexController {
     return await this.opexService.findAll();
   }
 
+  @Get('company/:companyId')
+  async findByCompanyId(@Param('companyId') companyId: number): Promise<Opex[]> {
+    return await this.opexService.findByCompanyId(companyId);    
+  }
+
   @Get(':id')
   async findOpexById(@Param('id') id: number): 
   Promise<Opex> {
