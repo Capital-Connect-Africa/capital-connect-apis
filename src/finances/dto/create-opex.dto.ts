@@ -1,6 +1,10 @@
 import { IsNotEmpty, IsNumber, IsString } from "class-validator";
 
 export class CreateOpexDto {
+    @IsNumber()
+    @IsNotEmpty()
+    year: number;
+    
     @IsString()
     @IsNotEmpty()
     description: string;
@@ -8,4 +12,7 @@ export class CreateOpexDto {
     @IsNumber()
     @IsNotEmpty()
     value: number;
+
+    @IsNumber()
+    companyId: number;
 }

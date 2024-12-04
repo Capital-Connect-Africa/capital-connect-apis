@@ -1,6 +1,10 @@
 import { IsNotEmpty, IsNumber, IsString } from "class-validator";
 
 export class CreateRevenueDto {
+    @IsNumber()
+    @IsNotEmpty()
+    year: number;
+    
     @IsString()
     @IsNotEmpty()
     description: string;
@@ -8,4 +12,7 @@ export class CreateRevenueDto {
     @IsNumber()
     @IsNotEmpty()
     value: number;
+
+    @IsNumber()
+    companyId: number;
 }
