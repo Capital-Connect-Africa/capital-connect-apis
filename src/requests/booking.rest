@@ -32,7 +32,6 @@ Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
 {
-    "calendlyEventId": "76098",
     "notes": "This is an updated test note"
 }
 
@@ -81,3 +80,12 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
 DELETE http://api.capitalconnect.africa/bookings/4
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+### Assign advisor to a booking
+PUT http://localhost:3000/bookings/4/assign-advisor
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+{
+    "userId": 27
+}
