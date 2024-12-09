@@ -3,17 +3,32 @@ import { Repository } from "typeorm";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Opex } from "./entities/opex.entity";
 import { CreateOpexDto } from "./dto/create-opex.dto";
+import { Company } from "src/company/entities/company.entity";
 
 @Injectable()
 export class OpexService {
   constructor(
     @InjectRepository(Opex)
     private readonly opexRepository: Repository<Opex>,
+    @InjectRepository(Company)
+    private readonly companyRepository: Repository<Company>,
   ){}
 
   async create(createOpexDto: CreateOpexDto): Promise<Opex> {
-    return await this.opexRepository.save(createOpexDto)
-  }
+    const { companyId } = createOpexDto;
+    const company = await this.companyRepository.findOne({ where: { id: companyId } });
+  
+    if (!company) {
+      throw new NotFoundException(`Company with ID ${companyId} does not exist.`);
+    }
+
+    const opex = this.opexRepository.create({
+      ...createOpexDto,
+      company: { id: companyId }, 
+    });
+  
+    return await this.opexRepository.save(opex);
+  }   
 
   async findAll(): Promise<Opex[]> {
     return await this.opexRepository.find();
@@ -24,6 +39,18 @@ export class OpexService {
     if (!opex) {
       throw new NotFoundException(`Opex with ID ${id} not found`);
     }
+    return opex;
+  }
+
+  async findByCompanyId(companyId: number): Promise<Opex[]> {
+    const opex = await this.opexRepository.find({
+       where: { company: { id: companyId } }
+    });
+  
+    if (!opex || opex.length === 0) {
+      throw new NotFoundException(`Opex with Company ID ${companyId} not found`);
+    }
+  
     return opex;
   }
 

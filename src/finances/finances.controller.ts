@@ -10,6 +10,7 @@ import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import throwInternalServer from 'src/shared/utils/exceptions.util';
 import { Role } from 'src/auth/role.enum';
 import { Roles } from 'src/auth/roles.decorator';
+import { Finances } from './entities/finance.entity';
 
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Controller('finances')
@@ -28,6 +29,11 @@ export class FinancesController {
   @Get()
   async findAll() {
     return this.financesService.findAll();
+  }
+
+  @Get('company/:companyId')
+  async findByCompanyId(@Param('companyId') companyId: number): Promise<Finances[]> {
+    return await this.financesService.findByCompanyId(companyId);    
   }
 
   @Get(':id')
