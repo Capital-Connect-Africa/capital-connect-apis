@@ -37,7 +37,7 @@ export class InvestorProfile {
   @Column({ nullable: true })
   url: string;
 
-  @Column()
+  @Column('bigint')
   availableFunding: number;
 
   @Column({ nullable: true })
