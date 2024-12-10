@@ -65,7 +65,7 @@ export class FinancesService {
   
     // Save the finance record
     return await this.financeRepository.save(finance);
-  }     
+  }    
   
   async findAll(): Promise<Finances[]> {
     try {
@@ -83,6 +83,19 @@ export class FinancesService {
     } catch (error) {
       throw new Error('An error occurred while fetching financial information.');
     }
+  }
+
+  async findByCompanyId(companyId: number): Promise<Finances[]> {
+    const finances = await this.financeRepository.find({ 
+      where: { company: { id: companyId} },
+      relations: ['revenues', 'opex'], 
+    });
+
+    if (!finances || finances.length === 0) {
+      throw new NotFoundException(`Finances with Company ID ${companyId} not found`);
+    }
+
+    return finances;
   }
 
   async findOne(id: number): Promise<Finances> {

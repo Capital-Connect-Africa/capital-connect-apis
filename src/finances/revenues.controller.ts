@@ -21,6 +21,11 @@ export class RevenueController {
     return await this.revenueService.findAll();
   }
 
+  @Get('company/:companyId')
+  async findByCompanyId(@Param('companyId') companyId: number): Promise<Revenue[]> {
+    return await this.revenueService.findByCompanyId(companyId);    
+  }
+
   @Get(':id')
   async findRevenueById(@Param('id') id: number): 
   Promise<Revenue> {

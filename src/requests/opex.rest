@@ -4,12 +4,19 @@ Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
 {
-    "description": "opex 1",
+    "companyId": 7,
+    "year": 2023,
+    "description": "opex",
     "value": 50000
 }
 
 ### Find all opex records
 GET http://localhost:3000/opex
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+### Find all opex records by companyId
+GET http://localhost:3000/opex/company/1
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
