@@ -8,10 +8,10 @@ export class UpdateInvestorProfilesTable1733224452820 implements MigrationInterf
         await queryRunner.query(`ALTER TABLE "investor_profiles" DROP COLUMN "availableFunding"`);
         await queryRunner.query(`ALTER TABLE "investor_profiles" RENAME COLUMN "availableFundingBigInt" TO "availableFunding"`);
     }
-    
-    public async down (queryRunner: QueryRunner): Promise<void> {
-        await queryRunner.query(`ALTER TABLE "investor_profiles" ADD "availableFundingBigInt" bigint`);
-        await queryRunner.query(`UPDATE "investor_profiles" SET "availableFundingBigInt" = "availableFunding"`);
+
+    public async down(queryRunner: QueryRunner): Promise<void> {
+        await queryRunner.query(`ALTER TABLE "investor_profiles" ADD "availableFundingBigInt" integer`);
+        await queryRunner.query(`UPDATE "investor_profiles" SET "availableFundingBigInt" = CAST("availableFunding" AS integer)`);
         await queryRunner.query(`ALTER TABLE "investor_profiles" DROP COLUMN "availableFunding"`);
         await queryRunner.query(`ALTER TABLE "investor_profiles" RENAME COLUMN "availableFundingBigInt" TO "availableFunding"`);
     }
