@@ -5,6 +5,21 @@ export class CreateFinanceDto {
     @IsNotEmpty()
     year: number;
 
+    @IsNumber()
+    costOfSales: number;
+
+    @IsNumber()
+    @IsOptional()
+    EBITDA: number;
+
+    @IsNumber()
+    @IsOptional()
+    EBIT: number;
+
+    @IsNumber()
+    @IsOptional()
+    taxes: number;
+
     @IsArray()
     revenues: number[];
 

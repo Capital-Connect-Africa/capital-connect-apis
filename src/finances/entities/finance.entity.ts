@@ -1,4 +1,6 @@
 import { 
+    BeforeInsert,
+    BeforeUpdate,
     Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn 
 } from "typeorm";
 import { FinanceStatus } from "../finance.enum";
@@ -15,6 +17,18 @@ export class Finances {
 
     @Column()
     year: number; 
+
+    @Column()
+    costOfSales: number;
+
+    @Column()
+    EBITDA: number;
+
+    @Column()
+    EBIT: number;
+
+    @Column()
+    taxes: number;
   
     @CreateDateColumn()
     createdAt: Date; 
