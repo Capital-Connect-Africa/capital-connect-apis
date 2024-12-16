@@ -93,6 +93,29 @@ export class UsersService {
     });
   }  
 
+  async findAllInvestors(): Promise<any[]> {
+    const investors = await this.usersRepository.find({
+      where: { roles: 'investor' },
+      relations: [
+        'mobileNumbers',
+        'subscriptions',
+        'subscriptions.subscriptionTier',
+      ],
+      order: {
+        id: 'DESC',
+      },
+    });
+  
+    return investors.map(user => {
+      const activeSubscription = user.subscriptions.filter(sub => sub.isActive);
+      
+      return {
+        ...user,
+        activeSubscription: activeSubscription.length > 0 ? activeSubscription : null,
+      };
+    });
+  }
+
   async update(id: number, updateUserDto: Partial<User>): Promise<User> {
     if (updateUserDto.username) {
       const isEmailValid = this.validateEmail(updateUserDto.username);

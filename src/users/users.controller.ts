@@ -61,6 +61,13 @@ export class UsersController {
     return this.userService.findAll();
   }
 
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Get('investors')
+  @Roles(Role.Admin)
+  getAllInvestors() {
+    return this.userService.findAllInvestors();
+  }
+
   @UseGuards(JwtAuthGuard)
   @Put(':id')
   @Roles(Role.Admin, Role.Investor, Role.User, Role.ContactPerson)
