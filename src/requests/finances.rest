@@ -4,8 +4,9 @@ Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
 {
-    "companyId": 12,
-    "year": 2024,
+    "companyId": 8,
+    "year": 2022,
+    "costOfSales": 155000,
     "revenues": [ 16, 17 ],
     "opex": [ 8, 9 ]
 }

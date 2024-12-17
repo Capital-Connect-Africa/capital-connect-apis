@@ -22,10 +22,10 @@ export class Finances {
     costOfSales: number;
 
     @Column()
-    EBITDA: number;
+    ebitda: number;
 
     @Column()
-    EBIT: number;
+    ebit: number;
 
     @Column()
     taxes: number;
