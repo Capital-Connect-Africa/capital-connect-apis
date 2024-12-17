@@ -62,10 +62,14 @@ export class UsersController {
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Get('investors')
+  @Get('role')
   @Roles(Role.Admin)
-  getAllInvestors() {
-    return this.userService.findAllInvestors();
+  async getUsersByRole(@Query('usertype') usertype: string): Promise<any[]> {
+    if (!Object.values(Role).includes(usertype as Role)) {
+      throw new BadRequestException(`Invalid role: ${usertype}`);
+    }
+  
+    return await this.userService.findAllByUserType(usertype as Role);
   }
 
   @UseGuards(JwtAuthGuard)

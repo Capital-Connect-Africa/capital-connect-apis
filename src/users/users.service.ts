@@ -12,6 +12,7 @@ import { addHours } from 'date-fns';
 import * as nodemailer from 'nodemailer';
 import * as sgMail from '@sendgrid/mail';
 import { resetPasswordTemplate } from '../templates/password-reset';
+import { Role } from 'src/auth/role.enum';
 const brevo = require('@getbrevo/brevo');
 
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
@@ -93,28 +94,25 @@ export class UsersService {
     });
   }  
 
-  async findAllInvestors(): Promise<any[]> {
-    const investors = await this.usersRepository.find({
-      where: { roles: 'investor' },
+  async findAllByUserType(usertype: Role): Promise<any[]> {
+    const users = await this.usersRepository.find({
+      where: { roles: usertype }, // Compare with the enum value
       relations: [
         'mobileNumbers',
         'subscriptions',
         'subscriptions.subscriptionTier',
       ],
-      order: {
-        id: 'DESC',
-      },
+      order: { id: 'DESC' },
     });
   
-    return investors.map(user => {
+    return users.map(user => {
       const activeSubscription = user.subscriptions.filter(sub => sub.isActive);
-      
       return {
         ...user,
-        activeSubscription: activeSubscription.length > 0 ? activeSubscription : null,
+        activeSubscription: activeSubscription.length > 0 ? activeSubscription[0] : null,
       };
     });
-  }
+  } 
 
   async update(id: number, updateUserDto: Partial<User>): Promise<User> {
     if (updateUserDto.username) {
