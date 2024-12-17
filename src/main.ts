@@ -9,6 +9,7 @@ import { ExpressAdapter } from '@bull-board/express';
 import { Queue } from 'bullmq';
 import { createBullBoard } from '@bull-board/api';
 import { BullMQAdapter } from '@bull-board/api/bullMQAdapter';
+import { redisOptions } from "./shared/redis/redis.config";
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -21,8 +22,8 @@ async function bootstrap() {
 
   // Initialize Bull Queues
   const queues = [
-    new Queue('task-queue', { connection: { host: 'localhost', port: 6379 } }),
-    new Queue('email-queue', { connection: { host: 'localhost', port: 6379 } }),
+    new Queue('task-queue', { connection: redisOptions }),
+    new Queue('email-queue', { connection: redisOptions}),
   ];
 
   // Create BullBoard
