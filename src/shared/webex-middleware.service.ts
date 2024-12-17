@@ -1,7 +1,7 @@
 import { HttpException, Injectable, NestMiddleware } from '@nestjs/common';
 import { WebexConfig } from './webex.config';
 import { HttpService } from '@nestjs/axios';
-import redisClient from './redisClient';
+import redisClient from './redis/redisClient';
 
 @Injectable()
 export class WebexTokenMiddleware implements NestMiddleware {
