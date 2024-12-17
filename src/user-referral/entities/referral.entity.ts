@@ -1,14 +1,21 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { ApiProperty } from "@nestjs/swagger";
+import { User } from "src/users/entities/user.entity";
+import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity('referrals')
-export class ReferralEntity{
-    @Column()
+export class Referral{
     @PrimaryGeneratedColumn()
-    id: number
+    id: number;
 
-    @Column('integer', {default: 0})
+    @OneToOne(() =>User, user =>user.id, {onDelete: 'CASCADE'})
+    @ApiProperty({description: 'Users referred by this user'})
+    user: User;
+
+    @Column({ type: "int", default: 0 })
+    @ApiProperty({description: 'Users referred by this user'})
     clicks: number;
 
-    @Column('integer', {default: 0})
-    visits: number
+    @Column({ type: "int", default: 0 })
+    @ApiProperty({description: 'Users referred by this user'})
+    visits: number;
 }
