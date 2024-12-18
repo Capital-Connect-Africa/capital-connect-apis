@@ -8,14 +8,14 @@ export class Referral{
     id: number;
 
     @OneToOne(() =>User, user =>user.id, {onDelete: 'CASCADE'})
-    @ApiProperty({description: 'Owner of this referral'})
+    @ApiProperty({description: 'Owner of this referral', type: User})
     user: User;
 
     @Column({ type: "int", default: 0 })
-    @ApiProperty({description: 'Number of times users clicked on the referral link'})
+    @ApiProperty({description: 'Number of times users clicked on the referral link', type: 'number'})
     clicks: number;
 
     @Column({ type: "int", default: 0 })
-    @ApiProperty({description: 'Number of times users visited unique pages before signing up'})
+    @ApiProperty({description: 'Number of times users visited unique pages before signing up', type: 'number'})
     visits: number;
 }
