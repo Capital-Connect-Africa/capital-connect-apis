@@ -23,10 +23,11 @@ import { UpdateUserAdminDto } from './dto/update-user-admin.dto';
 import { ResetPasswordDto } from './dto/reset-password.dto';
 import { RequestResetPasswordDto } from './dto/request-reset-password.dto';
 import throwInternalServer from 'src/shared/utils/exceptions.util';
+import { JwtService } from '@nestjs/jwt';
 
 @Controller('users')
 export class UsersController {
-  constructor(private userService: UsersService) {}
+  constructor(private userService: UsersService, private jwtService: JwtService) {}
 
   @UseGuards(JwtAuthGuard)
   @Get('profile')
@@ -45,7 +46,7 @@ export class UsersController {
         password,
         ...rest
       } = user;
-      return rest;
+      return {...rest, referralId: this.jwtService.sign({userId: user.id})};
     } catch (error) {
       if (error instanceof NotFoundException) {
         throw new NotFoundException(error.message);
