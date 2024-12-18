@@ -130,6 +130,9 @@ export class User {
   @OneToMany(() => User, (user) => user.referredBy)
   referredUsers: User[];
 
+  @OneToOne(() => Referral, (referral) => referral.user) // Add inverse relation here
+  referral: Referral;
+
   @OneToMany(() => Referral, (referral) => referral.user)
   referrals: Referral[];
 
