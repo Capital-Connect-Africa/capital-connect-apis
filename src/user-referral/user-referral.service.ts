@@ -3,13 +3,16 @@ import { Referral } from './entities/referral.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { UpdateReferralMetricsDto } from './dto/UpdateReferralMetricsDto';
+import { User } from 'src/users/entities/user.entity';
 
 @Injectable()
 export class UserReferralService {
 
     constructor(
         @InjectRepository(Referral)
-        private readonly userReferralRepository: Repository<Referral>
+        private readonly userReferralRepository: Repository<Referral>,
+        @InjectRepository(User)
+        private readonly userRepository: Repository<User>
     ){}
 
     async findReferrals(page:number =1, limit:number =10): Promise<Referral[]>{
@@ -18,7 +21,7 @@ export class UserReferralService {
             const referrals =await this.userReferralRepository.find({
                 skip,
                 take: limit,
-                relations: ['users'],
+                relations: ['user', 'user.referredUsers'],
                 order: {
                     id: 'DESC'
                 },
@@ -36,12 +39,12 @@ export class UserReferralService {
                 skip,
                 take: limit,
                 where: {user: {id: userId}},
-                relations: ['user', 'user.r'],
+                relations: ['user', 'user.referredUsers'],
                 order: {
                     id: 'DESC'
                 },
             });
-            return referrals;
+            return referrals
             
         } catch (error) {
             throw error as InternalServerErrorException
@@ -50,22 +53,30 @@ export class UserReferralService {
 
     async updateUserReferrals(userId:number, body: UpdateReferralMetricsDto){
         try {
-            const referral =await this.userReferralRepository.findOneBy({id: userId});
+            const {clicks, visits} =body;
+            
+            const referral =await this.userReferralRepository.findOneBy({user: {id: userId}});
             if(referral){
                 let userReferralLinkClicks =referral.clicks;
                 let userReferralLinkVisits =referral.visits;
-                const {clicks, visits} =body;
                 if(clicks) userReferralLinkClicks +=1
                 if(visits) userReferralLinkVisits +=1
-
                 await this.userReferralRepository.update(
-                    userId, 
+                    referral.id, 
                     {
                         clicks: userReferralLinkClicks, 
                         visits: userReferralLinkVisits
                     }
                 )
-
+            }else{
+                const user =await this.userRepository.findOneBy({id: userId});
+                if (!user) return;
+                const newUserReferral =this.userReferralRepository.create({
+                    clicks: clicks? 1: 0,
+                    visits: visits? 1: 0,
+                    user,
+                })
+                await this.userReferralRepository.save(newUserReferral);
             }
             return
         } catch (error) {

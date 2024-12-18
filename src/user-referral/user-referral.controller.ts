@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Put, Query, RequestMethod, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, ForbiddenException, Get, Param, Put, Query, Request, RequestMethod, UseGuards } from '@nestjs/common';
 import { ApiBadRequestResponse, ApiForbiddenResponse, ApiInternalServerErrorResponse, ApiNoContentResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { RolesGuard } from 'src/auth/roles.guard';
@@ -12,7 +12,7 @@ import { UpdateReferralMetricsDto } from './dto/UpdateReferralMetricsDto';
 import { JwtService } from '@nestjs/jwt';
 
 @ApiTags('user referrals')
-@Controller('user-referrals')
+@Controller('referrals')
 export class UserReferralController {
     constructor(private userReferralService: UserReferralService, private jwtService: JwtService){}
 
@@ -40,8 +40,14 @@ export class UserReferralController {
     @ApiUnauthorizedResponse({ description: 'Login required. Possibly user session expired', type: ErrorDto})
     @ApiForbiddenResponse({description: 'User access not allowed', type: ErrorDto})
     @ApiInternalServerErrorResponse({description: 'A little server oopsy occured! Not your bad 😃', type: ErrorDto})
-    async findUserReferrals(@Param('userId') userId: number, @Query('page') page: number, @Query('limit') limit: number) {
+    async findUserReferrals(@Param('userId') userId: number, @Query('page') page: number, @Query('limit') limit: number, @Request() req: any) {
         try {
+            const loggedInUser = req.user;
+            // console.log(loggedInUser.roles);
+            
+            // if (loggedInUser.id !== userId || !loggedInUser.roles.includes(Role.Admin)) {
+            //     throw new ForbiddenException('Invalid request'); // forbid unauthorized requests to user referrals
+            // }
             const referrals =await this.userReferralService.findUserReferrals(userId, page, limit);
             return referrals;
         } catch (error) { 
@@ -49,21 +55,23 @@ export class UserReferralController {
         }
     }
 
-    @Put('user/:referralId')
+    @Put('metrics/:referralId')
     @ApiOperation({ summary: 'Updates countable metrics of the user referral'  })
     @ApiNoContentResponse({ description: 'Metric updated successfully'})
     @ApiBadRequestResponse({description: 'Invalid data provided', type: ErrorDto})
     @ApiInternalServerErrorResponse({description: 'A little server oopsy occured! Not your bad 😃', type: ErrorDto})
     async updateUserReferrals(@Param('referralId') referralId: string, @Body() body: UpdateReferralMetricsDto) {
         try {
-            const userId:number =this.jwtService.decode(referralId);
-            const referrals =await this.userReferralService.updateUserReferrals(userId, body);
+            const { userId } =this.jwtService.decode(referralId);
+            const referrals =await this.userReferralService.updateUserReferrals(userId as number, body);
             return referrals;
         } catch (error) { 
             handleError(error, RequestMethod.PUT);
         }
     }
 
+    @UseGuards(JwtAuthGuard, RolesGuard)
+    @Roles(Role.Admin)
     @Delete(':referralId')
     @ApiOperation({ summary: 'Removes a referral from the database'  })
     @ApiNoContentResponse({ description: 'Referral removed successfully'})
