@@ -94,9 +94,14 @@ export class UsersService {
     });
   }  
 
-  async findAllByUserType(usertype: Role): Promise<any[]> {
+  async findAllByUserType(
+    usertype: Role, page: number = 1, limit: number = 30
+  ): Promise<any[]> {
+    const skip = (page - 1) * limit;
     const users = await this.usersRepository.find({
-      where: { roles: usertype }, // Compare with the enum value
+      skip,
+      take: limit,
+      where: { roles: usertype }, 
       relations: [
         'mobileNumbers',
         'subscriptions',
