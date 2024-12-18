@@ -43,11 +43,10 @@ export class UserReferralController {
     async findUserReferrals(@Param('userId') userId: number, @Query('page') page: number, @Query('limit') limit: number, @Request() req: any) {
         try {
             const loggedInUser = req.user;
-            // console.log(loggedInUser.roles);
+            if (Number(loggedInUser.id) !== Number(userId) && !loggedInUser.roles.includes(Role.Admin)) {
+                throw new ForbiddenException('Invalid request');
+            }
             
-            // if (loggedInUser.id !== userId || !loggedInUser.roles.includes(Role.Admin)) {
-            //     throw new ForbiddenException('Invalid request'); // forbid unauthorized requests to user referrals
-            // }
             const referrals =await this.userReferralService.findUserReferrals(userId, page, limit);
             return referrals;
         } catch (error) { 
