@@ -67,8 +67,21 @@ export class UserReferralService {
                 )
 
             }
+            return
         } catch (error) {
             throw error as BadRequestException
+        }
+    }
+
+    async removeReferral(referralId:number){
+        try {
+            const referral =await this.userReferralRepository.findOneBy({id: referralId})
+            if(referral){
+                await this.userReferralRepository.delete({id: referralId})
+                return
+            }
+        } catch (error) {
+            return error as InternalServerErrorException
         }
     }
 }

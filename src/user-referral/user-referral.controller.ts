@@ -1,5 +1,5 @@
-import { Body, Controller, Get, Param, Put, Query, RequestMethod, UseGuards } from '@nestjs/common';
-import { ApiBadRequestResponse, ApiForbiddenResponse, ApiInternalServerErrorResponse, ApiNoContentResponse, ApiOkResponse, ApiOperation, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
+import { Body, Controller, Delete, Get, Param, Put, Query, RequestMethod, UseGuards } from '@nestjs/common';
+import { ApiBadRequestResponse, ApiForbiddenResponse, ApiInternalServerErrorResponse, ApiNoContentResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { RolesGuard } from 'src/auth/roles.guard';
 import { UserReferralService } from './user-referral.service';
@@ -61,6 +61,19 @@ export class UserReferralController {
             return referrals;
         } catch (error) { 
             handleError(error, RequestMethod.PUT);
+        }
+    }
+
+    @Delete(':referralId')
+    @ApiOperation({ summary: 'Removes a referral from the database'  })
+    @ApiNoContentResponse({ description: 'Referral removed successfully'})
+    @ApiNotFoundResponse({description: 'Referral not found', type: ErrorDto})
+    @ApiInternalServerErrorResponse({description: 'A little server oopsy occured! Not your bad 😃', type: ErrorDto})
+    async removeReferral(@Param('referralId') referralId: string) {
+        try {
+            return await this.userReferralService.removeReferral(+referralId);
+        } catch (error) { 
+            handleError(error, RequestMethod.DELETE);
         }
     }
 }
