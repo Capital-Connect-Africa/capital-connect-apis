@@ -1,6 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { User } from "src/users/entities/user.entity";
-import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity('referrals')
 export class Referral{
@@ -8,6 +8,7 @@ export class Referral{
     id: number;
 
     @OneToOne(() =>User, user =>user.id, {onDelete: 'CASCADE'})
+    @JoinColumn()
     @ApiProperty({description: 'Owner of this referral', type: User})
     user: User;
 
