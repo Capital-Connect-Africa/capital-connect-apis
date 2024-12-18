@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, InternalServerErrorException } from '@nestjs/common';
+import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { Referral } from './entities/referral.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -78,10 +78,11 @@ export class UserReferralService {
             const referral =await this.userReferralRepository.findOneBy({id: referralId})
             if(referral){
                 await this.userReferralRepository.delete({id: referralId})
-                return
+                return;
             }
+            throw new NotFoundException(`Referral with id ${referralId} not found`)
         } catch (error) {
-            return error as InternalServerErrorException
+            throw error;
         }
     }
 }
