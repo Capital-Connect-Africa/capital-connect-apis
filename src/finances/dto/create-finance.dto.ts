@@ -10,11 +10,11 @@ export class CreateFinanceDto {
 
     @IsNumber()
     @IsOptional()
-    EBITDA: number;
+    ebitda: number;
 
     @IsNumber()
     @IsOptional()
-    EBIT: number;
+    ebit: number;
 
     @IsNumber()
     @IsOptional()

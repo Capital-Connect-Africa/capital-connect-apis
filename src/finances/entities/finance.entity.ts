@@ -18,16 +18,16 @@ export class Finances {
     @Column()
     year: number; 
 
-    @Column()
+    @Column('bigint', { default: 0 })
     costOfSales: number;
 
-    @Column()
+    @Column('bigint', { default: 0 })
     ebitda: number;
 
-    @Column()
+    @Column('bigint', { default: 0 })
     ebit: number;
 
-    @Column()
+    @Column('bigint', { default: 0 })
     taxes: number;
   
     @CreateDateColumn()

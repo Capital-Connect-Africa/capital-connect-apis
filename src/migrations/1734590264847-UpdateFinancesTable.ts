@@ -1,13 +1,13 @@
 import { MigrationInterface, QueryRunner } from "typeorm";
 
-export class UpdateFinancesTable1734433442270 implements MigrationInterface {
-    name = 'UpdateFinancesTable1734433442270'
+export class UpdateFinancesTable1734590264847 implements MigrationInterface {
+    name = 'UpdateFinancesTable1734590264847'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
-        await queryRunner.query(`ALTER TABLE "finances" ADD "costOfSales" integer NOT NULL DEFAULT '0'`);
-        await queryRunner.query(`ALTER TABLE "finances" ADD "ebitda" integer NULL DEFAULT '0'`);
-        await queryRunner.query(`ALTER TABLE "finances" ADD "ebit" integer NULL DEFAULT '0'`);
-        await queryRunner.query(`ALTER TABLE "finances" ADD "taxes" integer NULL DEFAULT '0'`);
+        await queryRunner.query(`ALTER TABLE "finances" ADD "costOfSales" bigint NOT NULL DEFAULT '0'`);
+        await queryRunner.query(`ALTER TABLE "finances" ADD "ebitda" bigint NULL DEFAULT '0'`);
+        await queryRunner.query(`ALTER TABLE "finances" ADD "ebit" bigint NULL DEFAULT '0'`);
+        await queryRunner.query(`ALTER TABLE "finances" ADD "taxes" bigint NULL DEFAULT '0'`);
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
@@ -18,4 +18,3 @@ export class UpdateFinancesTable1734433442270 implements MigrationInterface {
     }
 
 }
-
