@@ -18,7 +18,6 @@ async function bootstrap() {
 
   // Create an Express server for BullBoard
   const serverAdapter = new ExpressAdapter();
-  serverAdapter.setBasePath('/admin/queues');
 
   // Initialize Bull Queues
   const queues = [
@@ -32,6 +31,7 @@ async function bootstrap() {
     serverAdapter,
   });
 
+  serverAdapter.setBasePath('/admin/queues');
   // Mount BullBoard at /admin/queues
   app.use('/admin/queues', serverAdapter.getRouter());
 
