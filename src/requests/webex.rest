@@ -27,7 +27,7 @@ GET http://localhost:3000/webex/authorization/initiation
 
 http://localhost:3000/webex/865ca0f68b694cebb0025f4084435723
 Content-Type: application/json
-code: YmEwZTRlZGQtMzAxZS00MTE0LWE0OGEtZjYyNWMyMDkzYjJiMDhiMTE5NDQtNDFm_P0A1_bdd2aed2-da17-481d-bd6f-b43037ee90b7
+code: OWU0ZWEwYmYtZGUwMC00NjY0LTkzOGQtMjBlYTEzOTc4NjljZmM2ZThkNmItY2Ez_P0A1_bdd2aed2-da17-481d-bd6f-b43037ee90b7
 
 ### Create Metting Prod
 
@@ -58,4 +58,15 @@ GET https://capitalconnect-0060e0fb0eb4.herokuapp.com/webex/authorization/initia
 
 GET https://capitalconnect-0060e0fb0eb4.herokuapp.com/webex/cebd5c382d234975805723958efff95c
 Content-Type: application/json
-code: Yzk0YjhiYzAtMzJiMi00MWI5LThjOWMtNThiYjJjN2ZkMzgxOTY4NGI5M2EtMDll_P0A1_bdd2aed2-da17-481d-bd6f-b43037ee90b7
+code: YTU0NDM3ZGUtYzQ2NS00NjBlLWJlOWItMmJjMzJiMTY0NDIzNTRkNDUzMmMtMzM0_P0A1_bdd2aed2-da17-481d-bd6f-b43037ee90b7
+
+### Refresh token
+POST https://webexapis.com/v1/access_token
+Content-Type: application/json
+
+{
+  "grant_type": "refresh_token",
+  "refresh_token": "MWYxNjZiMzktNTU2My00Mjk3LTgyYmQtNDg3YjQ0ZWI3YzJiNjlhNzNlMDUtMDY1_P0A1_bdd2aed2-da17-481d-bd6f-b43037ee90b7",
+  "client_id": "C17aefb8e8aee8bcd617512aba43f0479a46NDg3YjQ0ZWI3YzJiNc88af611a3eefdd8a",
+  "client_secret": "5ea5d72adf96a6901a658043433f603da383dNDg3YjQ0ZWI3YzJiN4b440b5415"
+}

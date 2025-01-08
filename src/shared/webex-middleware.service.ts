@@ -2,10 +2,14 @@ import { HttpException, Injectable, NestMiddleware } from '@nestjs/common';
 import { WebexConfig } from './webex.config';
 import { HttpService } from '@nestjs/axios';
 import redisClient from './redis/redisClient';
+import { WebexIntegrationService } from "../webex_integration/webex_integration.service";
 
 @Injectable()
 export class WebexTokenMiddleware implements NestMiddleware {
-  constructor(private readonly httpService: HttpService) {}
+  constructor(
+    private readonly httpService: HttpService,
+    private readonly webexIntegrationService: WebexIntegrationService
+  ) {}
 
   private token: string;
   private tokenExpiry: number;
@@ -38,6 +42,7 @@ export class WebexTokenMiddleware implements NestMiddleware {
         const newRefreshToken = refresh_token;
         console.log('Expires in', expires_in);
         const accessTokenExpiryTime = new Date(Date.now() + expires_in);
+        this.webexIntegrationService.scheduleTokenRefresh(newRefreshToken, WebexConfig.clientId, WebexConfig.clientSecret)
 
         // Store new tokens and expiry times in Redis
         await redisClient.set(accessTokenKey, newAccessToken);
@@ -52,10 +57,10 @@ export class WebexTokenMiddleware implements NestMiddleware {
         // Request a new access token using the refresh token
         try {
           const response = await this.httpService
-            .post('https://api.webex.com/v1/oauth/token', {
+            .post('https://webexapis.com/v1/access_token', {
               grant_type: 'refresh_token',
-              client_id: process.env.CLIENT_ID,
-              client_secret: process.env.CLIENT_SECRET,
+              client_id: WebexConfig.clientId,
+              client_secret: WebexConfig.clientSecret,
               refresh_token: refreshToken,
             })
             .toPromise();
