@@ -1,13 +1,35 @@
-import { HttpException, Injectable } from '@nestjs/common';
+import { HttpException, Inject, Injectable } from "@nestjs/common";
 import { WebexConfig } from '../shared/webex.config';
 import axios from 'axios';
 import { BookingService } from '../booking/booking.service';
+import { Queue } from "bullmq";
 
 @Injectable()
 export class WebexIntegrationService {
   private readonly apiUrl = WebexConfig.apiBaseUrl;
 
-  constructor(private readonly bookingService: BookingService) {}
+  constructor(
+    private readonly bookingService: BookingService,
+    @Inject('TASK_QUEUE') private readonly queue: Queue
+    ) {}
+
+  async scheduleTokenRefresh(refreshToken: string, clientId: string, clientSecret: string) {
+    const delay = 24 * 60 * 60 * 1000 - 5 * 60 * 1000; // Schedule 5 minutes before expiration (24h lifespan)
+    // const delay = 60 * 60 * 1000 - 55 * 60 * 1000; // Schedule 5 minutes before expiration (test lifespan)
+
+    await this.queue.add(
+      'refresh-token',
+      { refreshToken, clientId, clientSecret },
+      {
+        repeat: { every: delay }, // Repeat the job daily
+        attempts: 5,
+        backoff: {
+          type: 'exponential',
+          delay: 1000,
+        },
+      }
+    );
+  }
 
   async createMeeting(
     accessToken: string,

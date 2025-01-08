@@ -13,13 +13,27 @@ import { ResendVerificationEmailDto } from './dto/resend-verification-email.dto'
 import { UsersService } from 'src/users/users.service';
 import { randomBytes } from 'crypto';
 import { addHours } from 'date-fns';
+import { TaskService } from "../shared/bullmq/task.service";
 
 @Controller('auth')
 export class AuthController {
   constructor(
     private readonly authService: AuthService,
     private readonly userService: UsersService,
+    private readonly taskService: TaskService,
   ) {}
+
+  @Post('/add')
+  async addTask(@Body() taskData: any) {
+    await this.taskService.addTask(taskData);
+    return { message: 'Task added successfully!' };
+  }
+
+  @Post('/add-repeating')
+  async addRepeatingTask(@Body() taskData: any) {
+    await this.taskService.addRepeatingTask(taskData);
+    return { message: 'Repeating task added successfully!' };
+  }
 
   @Post('login')
   async login(@Request() req) {
