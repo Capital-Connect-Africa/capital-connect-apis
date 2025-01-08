@@ -8,6 +8,7 @@ import { BadRequestException, ConflictException, Injectable, NotFoundException }
 import { VoucherType } from 'src/shared/enums/voucher.type.enum';
 import { Operators } from 'src/shared/enums/operators.enum';
 import { UserVoucher } from './entities/user-voucher.entity';
+import { UserProperties } from 'src/shared/enums/user.properies.enum';
 
 @Injectable()
 export class VoucherService {
@@ -263,44 +264,87 @@ export class VoucherService {
         }
         const rules =voucher.rules || [];
         // Process each rule
-        for (let rule of rules) {
-            let userPropertyValue = user[rule.userProperty];
+        for(const rule of rules){
             let errorMessage:string =null
-            
-            switch (rule.operator) {
-                case Operators.EQUAL_TO:
-                    if (userPropertyValue !== rule.value) 
+            switch(rule.userProperty){
+                case UserProperties.roles:
+                    if (user.roles !== rule.value) 
                         errorMessage =rule.description;
-                    break;
-    
-                case Operators.GREATER_THAN:  
-                    if (userPropertyValue <= rule.value) 
+                        break;
+                
+                case UserProperties.isEmailVerified:
+                    if (user.isEmailVerified !== Boolean(rule.value)) 
                         errorMessage =rule.description;
-                    break;
-    
-                case Operators.LESS_THAN:  
-                    if (userPropertyValue >= rule.value) 
+                        break;
+                
+                case UserProperties.hasAcceptedTerms:
+                    if (user.hasAcceptedTerms !== Boolean(rule.value)) 
                         errorMessage =rule.description;
-                    break;
-    
-                case Operators.GREATER_THAN_OR_EQUAL_TO:  
-                    if (userPropertyValue < rule.value) 
-                        errorMessage =rule.description;
-                    break;
-    
-                case Operators.LESS_THAN_OR_EQUAL_TO:  
-                    if (userPropertyValue > rule.value) 
-                        errorMessage =rule.description
-                    break;
-    
-                default:
-                    errorMessage ='You are not eligible to apply this voucher'
-            }
+                        break;
 
-            if(errorMessage) {
-                throw new ConflictException(errorMessage);
+                case UserProperties.referredBy:
+
+                    if (Number(rule.value) !== user.id) // user.referredBy.id 
+                        errorMessage =rule.description;
+                        break;
+                
+                case UserProperties.createdAt:
+                    const now =new Date().getTime();
+                    const timelines =rule.value.split(',').map(v =>new Date(v.trim()).getTime());              
+                    switch(rule.operator){
+
+                        case Operators.GREATER_THAN_OR_EQUAL_TO: 
+                            const [timeJoined, ...rest_] =timelines;
+                            if(timeJoined <now) errorMessage =rule.description;
+                            break;
+
+                        case Operators.BETWEEN:
+                            const [start, end, ..._rest] =timelines
+                            if(now >start && now <end) errorMessage =rule.description;
+                            break
+                    }
+
+                    break;
             }
         }
+        // for (let rule of rules) {
+        //     let userPropertyValue = user[rule.userProperty];
+        //     let errorMessage:string =null
+            
+        //     switch (rule.operator) {
+        //         case Operators.EQUAL_TO:
+        //             if (userPropertyValue !== rule.value) 
+        //                 errorMessage =rule.description;
+        //             break;
+    
+        //         case Operators.GREATER_THAN:  
+        //             if (userPropertyValue <= rule.value) 
+        //                 errorMessage =rule.description;
+        //             break;
+    
+        //         case Operators.LESS_THAN:  
+        //             if (userPropertyValue >= rule.value) 
+        //                 errorMessage =rule.description;
+        //             break;
+    
+        //         case Operators.GREATER_THAN_OR_EQUAL_TO:  
+        //             if (userPropertyValue < rule.value) 
+        //                 errorMessage =rule.description;
+        //             break;
+    
+        //         case Operators.LESS_THAN_OR_EQUAL_TO:  
+        //             if (userPropertyValue > rule.value) 
+        //                 errorMessage =rule.description
+        //             break;
+    
+        //         default:
+        //             errorMessage ='You are not eligible to apply this voucher'
+        //     }
+
+        //     if(errorMessage) {
+        //         throw new ConflictException(errorMessage);
+        //     }
+        // }
 
         /**
          * TODO: @meltus
