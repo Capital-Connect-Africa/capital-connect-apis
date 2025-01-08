@@ -2,6 +2,7 @@ import { ApiProperty } from "@nestjs/swagger";
 import { Voucher } from "./voucher.entity";
 import { Operators } from "src/shared/enums/operators.enum";
 import { Column, Entity, ManyToMany, PrimaryGeneratedColumn } from "typeorm";
+import { UserProperties } from "src/shared/enums/user.properies.enum";
 
 
 @Entity('rules')
@@ -10,9 +11,12 @@ export class EligibilityRule {
     @PrimaryGeneratedColumn()
     id: number;
     
-    @Column()
-    @ApiProperty({description: 'Targeted user table column name', type: 'string'})
-    userProperty: string;
+    @Column({
+        type: 'enum',
+        enum: UserProperties
+    })
+    @ApiProperty({description: 'Targeted user table column name', enum: UserProperties})
+    userProperty: UserProperties;
 
     @Column({
         type: 'enum',
