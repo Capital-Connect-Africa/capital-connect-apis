@@ -25,7 +25,10 @@ export class VoucherService {
         private readonly userVoucherRepository: Repository<UserVoucher>
     ) {}
 
-    async findVouchers(page:number =1, limit:number =10): Promise<Voucher[]>{
+    async findVouchers(page:number =1, limit:number =10): Promise<{
+            data: Voucher[],
+            total_count: number
+        }>{
         const skip = (page -1) *limit
         const vouchers =await this.voucherRepository.find({
             skip,
@@ -35,10 +38,17 @@ export class VoucherService {
                 id: 'DESC'
             },
         });
-        return vouchers;
+        
+        return {
+            data: vouchers,
+            total_count: await this.voucherRepository.count(),
+        };
     }
 
-    async findRules(page:number =1, limit:number =10): Promise<EligibilityRule[]>{
+    async findRules(page:number =1, limit:number =10): Promise<{
+            data: EligibilityRule[],
+            total_count: number
+        }>{
         const skip =(page - 1) * limit;
         const eligibilityRules =await this.eligibilityRuleRepository.find({
             skip, 
@@ -46,7 +56,10 @@ export class VoucherService {
             order: {id: 'DESC'}
         })
 
-        return eligibilityRules;
+        return {
+            data: eligibilityRules,
+            total_count: await this.eligibilityRuleRepository.count()
+        };
     }
 
     async createVoucher(voucher: Partial<Voucher>, ruleIds:number[] =[]): Promise<Voucher>{
