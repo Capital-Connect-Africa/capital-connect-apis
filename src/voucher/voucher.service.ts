@@ -267,90 +267,44 @@ export class VoucherService {
         for(const rule of rules){
             let errorMessage:string =null
             switch(rule.userProperty){
-                case UserProperties.roles:
+                case UserProperties.ROLES:
                     if (user.roles !== rule.value) 
                         errorMessage =rule.description;
                         break;
-                
-                case UserProperties.isEmailVerified:
-                    if (user.isEmailVerified !== Boolean(rule.value)) 
-                        errorMessage =rule.description;
-                        break;
-                
-                case UserProperties.hasAcceptedTerms:
-                    if (user.hasAcceptedTerms !== Boolean(rule.value)) 
-                        errorMessage =rule.description;
-                        break;
 
-                case UserProperties.referredBy:
-
+                case UserProperties.REFERRED_BY:
                     if (Number(rule.value) !== user.id) // user.referredBy.id 
                         errorMessage =rule.description;
                         break;
                 
-                case UserProperties.createdAt:
+                case UserProperties.CREATED_AT:
                     const now =new Date().getTime();
-                    const timelines =rule.value.split(',').map(v =>new Date(v.trim()).getTime());              
-                    switch(rule.operator){
+                    const timelines =rule.value.split(',')
+                          .map(v =>new Date(v.trim()).getTime())
+                          .filter(t => !isNaN(t));
 
+                    switch(rule.operator){
                         case Operators.GREATER_THAN_OR_EQUAL_TO: 
-                            const [timeJoined, ...rest_] =timelines;
-                            if(timeJoined <now) errorMessage =rule.description;
+                            if(timelines.length <1){
+                                errorMessage = rule.description;
+                                break;
+                            }
+                            const [timeJoined] =timelines;
+                            if(timeJoined >= now) errorMessage = rule.description;
                             break;
 
                         case Operators.BETWEEN:
-                            const [start, end, ..._rest] =timelines
-                            if(now >start && now <end) errorMessage =rule.description;
+                            if(timelines.length <2){
+                                errorMessage = rule.description;
+                                break;
+                            }
+                            const [start, end] =timelines;
+                            if(now > start && now < end) errorMessage = rule.description;
                             break
                     }
-
                     break;
             }
         }
-        // for (let rule of rules) {
-        //     let userPropertyValue = user[rule.userProperty];
-        //     let errorMessage:string =null
-            
-        //     switch (rule.operator) {
-        //         case Operators.EQUAL_TO:
-        //             if (userPropertyValue !== rule.value) 
-        //                 errorMessage =rule.description;
-        //             break;
-    
-        //         case Operators.GREATER_THAN:  
-        //             if (userPropertyValue <= rule.value) 
-        //                 errorMessage =rule.description;
-        //             break;
-    
-        //         case Operators.LESS_THAN:  
-        //             if (userPropertyValue >= rule.value) 
-        //                 errorMessage =rule.description;
-        //             break;
-    
-        //         case Operators.GREATER_THAN_OR_EQUAL_TO:  
-        //             if (userPropertyValue < rule.value) 
-        //                 errorMessage =rule.description;
-        //             break;
-    
-        //         case Operators.LESS_THAN_OR_EQUAL_TO:  
-        //             if (userPropertyValue > rule.value) 
-        //                 errorMessage =rule.description
-        //             break;
-    
-        //         default:
-        //             errorMessage ='You are not eligible to apply this voucher'
-        //     }
-
-        //     if(errorMessage) {
-        //         throw new ConflictException(errorMessage);
-        //     }
-        // }
-
-        /**
-         * TODO: @meltus
-         *      implement checks for other types e.g dates, arrays
-         *      implement checks for value ranges
-        */
     
         return true; // If all checks pass, voucher can be redeemed
     }
