@@ -111,7 +111,7 @@ export class VoucherService {
         });
 
         if(existingRule) {
-            throw new ConflictException('Rule already added');
+            return await this.eligibilityRuleRepository.save(existingRule);
         }
 
         const newRule =this.eligibilityRuleRepository.create(rule);
