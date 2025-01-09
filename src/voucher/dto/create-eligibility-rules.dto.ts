@@ -1,12 +1,13 @@
 import { IsNotEmpty} from "class-validator";
 import { ApiProperty } from "@nestjs/swagger";
 import { Operators } from "src/shared/enums/operators.enum";
+import { UserProperties } from "src/shared/enums/user.properies.enum";
 
 export class CreateEligibilityRuleDto{
 
     @IsNotEmpty({message: 'user property required*'})
-    @ApiProperty({description: 'Targeted user table column name', type: 'string'})
-    userProperty: string;
+    @ApiProperty({description: 'Targeted user table column name', enum: UserProperties})
+    userProperty: UserProperties;
 
     @IsNotEmpty({message: 'operator is required*'})
     @ApiProperty({description: 'Logical operators applied', enum: Operators})
