@@ -1,7 +1,5 @@
 export enum UserProperties{
-    referredBy ='referredBy',
-    createdAt ='createdAt',
-    isEmailVerified ='isEmailVerified',
-    hasAcceptedTerms ='hasAcceptedTerms',
-    roles ='roles',
+    CREATED_AT ='createdAt',
+    REFERRED_BY ='referredBy',
+    ROLES ='roles',
 }
