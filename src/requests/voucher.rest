@@ -16,11 +16,11 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 POST http://localhost:3000/vouchers/rules
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
-
 {
   "userProperty": "new rule",
   "operator": "gte",
-  "value": 4000         
+  "value": 4000,
+  "description": "Test description"      
 }
 
 ### Get all vouchers.
