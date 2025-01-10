@@ -210,9 +210,9 @@ export class VoucherController {
     @ApiForbiddenResponse({description: 'User access not allowed', type: ErrorDto})
     @ApiNotFoundResponse({description: 'Rule with id not found', type: ErrorDto})
     @ApiInternalServerErrorResponse({description: 'A little server oopsy occured! Not your bad 😃', type: ErrorDto})
-    async removeRule(@Param('id') id:number){
+    async removeRule(@Param('id') id:number, @Query('voucherId') voucherId?:number | null){
         try {
-            return await this.voucherService.removeRule(id)
+            return await this.voucherService.removeRule(id, voucherId);
         } catch (error) { 
             handleError(error, RequestMethod.DELETE);
         }

@@ -168,7 +168,7 @@ export class VoucherService {
 
     async findRuleById(ruleId: number): Promise<EligibilityRule> {
         const rule = await this.eligibilityRuleRepository.findOne({
-            where: {id: ruleId}
+            where: {id: ruleId},
         });
 
         if(!rule) {
@@ -204,15 +204,26 @@ export class VoucherService {
         return;
     }
 
-    async removeRule(ruleId:number){
+    async removeRule(ruleId:number, voucherId:number | null =null){
         const existingRule =await this.eligibilityRuleRepository.findOne({
-            where: {id: ruleId}
+            where: {id: ruleId},
+            relations: ['vouchers']
         })
-
+        
         if(!existingRule) {
             throw new NotFoundException('Rule with id not found');
         }
-
+        
+        if (voucherId) {
+            existingRule.vouchers = existingRule.vouchers.filter(
+                voucher => voucher.id !== Number(voucherId)
+            );
+            
+            await this.eligibilityRuleRepository.save(existingRule);
+            if (existingRule.vouchers.length > 0) {
+                return;
+            }
+        }
         await this.eligibilityRuleRepository.delete(ruleId);
         return;
     }

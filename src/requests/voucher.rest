@@ -16,8 +16,9 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 POST http://localhost:3000/vouchers/rules
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
 {
-  "userProperty": "new rule",
+  "userProperty": "createdAt",
   "operator": "gte",
   "value": 4000,
   "description": "Test description"      
@@ -49,7 +50,7 @@ Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
 ### Update a voucher by id
-PUT http://localhost:3000/vouchers/1
+PUT http://localhost:3000/vouchers/7
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
@@ -58,7 +59,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
   "maxUses": 5, 
   "maxAmount": 10,                     
   "expiresAt": "2024-12-31",          
-  "rules": [ 1, 2],                        
+  "rules": [ 8, 11],                        
   "percentageDiscount": 30           
 }
 
@@ -79,11 +80,16 @@ Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
 ### Delete a rule by id
-DELETE http://localhost:3000/vouchers/rules/6
+DELETE http://localhost:3000/vouchers/rules/4
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
-### Delete a rule by id
+### Drop rule from voucher
+DELETE http://localhost:3000/vouchers/rules/8?voucherId=7
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+### redeem voucher
 POST http://localhost:3000/vouchers/redeem-voucher
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
