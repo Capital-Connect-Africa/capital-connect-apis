@@ -36,7 +36,9 @@ export class EligibilityRule {
     @ApiProperty({description: 'The value being validated against', type: 'string'})
     value: string; // can be range i.e val1 - val2
     
-    @ManyToMany(() => Voucher, voucher => voucher.rules)
+    @ManyToMany(() => Voucher, voucher => voucher.rules, {
+        onDelete: 'CASCADE'
+    })
     @ApiProperty({description: 'The voucher to which the rule is applied', type: [Voucher]})
     vouchers: Voucher[];
 }
