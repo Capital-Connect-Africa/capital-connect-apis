@@ -11,23 +11,36 @@ import { Voucher } from 'src/voucher/entities/voucher.entity';
 import { EligibilityRule } from 'src/voucher/entities/eligibility-rule.entity';
 import { User } from 'src/users/entities/user.entity';
 import { UserVoucher } from 'src/voucher/entities/user-voucher.entity';
-import { BullModule } from "@nestjs/bullmq";
-import { redisOptions } from "../shared/redis/redis.config";
-import { Queue } from "bullmq";
+import { BullModule } from '@nestjs/bullmq';
+import { redisOptions } from '../shared/redis/redis.config';
+import { Queue } from 'bullmq';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Booking, Voucher, EligibilityRule, User, UserVoucher]), HttpModule,
+  imports: [
+    TypeOrmModule.forFeature([
+      Booking,
+      Voucher,
+      EligibilityRule,
+      User,
+      UserVoucher,
+    ]),
+    HttpModule,
     BullModule.registerQueue({
       name: 'task-queue',
       connection: redisOptions,
-    }),],
+    }),
+  ],
   controllers: [WebexIntegrationController],
-  providers: [WebexIntegrationService, BookingService, VoucherService,
+  providers: [
+    WebexIntegrationService,
+    BookingService,
+    VoucherService,
     {
       provide: 'TASK_QUEUE',
       useFactory: (queue: Queue) => queue,
       inject: ['BullQueue_task-queue'],
-    },],
+    },
+  ],
 })
 export class WebexIntegrationModule {
   configure(consumer: MiddlewareConsumer) {
@@ -36,6 +49,7 @@ export class WebexIntegrationModule {
       .forRoutes(
         { path: 'webex/create', method: RequestMethod.POST },
         { path: 'webex/:id', method: RequestMethod.GET },
+        { path: 'webex/authorizations', method: RequestMethod.DELETE },
       );
   }
 }
