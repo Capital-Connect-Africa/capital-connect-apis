@@ -52,7 +52,7 @@ export class Voucher {
     rules: EligibilityRule[];
 
 
-    @OneToMany(() => UserVoucher, userVoucher => userVoucher.voucher)
+    @OneToMany(() => UserVoucher, userVoucher => userVoucher.voucher, {onDelete: 'CASCADE'})
     @ApiProperty({type: [UserVoucher], description: 'An array of users who already redeemed the voucher'})
     users: UserVoucher[];
 }

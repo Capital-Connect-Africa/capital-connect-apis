@@ -14,7 +14,7 @@ export class UserVoucher {
     @ApiProperty({description: 'User who has redeemed the voucher', type:[User]})
     user: User;
 
-    @ManyToOne(() => Voucher, voucher => voucher.users)
+    @ManyToOne(() => Voucher, voucher => voucher.users, { onDelete: 'CASCADE' })
     @ApiProperty({description: 'Voucher that has been redeemed by the user', type:[Voucher]})
     voucher: Voucher;
 
