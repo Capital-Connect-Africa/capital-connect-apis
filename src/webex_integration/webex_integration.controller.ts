@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Res } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Res } from "@nestjs/common";
 import { WebexIntegrationService } from './webex_integration.service';
 import { WebexToken } from '../shared/headers.decorators';
 
@@ -13,7 +13,10 @@ export class WebexIntegrationController {
   }
 
   @Post('create')
-  async createMeeting(@WebexToken() webexToken: string, @Body() body: any) {
+  async createMeeting(
+    @WebexToken() webexToken: string,
+    @Body() body: any
+  ) {
     const { title, start, end, timezone, invitees, bookingId } = body;
     return this.webexService.createMeeting(
       webexToken,
@@ -26,11 +29,26 @@ export class WebexIntegrationController {
     );
   }
 
+  @Get('authorizations')
+  async getAuthorizations(
+    @WebexToken() webexToken: string,
+    @Param('id') id: string,
+  ) {
+    return this.webexService.getAuthorizations(webexToken);
+  }
+
   @Get(':id')
   async getMeetingDetails(
     @WebexToken() webexToken: string,
     @Param('id') id: string,
   ) {
     return this.webexService.getMeetingDetails(webexToken, id);
+  }
+
+  @Delete('authorizations')
+  async deleteAuthorizations(
+    @WebexToken() webexToken: string
+  ) {
+    return this.webexService.deleteAuthorizations(webexToken);
   }
 }

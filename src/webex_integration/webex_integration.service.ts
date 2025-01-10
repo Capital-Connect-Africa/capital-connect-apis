@@ -84,4 +84,27 @@ export class WebexIntegrationService {
       url: `${WebexConfig.apiBaseUrl}/authorize?client_id=${WebexConfig.clientId}&response_type=code&redirect_uri=${WebexConfig.redirectUri}&scope=${process.env.WEBEX_SCOPES}`,
     };
   }
+
+  async getAuthorizations(accessToken: string) {
+    try {
+      const response = await axios.get(`${this.apiUrl}/authorizations`, {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      });
+      return response.data;
+    } catch (error) {
+      console.log(error);
+      throw new HttpException(error.response?.data || 'Webex API Error', 500);
+    }
+  }
+
+  async deleteAuthorizations(webexToken: string) {
+     const authorizations = await this.getAuthorizations(webexToken);
+     for (let i = 0; i < 700; i++) {
+       const item = authorizations.items[i + 1];
+       await axios.delete(`${this.apiUrl}/authorizations/${item.id}`, {
+         headers: { Authorization: `Bearer ${webexToken}` },
+       });
+     }
+
+  }
 }
