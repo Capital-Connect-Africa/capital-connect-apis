@@ -15,6 +15,7 @@ import { randomBytes } from 'crypto';
 import { addHours } from 'date-fns';
 import { JwtService } from '@nestjs/jwt';
 import { User } from 'src/users/entities/user.entity';
+import { TaskService } from "../shared/bullmq/task.service";
 
 @Controller('auth')
 export class AuthController {
@@ -22,7 +23,20 @@ export class AuthController {
     private readonly jwtService: JwtService,
     private readonly authService: AuthService,
     private readonly userService: UsersService,
+    private readonly taskService: TaskService,
   ) {}
+
+  @Post('/add')
+  async addTask(@Body() taskData: any) {
+    await this.taskService.addTask(taskData);
+    return { message: 'Task added successfully!' };
+  }
+
+  @Post('/add-repeating')
+  async addRepeatingTask(@Body() taskData: any) {
+    await this.taskService.addRepeatingTask(taskData);
+    return { message: 'Repeating task added successfully!' };
+  }
 
   @Post('login')
   async login(@Request() req) {

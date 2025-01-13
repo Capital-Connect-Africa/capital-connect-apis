@@ -41,7 +41,7 @@ export class BookingService {
       skip,
       take: limit,
       order: { id: 'DESC' },
-      relations: ['payments', 'user'],
+      relations: ['payments', 'user', 'advisor'],
     };
   
     if (user.roles.includes('admin')) {

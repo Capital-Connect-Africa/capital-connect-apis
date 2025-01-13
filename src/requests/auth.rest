@@ -97,3 +97,41 @@ Content-Type: application/json
 {
     "email": "tech@capitalconnect.africa"
 }
+
+### Add a Task
+POST http://localhost:3000/auth/add
+Content-Type: application/json
+
+{
+  "taskName": "Sample Task B",
+  "description": "This is a test task",
+  "priority": "high"
+}
+
+### Add a Repeating Task
+POST http://localhost:3000/auth/add-repeating
+Content-Type: application/json
+
+{
+  "taskName": "Repeating Task",
+  "description": "This task repeats every hour b"
+}
+
+### Add a Task
+POST https://capitalconnect-0060e0fb0eb4.herokuapp.com/auth/add
+Content-Type: application/json
+
+{
+  "taskName": "Sample Task B",
+  "description": "This is a test task",
+  "priority": "high"
+}
+
+### Add a Repeating Task
+POST https://capitalconnect-0060e0fb0eb4.herokuapp.com/auth/add-repeating
+Content-Type: application/json
+
+{
+  "taskName": "Repeating Task",
+  "description": "This task repeats every hour b"
+}
