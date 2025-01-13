@@ -8,6 +8,7 @@ import { BadRequestException, ConflictException, Injectable, NotFoundException }
 import { VoucherType } from 'src/shared/enums/voucher.type.enum';
 import { Operators } from 'src/shared/enums/operators.enum';
 import { UserVoucher } from './entities/user-voucher.entity';
+import { UserProperties } from 'src/shared/enums/user.properies.enum';
 
 @Injectable()
 export class VoucherService {
@@ -24,7 +25,10 @@ export class VoucherService {
         private readonly userVoucherRepository: Repository<UserVoucher>
     ) {}
 
-    async findVouchers(page:number =1, limit:number =10): Promise<Voucher[]>{
+    async findVouchers(page:number =1, limit:number =10): Promise<{
+            data: Voucher[],
+            total_count: number
+        }>{
         const skip = (page -1) *limit
         const vouchers =await this.voucherRepository.find({
             skip,
@@ -34,10 +38,17 @@ export class VoucherService {
                 id: 'DESC'
             },
         });
-        return vouchers;
+        
+        return {
+            data: vouchers,
+            total_count: await this.voucherRepository.count(),
+        };
     }
 
-    async findRules(page:number =1, limit:number =10): Promise<EligibilityRule[]>{
+    async findRules(page:number =1, limit:number =10): Promise<{
+            data: EligibilityRule[],
+            total_count: number
+        }>{
         const skip =(page - 1) * limit;
         const eligibilityRules =await this.eligibilityRuleRepository.find({
             skip, 
@@ -45,7 +56,10 @@ export class VoucherService {
             order: {id: 'DESC'}
         })
 
-        return eligibilityRules;
+        return {
+            data: eligibilityRules,
+            total_count: await this.eligibilityRuleRepository.count()
+        };
     }
 
     async createVoucher(voucher: Partial<Voucher>, ruleIds:number[] =[]): Promise<Voucher>{
@@ -110,7 +124,7 @@ export class VoucherService {
         });
 
         if(existingRule) {
-            throw new ConflictException('Rule already added');
+            return await this.eligibilityRuleRepository.save(existingRule);
         }
 
         const newRule =this.eligibilityRuleRepository.create(rule);
@@ -154,7 +168,7 @@ export class VoucherService {
 
     async findRuleById(ruleId: number): Promise<EligibilityRule> {
         const rule = await this.eligibilityRuleRepository.findOne({
-            where: {id: ruleId}
+            where: {id: ruleId},
         });
 
         if(!rule) {
@@ -190,15 +204,26 @@ export class VoucherService {
         return;
     }
 
-    async removeRule(ruleId:number){
+    async removeRule(ruleId:number, voucherId:number | null =null){
         const existingRule =await this.eligibilityRuleRepository.findOne({
-            where: {id: ruleId}
+            where: {id: ruleId},
+            relations: ['vouchers']
         })
-
+        
         if(!existingRule) {
             throw new NotFoundException('Rule with id not found');
         }
-
+        
+        if (voucherId) {
+            existingRule.vouchers = existingRule.vouchers.filter(
+                voucher => voucher.id !== Number(voucherId)
+            );
+            
+            await this.eligibilityRuleRepository.save(existingRule);
+            if (existingRule.vouchers.length > 0) {
+                return;
+            }
+        }
         await this.eligibilityRuleRepository.delete(ruleId);
         return;
     }
@@ -263,50 +288,47 @@ export class VoucherService {
         }
         const rules =voucher.rules || [];
         // Process each rule
-        for (let rule of rules) {
-            let userPropertyValue = user[rule.userProperty];
+        for(const rule of rules){
             let errorMessage:string =null
-            
-            switch (rule.operator) {
-                case Operators.EQUAL_TO:
-                    if (userPropertyValue !== rule.value) 
+            switch(rule.userProperty){
+                case UserProperties.ROLES:
+                    if (user.roles !== rule.value) 
                         errorMessage =rule.description;
-                    break;
-    
-                case Operators.GREATER_THAN:  
-                    if (userPropertyValue <= rule.value) 
-                        errorMessage =rule.description;
-                    break;
-    
-                case Operators.LESS_THAN:  
-                    if (userPropertyValue >= rule.value) 
-                        errorMessage =rule.description;
-                    break;
-    
-                case Operators.GREATER_THAN_OR_EQUAL_TO:  
-                    if (userPropertyValue < rule.value) 
-                        errorMessage =rule.description;
-                    break;
-    
-                case Operators.LESS_THAN_OR_EQUAL_TO:  
-                    if (userPropertyValue > rule.value) 
-                        errorMessage =rule.description
-                    break;
-    
-                default:
-                    errorMessage ='You are not eligible to apply this voucher'
-            }
+                        break;
 
-            if(errorMessage) {
-                throw new ConflictException(errorMessage);
+                case UserProperties.REFERRED_BY:
+                    if (Number(rule.value) !== user.id) // user.referredBy.id 
+                        errorMessage =rule.description;
+                        break;
+                
+                case UserProperties.CREATED_AT:
+                    const now =new Date().getTime();
+                    const timelines =rule.value.split(',')
+                          .map(v =>new Date(v.trim()).getTime())
+                          .filter(t => !isNaN(t));
+
+                    switch(rule.operator){
+                        case Operators.GREATER_THAN_OR_EQUAL_TO: 
+                            if(timelines.length <1){
+                                errorMessage = rule.description;
+                                break;
+                            }
+                            const [timeJoined] =timelines;
+                            if(timeJoined >= now) errorMessage = rule.description;
+                            break;
+
+                        case Operators.BETWEEN:
+                            if(timelines.length <2){
+                                errorMessage = rule.description;
+                                break;
+                            }
+                            const [start, end] =timelines;
+                            if(now > start && now < end) errorMessage = rule.description;
+                            break
+                    }
+                    break;
             }
         }
-
-        /**
-         * TODO: @meltus
-         *      implement checks for other types e.g dates, arrays
-         *      implement checks for value ranges
-        */
     
         return true; // If all checks pass, voucher can be redeemed
     }
