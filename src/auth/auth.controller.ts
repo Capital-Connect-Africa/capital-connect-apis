@@ -13,14 +13,11 @@ import { ResendVerificationEmailDto } from './dto/resend-verification-email.dto'
 import { UsersService } from 'src/users/users.service';
 import { randomBytes } from 'crypto';
 import { addHours } from 'date-fns';
-import { JwtService } from '@nestjs/jwt';
-import { User } from 'src/users/entities/user.entity';
 import { TaskService } from "../shared/bullmq/task.service";
 
 @Controller('auth')
 export class AuthController {
   constructor(
-    private readonly jwtService: JwtService,
     private readonly authService: AuthService,
     private readonly userService: UsersService,
     private readonly taskService: TaskService,
@@ -55,22 +52,9 @@ export class AuthController {
   @Post('signup')
   async signup(@Body() createUserDto: CreateUserDto) {
     try {
-      const { referralId } =createUserDto;
-      let referredByUser: User | null = null;
-
-      if(referralId){
-        const { userId}  =this.jwtService.decode(referralId) ;
-        referredByUser = await this.userService.findOne(userId as number);
-      }
-
-      delete createUserDto.referralId;
       const user = await this.authService.signup(createUserDto);
-      if(referredByUser){
-        user.referredBy =referredByUser;
-        await this.userService.update(user.id, { referredBy: referredByUser });
-      }
       await this.authService.sendVerificationEmail(user);
-      return {...user, referralId: this.jwtService.sign({userId: user.id})};
+      return user;
     } catch (error) {
       if (error instanceof BadRequestException) {
         throw new BadRequestException(error.message);
