@@ -42,7 +42,6 @@ import { SegmentModule } from './segment/segment.module';
 import { VoucherModule } from './voucher/voucher.module';
 import { WebexIntegrationModule } from './webex_integration/webex_integration.module';
 import { FinancesModule } from './finances/finances.module';
-import { UserReferralModule } from './user-referral/user-referral.module';
 
 @Module({
   imports: [
@@ -91,7 +90,6 @@ import { UserReferralModule } from './user-referral/user-referral.module';
     VoucherModule,
     WebexIntegrationModule,
     FinancesModule,
-    UserReferralModule,
   ],
   providers: [
     AppService,

@@ -71,7 +71,6 @@ export class AuthService {
         lastName: user.lastName,
         username: user.username,
         sub: user.id,
-        referralId: this.jwtService.sign({userId: user.id}),
         roles: userRoles || [Role.User],
         hasAcceptedTerms: user.hasAcceptedTerms,
         subscriptionTier: subscriptionTier || SubscriptionTierEnum.BASIC,

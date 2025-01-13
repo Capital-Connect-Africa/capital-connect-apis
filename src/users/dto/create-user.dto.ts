@@ -18,7 +18,4 @@ export class CreateUserDto {
 
   @IsOptional()
   roles: string; // user, investor, advisor
-
-  @IsOptional()
-  referralId: string
 }
