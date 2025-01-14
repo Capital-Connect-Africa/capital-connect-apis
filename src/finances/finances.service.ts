@@ -111,33 +111,39 @@ export class FinancesService {
   }
 
   async update(id: number, updateFinanceDto: any): Promise<Finances> {
-    const { year, revenues, opex } = updateFinanceDto;
+    const { year, revenues, opex, costOfSales, ebitda, ebit, taxes } = updateFinanceDto;
   
     const finance = await this.financeRepository.findOne({
       where: { id },
-      relations: ['revenues', 'opex'], 
+      relations: ['revenues', 'opex'],
     });
   
     if (!finance) {
       throw new NotFoundException(`Finance record with ID ${id} not found`);
     }
   
-    if (year) finance.year = year;
+    // Update basic fields if provided
+    if (year !== undefined) finance.year = year;
+    if (costOfSales !== undefined) finance.costOfSales = costOfSales;
+    if (ebitda !== undefined) finance.ebitda = ebitda;
+    if (ebit !== undefined) finance.ebit = ebit;
+    if (taxes !== undefined) finance.taxes = taxes;
   
+    // Update related entities
     if (revenues && revenues.length > 0) {
       finance.revenues = await this.revenueRepository.find({
-        where: { id: In(revenues) },  
+        where: { id: In(revenues) },
       });
     }
   
     if (opex && opex.length > 0) {
       finance.opex = await this.opexRepository.find({
-        where: { id: In(opex) },  
+        where: { id: In(opex) },
       });
     }
-    
+  
     return await this.financeRepository.save(finance);
-  }  
+  }   
   
   async addNotes(id: number, updateData: any): Promise<Finances> {
     const { notes } = updateData; 
