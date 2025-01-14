@@ -1,7 +1,11 @@
 import 'reflect-metadata';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { ValidationPipe } from '@nestjs/common';
+import {
+  UnauthorizedException,
+  UseGuards,
+  ValidationPipe,
+} from '@nestjs/common';
 import { useContainer } from 'class-validator';
 import { CustomLogger } from './shared/utils/custom-logger.util';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
@@ -9,7 +13,10 @@ import { ExpressAdapter } from '@bull-board/express';
 import { Queue } from 'bullmq';
 import { createBullBoard } from '@bull-board/api';
 import { BullMQAdapter } from '@bull-board/api/bullMQAdapter';
-import { redisOptions } from "./shared/redis/redis.config";
+import { redisOptions } from './shared/redis/redis.config';
+import { ensureAdminMiddleware } from './shared/bullmq/ensure-admin.middleware';
+import { JwtAuthGuard } from './auth/jwt-auth.guard';
+import { JwtService } from '@nestjs/jwt';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -22,7 +29,7 @@ async function bootstrap() {
   // Initialize Bull Queues
   const queues = [
     new Queue('task-queue', { connection: redisOptions }),
-    new Queue('email-queue', { connection: redisOptions}),
+    new Queue('email-queue', { connection: redisOptions }),
   ];
 
   // Create BullBoard
@@ -33,6 +40,44 @@ async function bootstrap() {
 
   serverAdapter.setBasePath('/admin/queues');
   // Mount BullBoard at /admin/queues
+  /*  app.use(
+    '/admin/queues',
+    ensureAdminMiddleware,
+    serverAdapter.getRouter()
+  );*/
+
+  // Custom middleware for JWT validation
+  app.use('/admin/queues', async (req, res, next) => {
+    const jwtService = app.get(JwtService); // Retrieve JwtService from the app context
+
+    try {
+      const authHeader = req.headers['authorization'];
+      if (!authHeader) {
+        throw new UnauthorizedException('Authorization header missing');
+      }
+
+      const token = authHeader.split(' ')[1];
+      if (!token) {
+        throw new UnauthorizedException(
+          'Token missing in Authorization header',
+        );
+      }
+
+      const payload = jwtService.verify(token); // Verify and decode the token
+      if (!payload || !payload.roles.includes('admin')) {
+        throw new UnauthorizedException('Unauthorized');
+      }
+
+      req.user = payload; // Attach the user payload to the request
+      next();
+    } catch (error) {
+      res
+        .status(401)
+        .json({ message: 'Unauthorized access', error: error.message });
+    }
+  });
+
+  // Mount BullMQ Dashboard
   app.use('/admin/queues', serverAdapter.getRouter());
 
   // config the documentation
