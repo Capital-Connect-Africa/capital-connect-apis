@@ -19,11 +19,11 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 ###
 # Get users
 
-GET http://localhost:3000/users
+GET http://localhost:3000/users?page=2&limit=3
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
 ### Filter users by user role.
-GET http://localhost:3000/users/role?usertype=investor&page=1&limit=10
+GET http://localhost:3000/users/role?usertype=investor&page=1&limit=1
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
 ###

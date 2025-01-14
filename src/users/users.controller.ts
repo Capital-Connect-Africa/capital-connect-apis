@@ -57,8 +57,8 @@ export class UsersController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Get()
   @Roles(Role.Admin)
-  getAllUsers() {
-    return this.userService.findAll();
+  getAllUsers(@Query('page') page: number, @Query('limit') limit: number) {
+    return this.userService.findAll(page, limit);
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)

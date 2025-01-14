@@ -72,8 +72,11 @@ export class UsersService {
     return await this.usersRepository.save(usr);
   }
 
-  async findAll(): Promise<any[]> {
-    const users = await this.usersRepository.find({
+  async findAll(page: number = 1, limit: number = 30): Promise<any[]> {
+    const skip = (page - 1) * limit;
+    const [users, total] = await this.usersRepository.findAndCount({
+      skip,
+      take: limit,
       relations: [
         'mobileNumbers',
         'subscriptions',
@@ -90,18 +93,21 @@ export class UsersService {
       return {
         ...user,
         activeSubscription: activeSubscription.length > 0 ? activeSubscription : null,
+        total,
       };
     });
   }  
 
   async findAllByUserType(
-    usertype: Role, page: number = 1, limit: number = 30
+    usertype: Role,
+    page: number = 1,
+    limit: number = 30
   ): Promise<any[]> {
-    const skip = (page - 1) * limit;
-    const users = await this.usersRepository.find({
+    const skip = (page - 1) * limit;  
+    const [users, total] = await this.usersRepository.findAndCount({
       skip,
       take: limit,
-      where: { roles: usertype }, 
+      where: { roles: usertype },
       relations: [
         'mobileNumbers',
         'subscriptions',
@@ -111,13 +117,14 @@ export class UsersService {
     });
   
     return users.map(user => {
-      const activeSubscription = user.subscriptions.filter(sub => sub.isActive);
+      const activeSubscription = user.subscriptions.find(sub => sub.isActive);
       return {
         ...user,
-        activeSubscription: activeSubscription.length > 0 ? activeSubscription[0] : null,
+        activeSubscription: activeSubscription || null,
+        total,
       };
     });
-  } 
+  }  
 
   async update(id: number, updateUserDto: Partial<User>): Promise<User> {
     if (updateUserDto.username) {
