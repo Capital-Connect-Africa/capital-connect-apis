@@ -135,3 +135,12 @@ Content-Type: application/json
   "taskName": "Repeating Task",
   "description": "This task repeats every hour b"
 }
+
+### Access BullMQ dashboard
+GET http://localhost:3000/admin/queues
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+}
+
+### Access BullMQ dashboard
+GET https://capitalconnect-0060e0fb0eb4.herokuapp.com/admin/queues
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
