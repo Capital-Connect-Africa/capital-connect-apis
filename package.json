@@ -8,7 +8,7 @@
   "scripts": {
     "build": "nest build && node copy-static-assets.js",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
-    "start": "npm run typeorm:prod migration:run && node copy-static-assets.js && node dist/src/main",
+    "start": "npm run typeorm:prod migration:revert && npm run typeorm:prod migration:revert && node copy-static-assets.js && node dist/src/main",
     "start:worker": "node dist/src/shared/bullmq/task.processor.js",
     "start:dev": "nest start --watch",
     "dev": "nest start --watch",
