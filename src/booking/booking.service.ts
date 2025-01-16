@@ -67,9 +67,11 @@ export class BookingService {
   }
 
   async update(id: number, updateBookingDto: UpdateBookingDto) {
-    const { calendlyEventId, notes } = updateBookingDto;
+    const { calendlyEventId, notes, meetingStartTime, meetingEndTime } = updateBookingDto;
     const updates = {};
     if (calendlyEventId) updates['calendlyEventId'] = calendlyEventId;
+    if (meetingStartTime) updates['meetingStartTime'] = meetingStartTime;
+    if (meetingEndTime) updates['meetingEndTime'] = meetingEndTime;
     if (notes) updates['notes'] = notes;
     if (Object.keys(updates).length > 0)
       await this.bookingRepository.update(id, updateBookingDto);
