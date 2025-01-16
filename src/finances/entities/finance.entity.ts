@@ -59,4 +59,14 @@ export class Finances {
     @ManyToOne(() => User, (user) => user.finances)
     @JoinColumn({ name: 'userId' })
     user: User; 
+
+    // Calculated columns
+    totalRevenues?: number;
+    grossProfit?: number;
+    ebitdas?: number;
+    ebits?: number;
+    profitBeforeTax?: number;
+    netProfit?: number;
+    grossMargin?: string;
+    ebitdasMargin?: string;
 }

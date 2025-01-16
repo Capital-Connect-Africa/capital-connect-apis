@@ -29,6 +29,11 @@ GET http://localhost:3000/finances/37
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
+### Generate report of financial information record by id.
+GET http://localhost:3000/finances/report/3
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
 ### Update financial information record.
 PUT http://localhost:3000/finances/1
 Content-Type: application/json

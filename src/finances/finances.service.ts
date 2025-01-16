@@ -176,6 +176,58 @@ export class FinancesService {
   }
   
   // Helper methods
+  async generateReport(id: number): Promise<Finances> {
+    // Find the finance record
+    const finance = await this.financeRepository.findOne({ 
+      where: { id }, 
+      relations: ['revenues', 'opex'] 
+    });
+  
+    if (!finance) {
+      throw new Error('Finance record not found');
+    }
+  
+    // Map revenue and opex values to numbers
+    const revenueValues = finance.revenues.map(revenue => Number(revenue.value));
+    const opexValues = finance.opex.map(opex => Number(opex.value));
+  
+    // Calculate total revenues
+    const totalRevenues = revenueValues.reduce((a, b) => a + b, 0);
+  
+    // Calculate gross profit
+    const grossProfit = totalRevenues - Number(finance.costOfSales);
+  
+    // Calculate EBITDA
+    const ebitdas = grossProfit - opexValues.reduce((a, b) => a + b, 0);
+  
+    // Calculate EBIT (EBITDA + ebit)
+    const ebits = ebitdas + Number(finance.ebitda);
+  
+    // Calculate profit before tax
+    const profitBeforeTax = ebits + Number(finance.ebit);
+  
+    // Calculate net profit
+    const netProfit = profitBeforeTax - Number(finance.taxes);
+
+    // Calculate percentage gross margin
+    const grossMargin = (grossProfit / totalRevenues) * 100;
+
+    // Calculate ebitdas margin
+    const ebitdasMargin = (ebitdas / totalRevenues) * 100;
+  
+    return {
+      ...finance,
+      totalRevenues,
+      grossProfit,
+      ebitdas,
+      ebits,
+      profitBeforeTax,
+      netProfit,
+      grossMargin: Math.round(grossMargin) + '%',
+      ebitdasMargin: Math.round(ebitdasMargin) + '%',
+    };
+  }  
+
   async approveRecord(id: number): Promise<Finances> {
     return this.updateFinancialRecordStatus(id, FinanceStatus.APPROVED);
   }
