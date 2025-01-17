@@ -48,6 +48,10 @@ async function bootstrap() {
 
   // Custom middleware for JWT validation
   app.use('/admin/queues', async (req, res, next) => {
+    if (req.path !== '/') {
+      return next();
+    }
+
     const jwtService = app.get(JwtService); // Retrieve JwtService from the app context
 
     try {
