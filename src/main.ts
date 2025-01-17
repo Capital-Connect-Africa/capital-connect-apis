@@ -51,19 +51,18 @@ async function bootstrap() {
     const jwtService = app.get(JwtService); // Retrieve JwtService from the app context
 
     try {
-      const authHeader = req.headers['authorization'];
-      if (!authHeader) {
+      const authorization = req.query['authorization'];
+      if (!authorization) {
         throw new UnauthorizedException('Authorization header missing');
       }
 
-      const token = authHeader.split(' ')[1];
-      if (!token) {
+      if (!authorization) {
         throw new UnauthorizedException(
           'Token missing in Authorization header',
         );
       }
 
-      const payload = jwtService.verify(token); // Verify and decode the token
+      const payload = jwtService.verify(authorization); // Verify and decode the token
       if (!payload || !payload.roles.includes('admin')) {
         throw new UnauthorizedException('Unauthorized');
       }
