@@ -57,8 +57,12 @@ export class WebexIntegrationService {
           },
         },
       );
+      const meetingDetails = response.data;
+
       await this.bookingService.update(bookingId, {
-        calendlyEventId: response.data.id,
+        calendlyEventId: meetingDetails.calendlyEventId,
+        meetingStartTime: meetingDetails.start,
+        meetingEndTime: meetingDetails.end,
       });
       return response.data;
     } catch (error) {

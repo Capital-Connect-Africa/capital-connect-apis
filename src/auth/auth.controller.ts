@@ -14,6 +14,10 @@ import { UsersService } from 'src/users/users.service';
 import { randomBytes } from 'crypto';
 import { addHours } from 'date-fns';
 import { TaskService } from "../shared/bullmq/task.service";
+import { User } from 'src/users/entities/user.entity';
+import { JwtService } from '@nestjs/jwt';
+
+
 
 @Controller('auth')
 export class AuthController {
@@ -21,6 +25,7 @@ export class AuthController {
     private readonly authService: AuthService,
     private readonly userService: UsersService,
     private readonly taskService: TaskService,
+    private readonly jwtService: JwtService,
   ) {}
 
   @Post('/add')
@@ -52,9 +57,20 @@ export class AuthController {
   @Post('signup')
   async signup(@Body() createUserDto: CreateUserDto) {
     try {
+      const { referralToken } =createUserDto;
+      let referrer:User | null =null;
+      if(referralToken){
+        const { userId } = this.jwtService.decode(referralToken) as {userId: number};
+        referrer =await this.userService.findOne(userId);
+      }
+      delete createUserDto.referralToken;
       const user = await this.authService.signup(createUserDto);
+      if(referrer){
+        user.referrer =referrer;
+        await this.userService.update(user.id, { referrer });
+      }
       await this.authService.sendVerificationEmail(user);
-      return user;
+      return {...user, referralToken: this.jwtService.sign({userId: user.id})};
     } catch (error) {
       if (error instanceof BadRequestException) {
         throw new BadRequestException(error.message);

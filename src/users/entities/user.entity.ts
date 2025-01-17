@@ -10,6 +10,7 @@ import {
   JoinTable,
   CreateDateColumn,
   UpdateDateColumn,
+  ManyToOne,
 } from 'typeorm';
 import * as bcrypt from 'bcryptjs';
 import { Submission } from 'src/submission/entities/submission.entity';
@@ -21,11 +22,12 @@ import { UserSubscription } from '../../subscription_tier/entities/userSubscript
 import { Finances } from 'src/finances/entities/finance.entity';
 import { UserVoucher } from 'src/voucher/entities/user-voucher.entity';
 import { ApiProperty } from '@nestjs/swagger';
+import { Referral } from 'src/user-referral/entities/referral.entity';
 
 @Entity('users')
 export class User {
   @PrimaryGeneratedColumn()
-  @ApiProperty({description: 'User unique identofier'})
+  @ApiProperty({description: 'User unique identifier'})
   id: number;
 
   @Column({ unique: true })
@@ -132,4 +134,14 @@ export class User {
     },
   })
   investorProfiles: InvestorProfile[];
+
+  // Referrals
+  @ManyToOne(() => User, user => user.referredUsers, { nullable: true, onDelete: 'SET NULL' })
+  referrer: User;
+
+  @OneToMany(() => User, user => user.referrer)
+  referredUsers: User[];
+
+  @OneToOne(() => Referral, referral => referral.user)
+  referral: Referral;
 }
