@@ -28,6 +28,12 @@ export class Booking {
   @UpdateDateColumn()
   updatedAt: Date;
 
+  @Column({ type: 'timestamptz', nullable: true }) 
+  meetingStartTime: Date;
+
+  @Column({ type: 'timestamptz', nullable: true }) 
+  meetingEndTime: Date;
+
   @ManyToOne(() => User, (user) => user.bookings, { onDelete: 'CASCADE' })
   user: User;
 
