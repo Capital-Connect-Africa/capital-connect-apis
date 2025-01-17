@@ -9,6 +9,7 @@ import { User } from 'src/users/entities/user.entity';
 import { Revenue } from './entities/revenue.entity';
 import { Opex } from './entities/opex.entity';
 import { FinanceStatus } from './finance.enum';
+import { CostOfSales } from './entities/costs.entity';
 
 @Injectable()
 export class FinancesService {
@@ -19,12 +20,14 @@ export class FinancesService {
     private readonly revenueRepository: Repository<Revenue>,
     @InjectRepository(Opex)
     private readonly opexRepository: Repository<Opex>,
+    @InjectRepository(CostOfSales)
+    private readonly costOfSalesRepository: Repository<CostOfSales>,
     @InjectRepository(Company)
     private readonly companyRepository: Repository<Company>,
   ) {}
 
   async create(createFinanceDto: CreateFinanceDto, user: User): Promise<Finances> {
-    const { companyId, year, revenues, opex, ...rest } = createFinanceDto;
+    const { companyId, year, revenues, opex, costOfSales, ...rest } = createFinanceDto;
 
     const company = await this.companyRepository.findOne({ where: { id: companyId } });
     if (!company) {
@@ -37,7 +40,7 @@ export class FinancesService {
         company: { id: companyId },
         year,
       },
-      relations: ['revenues', 'opex'],
+      relations: ['revenues', 'opex', 'costOfSales'],
     });
   
     if (existingFinance) {
@@ -61,6 +64,12 @@ export class FinancesService {
       finance.opex = await this.opexRepository.find({
         where: { id: In(opex) },
       });
+
+    if (costOfSales) {
+      finance.costOfSales = await this.opexRepository.find({
+        where: { id: In(costOfSales) },
+      });
+    }
     }
   
     // Save the finance record
@@ -70,7 +79,7 @@ export class FinancesService {
   async findAll(): Promise<Finances[]> {
     try {
       const finances = await this.financeRepository.find({
-        relations: ['revenues', 'opex', 'company', 'user'],
+        relations: ['revenues', 'opex', 'costOfSales', 'company', 'user'],
         select: {company: {id: true}, user: {username: true}},
         order: {year: 'DESC'},
       });
@@ -88,7 +97,7 @@ export class FinancesService {
   async findByCompanyId(companyId: number): Promise<Finances[]> {
     const finances = await this.financeRepository.find({ 
       where: { company: { id: companyId} },
-      relations: ['revenues', 'opex'], 
+      relations: ['revenues', 'opex', 'costOfSales'], 
     });
 
     if (!finances || finances.length === 0) {
@@ -101,7 +110,7 @@ export class FinancesService {
   async findOne(id: number): Promise<Finances> {
       const finance = await this.financeRepository.findOne({ 
         where: { id },
-        relations: ['revenues', 'opex', 'company', 'user'], 
+        relations: ['revenues', 'opex', 'costOfSales', 'company', 'user'], 
       });
       if (!finance) {
         throw new NotFoundException(`Financial information with id ${id} not found.`);
@@ -111,11 +120,11 @@ export class FinancesService {
   }
 
   async update(id: number, updateFinanceDto: any): Promise<Finances> {
-    const { year, revenues, opex, costOfSales, ebitda, ebit, taxes } = updateFinanceDto;
+    const { year, revenues, opex, costOfSales, amorDep, interests, taxes } = updateFinanceDto;
   
     const finance = await this.financeRepository.findOne({
       where: { id },
-      relations: ['revenues', 'opex'],
+      relations: ['revenues', 'opex', 'costOfSales'],
     });
   
     if (!finance) {
@@ -124,9 +133,8 @@ export class FinancesService {
   
     // Update basic fields if provided
     if (year !== undefined) finance.year = year;
-    if (costOfSales !== undefined) finance.costOfSales = costOfSales;
-    if (ebitda !== undefined) finance.ebitda = ebitda;
-    if (ebit !== undefined) finance.ebit = ebit;
+    if (amorDep !== undefined) finance.amorDep = amorDep;
+    if (interests !== undefined) finance.interests = interests;
     if (taxes !== undefined) finance.taxes = taxes;
   
     // Update related entities
@@ -139,6 +147,12 @@ export class FinancesService {
     if (opex && opex.length > 0) {
       finance.opex = await this.opexRepository.find({
         where: { id: In(opex) },
+      });
+    }
+
+    if (costOfSales && costOfSales.length > 0) {
+      finance.costOfSales = await this.costOfSalesRepository.find({
+        where: { id: In(costOfSales) },
       });
     }
   
@@ -180,7 +194,7 @@ export class FinancesService {
     // Find the finance record
     const finance = await this.financeRepository.findOne({ 
       where: { id }, 
-      relations: ['revenues', 'opex'] 
+      relations: ['revenues', 'opex', 'costOfSales'] 
     });
   
     if (!finance) {
@@ -190,21 +204,28 @@ export class FinancesService {
     // Map revenue and opex values to numbers
     const revenueValues = finance.revenues.map(revenue => Number(revenue.value));
     const opexValues = finance.opex.map(opex => Number(opex.value));
+    const costsValues = finance.costOfSales.map(costOfSales => Number(costOfSales.value));
   
     // Calculate total revenues
     const totalRevenues = revenueValues.reduce((a, b) => a + b, 0);
+
+    // Calculate total cost of sales
+    const totalCosts = costsValues.reduce((a, b) => a + b, 0);
+
+    // Calculate total opex
+    const totalOpex = opexValues.reduce((a, b) => a + b, 0);
   
     // Calculate gross profit
-    const grossProfit = totalRevenues - Number(finance.costOfSales);
+    const grossProfit = totalRevenues - totalCosts;
   
     // Calculate EBITDA
-    const ebitdas = grossProfit - opexValues.reduce((a, b) => a + b, 0);
+    const ebitda = grossProfit - totalOpex;
   
     // Calculate EBIT (EBITDA + ebit)
-    const ebits = ebitdas + Number(finance.ebitda);
+    const ebit = ebitda + Number(finance.amorDep);
   
     // Calculate profit before tax
-    const profitBeforeTax = ebits + Number(finance.ebit);
+    const profitBeforeTax = ebit + Number(finance.interests);
   
     // Calculate net profit
     const netProfit = profitBeforeTax - Number(finance.taxes);
@@ -213,18 +234,19 @@ export class FinancesService {
     const grossMargin = (grossProfit / totalRevenues) * 100;
 
     // Calculate ebitdas margin
-    const ebitdasMargin = (ebitdas / totalRevenues) * 100;
+    const ebitdaMargin = (ebitda / totalRevenues) * 100;
   
     return {
       ...finance,
       totalRevenues,
+      totalCosts,
       grossProfit,
-      ebitdas,
-      ebits,
+      ebitda,
+      ebit,
       profitBeforeTax,
       netProfit,
       grossMargin: Math.round(grossMargin) + '%',
-      ebitdasMargin: Math.round(ebitdasMargin) + '%',
+      ebitdaMargin: Math.round(ebitdaMargin) + '%',
     };
   }  
 

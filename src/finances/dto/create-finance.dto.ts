@@ -6,15 +6,12 @@ export class CreateFinanceDto {
     year: number;
 
     @IsNumber()
-    costOfSales: number;
+    @IsOptional()
+    amorDep: number;
 
     @IsNumber()
     @IsOptional()
-    ebitda: number;
-
-    @IsNumber()
-    @IsOptional()
-    ebit: number;
+    interests: number;
 
     @IsNumber()
     @IsOptional()
@@ -25,6 +22,9 @@ export class CreateFinanceDto {
 
     @IsArray()
     opex: number[];
+
+    @IsArray()
+    costOfSales: number[];
 
     @IsNumber()
     companyId: number;
