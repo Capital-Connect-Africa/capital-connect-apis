@@ -10,6 +10,5 @@ import { JwtService } from '@nestjs/jwt';
   providers: [UserReferralService, JwtService],
   controllers: [UserReferralController],
   imports: [TypeOrmModule.forFeature([Referral, User])],
-  exports: [UserReferralService, JwtService]
 })
 export class UserReferralModule {}
