@@ -96,4 +96,27 @@ export class UserReferralService {
             throw error;
         }
     }
+
+    async getStats() {
+            const referrals = await this.userReferralRepository.find({
+                relations: ['user', 'user.referredUsers'],
+                order: {
+                    id: 'DESC'
+                },
+            });
+
+            const stats = referrals.reduce(
+                (acc, referral) => {
+                    acc.clicks += referral.clicks || 0;
+                    acc.visits += referral.visits || 0;
+                    acc.signups += (referral.user?.referredUsers?.length || 0);
+                    return acc;
+                },
+                { clicks: 0, visits: 0, signups: 0 }
+            );
+        
+            return stats;
+        }
+        
+    
 }
