@@ -75,12 +75,30 @@ export class UserReferralController {
     @ApiOperation({ summary: 'Removes a referral from the database'  })
     @ApiNoContentResponse({ description: 'Referral removed successfully'})
     @ApiNotFoundResponse({description: 'Referral not found', type: ErrorDto})
+    @ApiUnauthorizedResponse({ description: 'Login required. Possibly user session expired', type: ErrorDto})
+    @ApiForbiddenResponse({description: 'User access not allowed', type: ErrorDto})
     @ApiInternalServerErrorResponse({description: 'A little server oopsy occured! Not your bad 😃', type: ErrorDto})
     async removeReferral(@Param('referralId') referralId: string) {
         try {
             return await this.userReferralService.removeReferral(+referralId);
         } catch (error) { 
             handleError(error, RequestMethod.DELETE);
+        }
+    }
+
+    @UseGuards(JwtAuthGuard, RolesGuard)
+    @Roles(Role.Admin)
+    @Get('stats')
+    @ApiOperation({ summary: 'Pulls referral stats'  })
+    @ApiOkResponse({ description: 'Stats pulled successfully'})
+    @ApiUnauthorizedResponse({ description: 'Login required. Possibly user session expired', type: ErrorDto})
+    @ApiForbiddenResponse({description: 'User access not allowed', type: ErrorDto})
+    @ApiInternalServerErrorResponse({description: 'A little server oopsy occured! Not your bad 😃', type: ErrorDto})
+    async getStats() {
+        try {
+            return await this.userReferralService.getStats();
+        } catch (error) { 
+            handleError(error, RequestMethod.GET);
         }
     }
 }
