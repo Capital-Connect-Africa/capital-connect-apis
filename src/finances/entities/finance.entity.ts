@@ -9,6 +9,7 @@ import { File } from "src/files/entities/file.entity";
 import { Revenue } from "./revenue.entity";
 import { Opex } from "./opex.entity";
 import { User } from "src/users/entities/user.entity";
+import { CostOfSales } from "./costs.entity";
 
 @Entity('finances')
 export class Finances {
@@ -19,13 +20,10 @@ export class Finances {
     year: number; 
 
     @Column('bigint', { default: 0 })
-    costOfSales: number;
+    amorDep: number;
 
     @Column('bigint', { default: 0 })
-    ebitda: number;
-
-    @Column('bigint', { default: 0 })
-    ebit: number;
+    interests: number;
 
     @Column('bigint', { default: 0 })
     taxes: number;
@@ -48,6 +46,9 @@ export class Finances {
     @OneToMany(() => Opex, (opex) => opex.finances, { cascade: true })
     opex: Opex[];
 
+    @OneToMany(() => CostOfSales, (costOfSales) => costOfSales.finances, { cascade: true })
+    costOfSales: CostOfSales[];
+
     @OneToOne(() => File)
     @JoinColumn()
     attachments: File;
@@ -59,4 +60,16 @@ export class Finances {
     @ManyToOne(() => User, (user) => user.finances)
     @JoinColumn({ name: 'userId' })
     user: User; 
+
+    // Calculated columns
+    totalRevenues?: number;
+    totalCosts?: number;
+    totalOpex?: number;
+    grossProfit?: number;
+    ebitda?: number;
+    ebit?: number;
+    profitBeforeTax?: number;
+    netProfit?: number;
+    grossMargin?: string;
+    ebitdaMargin?: string;
 }

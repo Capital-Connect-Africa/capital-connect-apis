@@ -1,0 +1,41 @@
+### Create a new Cost of sale record.
+POST http://localhost:3000/cost-of-sales
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+{
+    "companyId": 1,
+    "year": 2025,
+    "description": "Company",
+    "value": 2000000
+}
+
+### Find all Cost of sale records
+GET http://localhost:3000/cost-of-sales
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+### Find all Cost of sale records by CompanyId
+GET http://localhost:3000/cost-of-sales/company/1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+### Find Cost of sale record by Id
+GET http://localhost:3000/cost-of-sales/16
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+### Update a Cost of sale record.
+PUT http://localhost:3000/cost-of-sales/17
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+{
+    "description": "Company 12",
+    "value": 50000
+}
+
+### Delete a Cost of sale record
+DELETE http://localhost:3000/cost-of-sales/5
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
