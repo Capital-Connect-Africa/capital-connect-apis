@@ -150,6 +150,8 @@ export class SubscriptionController {
     let amountDiscounted = 0;
     let amount = userSubscription.subscriptionTier.price;
 
+    console.log('subscriptionTier.price', amount);
+
     if (voucherCode) {
       // redeem voucher if provided
       const result = await this.subscriptionService.redeemVoucher(
@@ -158,7 +160,9 @@ export class SubscriptionController {
         amount,
       );
       amountDiscounted = result.discount;
-      amount = result.amount;
+      amount = result.amount; // check
+
+      console.log('Amount after discount', amount);
 
       // @NOTE: code implemented outside try/catch to throw errors due to voucher service 💀
     }
@@ -294,6 +298,8 @@ export class SubscriptionController {
     let amountDiscounted = 0;
     let amount = userSubscription.subscriptionTier.price - currentTier.price; // 😀 discount will be applied on this amount
 
+    console.log('subscriptionTier.price on upgrade', amount);
+
     if (voucherCode) {
       // redeem voucher if provided
       const result = await this.subscriptionService.redeemVoucher(
@@ -305,6 +311,7 @@ export class SubscriptionController {
       amount = result.amount;
       // @NOTE: code implemented outside try/catch to throw errors due to voucher service 💀
     }
+    console.log('Amount after discount - upgrade', amount);
     try {
       const response = await this.httpService
         .post(
