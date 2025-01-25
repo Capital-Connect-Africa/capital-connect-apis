@@ -43,7 +43,7 @@ export class AuthService {
     const user = await this.validateUser(username, password);
     if (user) {
       if (!user.referralCode) {
-        const referralCode = generateCryptCode(8);
+        const referralCode = generateCryptCode();
         await this.usersService.update(user.id, { referralCode });
       }
       if (!user.isEmailVerified) {

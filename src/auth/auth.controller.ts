@@ -62,7 +62,7 @@ export class AuthController {
         referrer = await this.userService.findUserByReferralCode(referralCode);
       }
       delete createUserDto.referralCode;
-      const userReferralCode = generateCryptCode(8);
+      const userReferralCode = generateCryptCode();
       const user = await this.authService.signup({
         ...createUserDto,
         referralCode: userReferralCode,
