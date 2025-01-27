@@ -29,7 +29,7 @@ export class BookingController {
     private readonly bookingService: BookingService,
     private readonly paymentService: PaymentService,
     private readonly httpService: HttpService,
-  ) {}
+  ) { }
 
   @Post()
   async createBooking(
@@ -144,8 +144,13 @@ export class BookingController {
   }
 
   @Put(':id')
-  update(@Param('id') id: string, @Body() updateBookingDto: UpdateBookingDto) {
-    return this.bookingService.update(+id, updateBookingDto);
+  update(
+    @Param('id') id: string,
+    @Req() req,
+    @Body() updateBookingDto: UpdateBookingDto) {
+
+
+    return this.bookingService.update(+id, updateBookingDto, req.user);
   }
 
   @Delete(':id')
