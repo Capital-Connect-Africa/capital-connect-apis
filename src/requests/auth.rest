@@ -105,7 +105,16 @@ Content-Type: application/json
   "description": "This task repeats every hour b"
 }
 
-### Add a Task
+### Delete a Repeating Task
+DELETE http://localhost:3000/auth/delete-repeating
+Content-Type: application/json
+
+{
+  "taskName": "Repeating Task",
+  "description": "This task repeats every hour b"
+}
+
+### Add a Task prod
 POST https://capitalconnect-0060e0fb0eb4.herokuapp.com/auth/add
 Content-Type: application/json
 
@@ -115,8 +124,17 @@ Content-Type: application/json
   "priority": "high"
 }
 
-### Add a Repeating Task
+### Add a Repeating Task prod
 POST https://capitalconnect-0060e0fb0eb4.herokuapp.com/auth/add-repeating
+Content-Type: application/json
+
+{
+  "taskName": "Repeating Task",
+  "description": "This task repeats every hour b"
+}
+
+### Delete a Repeating Task prod
+DELETE https://capitalconnect-0060e0fb0eb4.herokuapp.com/auth/delete-repeating
 Content-Type: application/json
 
 {
