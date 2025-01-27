@@ -91,7 +91,7 @@ export class Finances {
 
     // Calculate fields
     @BeforeInsert()
-    @AfterUpdate()
+    @BeforeUpdate()
     calculateFields() {
         // Map revenue, costs and opex values to numbers
         const revenueValues = this.revenues.map(revenue => Number(revenue.value));

@@ -174,7 +174,10 @@ export class FinancesService {
 
   async updateFinancialRecordStatus(id: number, newStatus: FinanceStatus): 
   Promise<Finances> {
-    const finance = await this.financeRepository.findOne({ where: { id } });
+    const finance = await this.financeRepository.findOne({ 
+      where: { id },
+      relations: ['revenues', 'opex', 'costOfSales'], 
+    });
   
     if (!finance) {
       throw new NotFoundException(`Finance record with ID ${id} not found`);
@@ -185,6 +188,7 @@ export class FinancesService {
     }
   
     finance.status = newStatus;
+    finance.calculateFields(); 
     await this.financeRepository.save(finance);
   
     return finance; 
