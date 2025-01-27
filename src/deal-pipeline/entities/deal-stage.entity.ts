@@ -19,9 +19,6 @@ export class DealStage {
   @OneToMany(() => Deal, (deal) => deal.stage)
   deals: Deal[];
 
-  @Column({ type: 'timestamp', nullable: true })
-  deadline: Date;
-
   @OneToMany(() => DealStageHistory, (history) => history.stage)
   stageHistory: DealStageHistory[];
 }
