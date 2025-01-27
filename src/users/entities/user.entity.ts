@@ -27,39 +27,47 @@ import { Referral } from 'src/user-referral/entities/referral.entity';
 @Entity('users')
 export class User {
   @PrimaryGeneratedColumn()
-  @ApiProperty({description: 'User unique identifier'})
+  @ApiProperty({ description: 'User unique identifier' })
   id: number;
 
   @Column({ unique: true })
-  @ApiProperty({description: 'A unique user email id'})
+  @ApiProperty({ description: 'A unique user email id' })
   username: string;
 
   @Column()
-  @ApiProperty({description: 'An encripted user password'})
+  @ApiProperty({ description: 'An encripted user password' })
   password: string;
 
   @Column({ nullable: true })
-  @ApiProperty({description: 'User\'s initial name', required: false})
+  @ApiProperty({ description: "User's initial name", required: false })
   firstName: string;
 
   @Column({ nullable: true })
-  @ApiProperty({description: 'User\'s last name', required: false})
+  @ApiProperty({ description: "User's last name", required: false })
   lastName: string;
 
   @Column({ default: Role.User.toString() })
-  @ApiProperty({description: 'User role', enum: Role})
+  @ApiProperty({ description: 'User role', enum: Role })
   roles: string;
 
   @Column({ nullable: true })
-  @ApiProperty({description: 'A password reset token', required: false})
+  @ApiProperty({ description: 'A password reset token', required: false })
   resetPasswordToken: string;
 
   @Column({ type: 'timestamp', nullable: true })
-  @ApiProperty({description: 'A date time when the validity of the password reset token ceases', required: false, })
+  @ApiProperty({
+    description:
+      'A date time when the validity of the password reset token ceases',
+    required: false,
+  })
   resetPasswordExpires: Date;
 
   @Column({ default: false })
-  @ApiProperty({description: 'Whether user email was validated', required: false, type: Boolean})
+  @ApiProperty({
+    description: 'Whether user email was validated',
+    required: false,
+    type: Boolean,
+  })
   isEmailVerified: boolean;
 
   @Column({ nullable: true })
@@ -92,7 +100,7 @@ export class User {
   @OneToMany(() => MobileNumber, (mobile) => mobile.user)
   mobileNumbers: MobileNumber[];
 
-  @OneToMany(() => Booking, (booking) => booking.advisor) 
+  @OneToMany(() => Booking, (booking) => booking.advisor)
   advisedBookings: Booking[];
 
   @OneToOne(
@@ -113,15 +121,12 @@ export class User {
   )
   subscriptions: UserSubscription[];
 
-  @OneToMany(() => Finances, (finances) => finances.user,{
+  @OneToMany(() => Finances, (finances) => finances.user, {
     onDelete: 'CASCADE',
   })
-  finances: Finances[]; 
+  finances: Finances[];
 
-  @OneToMany(
-    () => UserVoucher,
-    (voucher) => voucher.user,
-  )
+  @OneToMany(() => UserVoucher, (voucher) => voucher.user)
   vouchers: UserVoucher[];
 
   @ManyToMany(() => InvestorProfile, (profile) => profile.users)
@@ -136,12 +141,19 @@ export class User {
   investorProfiles: InvestorProfile[];
 
   // Referrals
-  @ManyToOne(() => User, user => user.referredUsers, { nullable: true, onDelete: 'SET NULL' })
+  @Column({ nullable: true, unique: true })
+  @ApiProperty({ description: 'User referral identifier', required: false })
+  referralCode: string;
+
+  @ManyToOne(() => User, (user) => user.referredUsers, {
+    nullable: true,
+    onDelete: 'SET NULL',
+  })
   referrer: User;
 
-  @OneToMany(() => User, user => user.referrer)
+  @OneToMany(() => User, (user) => user.referrer)
   referredUsers: User[];
 
-  @OneToOne(() => Referral, referral => referral.user)
+  @OneToOne(() => Referral, (referral) => referral.user)
   referral: Referral;
 }

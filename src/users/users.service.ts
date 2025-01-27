@@ -33,21 +33,33 @@ export class UsersService {
         'subscriptions.subscriptionTier',
       ],
     });
-  
+
     if (!user) {
       return undefined;
     }
-    const activeSubscription = user.subscriptions.filter(sub => sub.isActive);
+    const activeSubscription = user.subscriptions.filter((sub) => sub.isActive);
 
     return {
       ...user,
-      activeSubscription: activeSubscription.length > 0 ? activeSubscription : null,
+      activeSubscription:
+        activeSubscription.length > 0 ? activeSubscription : null,
     };
-  }  
+  }
 
   async findByUsername(username: string): Promise<User | undefined> {
     return this.usersRepository.findOne({
       where: { username: username.toLowerCase() },
+      relations: [
+        'mobileNumbers',
+        'subscriptions',
+        'subscriptions.subscriptionTier',
+      ],
+    });
+  }
+
+  async findUserByReferralCode(referralCode: string): Promise<User | null> {
+    return this.usersRepository.findOne({
+      where: { referralCode },
       relations: [
         'mobileNumbers',
         'subscriptions',
@@ -83,27 +95,30 @@ export class UsersService {
         'subscriptions.subscriptionTier',
       ],
       order: {
-        id: 'DESC'
-      }
+        id: 'DESC',
+      },
     });
-  
-    return users.map(user => {
-      const activeSubscription = user.subscriptions.filter(sub => sub.isActive);
-      
+
+    return users.map((user) => {
+      const activeSubscription = user.subscriptions.filter(
+        (sub) => sub.isActive,
+      );
+
       return {
         ...user,
-        activeSubscription: activeSubscription.length > 0 ? activeSubscription : null,
+        activeSubscription:
+          activeSubscription.length > 0 ? activeSubscription : null,
         total,
       };
     });
-  }  
+  }
 
   async findAllByUserType(
     usertype: Role,
     page: number = 1,
-    limit: number = 30
+    limit: number = 30,
   ): Promise<any[]> {
-    const skip = (page - 1) * limit;  
+    const skip = (page - 1) * limit;
     const [users, total] = await this.usersRepository.findAndCount({
       skip,
       take: limit,
@@ -115,16 +130,16 @@ export class UsersService {
       ],
       order: { id: 'DESC' },
     });
-  
-    return users.map(user => {
-      const activeSubscription = user.subscriptions.find(sub => sub.isActive);
+
+    return users.map((user) => {
+      const activeSubscription = user.subscriptions.find((sub) => sub.isActive);
       return {
         ...user,
         activeSubscription: activeSubscription || null,
         total,
       };
     });
-  }  
+  }
 
   async update(id: number, updateUserDto: Partial<User>): Promise<User> {
     if (updateUserDto.username) {
@@ -149,9 +164,9 @@ export class UsersService {
   }
 
   async updateByAdmin(id: number, updateUserDto: Partial<User>): Promise<User> {
-    if (updateUserDto.username){
+    if (updateUserDto.username) {
       const isEmailValid = this.validateEmail(updateUserDto.username);
-      if(!isEmailValid){
+      if (!isEmailValid) {
         throw new BadRequestException('Invalid email format');
       }
       const isUsernameTaken = await this.isUsernameTaken(
@@ -165,7 +180,7 @@ export class UsersService {
       const hash = await bcrypt.hash(updateUserDto.password, 10);
       updateUserDto.password = hash;
     }
-    if (updateUserDto.roles){
+    if (updateUserDto.roles) {
       const isRoleValid = this.validateRoles(updateUserDto.roles);
       if (!isRoleValid) {
         throw new BadRequestException('Invalid role(s) provided');
@@ -173,7 +188,7 @@ export class UsersService {
     }
 
     await this.usersRepository.update(id, updateUserDto);
-    return this.usersRepository.findOneBy({ id }); 
+    return this.usersRepository.findOneBy({ id });
   }
 
   validateEmail(email: string): boolean {
@@ -182,7 +197,13 @@ export class UsersService {
   }
 
   validateRoles(role: string): boolean {
-    const validRoles = ['admin', 'user', 'investor', 'contact_person', 'advisor'];
+    const validRoles = [
+      'admin',
+      'user',
+      'investor',
+      'contact_person',
+      'advisor',
+    ];
     return validRoles.includes(role);
   }
 
@@ -191,21 +212,21 @@ export class UsersService {
       const user = await this.usersRepository.findOne({
         where: { username: email.toLowerCase() }, // Use toLowerCase for case-insensitive search
       });
-  
+
       if (!user) {
         throw new NotFoundException('User not found');
       }
-  
+
       // Generate reset token and set expiration
       user.resetPasswordToken = randomBytes(32).toString('hex');
       user.resetPasswordExpires = addHours(new Date(), 1); // Token valid for 1 hour
-  
+
       // Save the user with the reset token and expiration
       await this.usersRepository.save(user);
-  
+
       // Construct the reset password URL
       const resetPasswordUrl = `${process.env.FRONTEND_URL}/reset-password/${user.resetPasswordToken}`;
-  
+
       // Import the email content from the template file
       const msg = {
         to: user.username,
@@ -213,13 +234,13 @@ export class UsersService {
         subject: 'Password Reset',
         html: resetPasswordTemplate(resetPasswordUrl),
       };
-  
+
       // Send the reset email
       await this.sendResetEmailViaBrevo(msg, user);
     } catch (error) {
       throw error;
     }
-  }  
+  }
 
   async resetPassword(token: string, newPassword: string): Promise<void> {
     const user = await this.usersRepository.findOne({
