@@ -66,7 +66,7 @@ async function bootstrap() {
         );
       }
 
-      const payload = jwtService.verify(authorization); // Verify and decode the token
+      const payload = jwtService.verify(authorization, {secret: process.env.JWT_SECRET}); // Verify and decode the token
       if (!payload || !payload.roles.includes('admin')) {
         throw new UnauthorizedException('Unauthorized');
       }

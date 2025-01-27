@@ -15,14 +15,14 @@ import { VoucherType } from 'src/shared/enums/voucher.type.enum';
 @Injectable()
 export class SubscriptionService {
   constructor(
-    private readonly voucherService:VoucherService,
+    private readonly voucherService: VoucherService,
     @InjectRepository(UserSubscription)
     private readonly userSubscriptionRepository: Repository<UserSubscription>,
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
     @InjectRepository(SubscriptionTier)
     private readonly subscriptionTierRepository: Repository<SubscriptionTier>,
-  ) { }
+  ) {}
 
   async assignSubscription(
     userId: number,
@@ -165,7 +165,7 @@ export class SubscriptionService {
     return user;
   }
 
-  async findAll(page: number = 1, limit: number = 10){
+  async findAll(page: number = 1, limit: number = 10) {
     const [data, total] = await this.userSubscriptionRepository.findAndCount({
       take: limit,
       skip: (page - 1) * limit,
@@ -194,31 +194,28 @@ export class SubscriptionService {
     );
   }
 
-  async redeemVoucher(userId:number, voucherCode:string, amount:number){ // 4 coffee cups later 😮‍💨
+  async redeemVoucher(userId: number, voucherCode: string, amount: number) {
+    // 4 coffee cups later 😮‍💨
     try {
-      const { 
-        maxAmount,  
-        discount 
-        
-      } = await this.voucherService.redeemVoucher(
-        userId, 
-        voucherCode, 
-        VoucherType.subscriptionPlan
+      const { maxAmount, discount } = await this.voucherService.redeemVoucher(
+        userId,
+        voucherCode,
+        VoucherType.subscriptionPlan,
       );
-      const discountRate = (discount / 100)
-      const dicountedPrice =discountRate * amount;
+      const discountRate = discount / 100;
+      const discountedPrice = discountRate * amount;
 
-      const amountDiscounted = Math.min(
-        maxAmount, 
-        dicountedPrice
+      const amountDiscounted = Math.min(maxAmount, discountedPrice);
+
+      const amountToBePaid = Math.max(
+        amount - amountDiscounted,
+        +process.env.PESAPAL_MIN_PAYABLE_AMOUNT,
       );
-      
-      const amountToBePaid = Math.max(amount - amountDiscounted, +process.env.PESAPAL_MIN_PAYABLE_AMOUNT)
-      
-      return { 
-        discount: amountDiscounted, 
-        amount: amountToBePaid
-      }
+
+      return {
+        discount: amountDiscounted,
+        amount: amountToBePaid,
+      };
     } catch (error) {
       throw error as BadRequestException;
     }
