@@ -89,7 +89,7 @@ export class PaymentService {
     paymentObj.currency = process.env.CURRENCY || 'KES';
     paymentObj.amount = Number(process.env.ADVISORY_SESSIONS_COST) || 10000;
     paymentObj.status = 'initiated';
-    paymentObj.discount =discount ?? 0,
+    paymentObj.discount = discount ?? 0;
     paymentObj.description = 'Advisory session payment';
     paymentObj.orderTrackingId = orderTrackingId;
     paymentObj.user = { id: userId } as User;
@@ -111,7 +111,7 @@ export class PaymentService {
     paymentObj.currency = process.env.CURRENCY || 'KES';
     paymentObj.amount = amount;
     paymentObj.status = 'initiated';
-    paymentObj.discount =discount ?? 0,
+    paymentObj.discount = discount ?? 0;
     paymentObj.description = description;
     paymentObj.orderTrackingId = orderTrackingId;
     paymentObj.user = { id: userId } as User;
@@ -137,8 +137,8 @@ export class PaymentService {
       ],
       order: { id: 'DESC' },
     });
-    
-    return {data, total};
+
+    return { data, total };
   }
 
   async findOne(id: number) {
@@ -201,7 +201,11 @@ export class PaymentService {
       },
       skip,
       take: limit,
-      relations: ['booking', 'userSubscription', 'userSubscription.subscriptionTier'],
+      relations: [
+        'booking',
+        'userSubscription',
+        'userSubscription.subscriptionTier',
+      ],
     });
   }
 }

@@ -1,0 +1,31 @@
+### Click referral link
+PUT http://localhost:3000/referrals/metrics/ec29818a
+Content-Type: application/json
+
+{
+    "clicks": true
+}
+
+### Visit a page
+PUT http://localhost:3000/referrals/metrics/ec29818a
+Content-Type: application/json
+
+{
+    "visits": true
+}
+
+### Get user referrals
+GET http://localhost:3000/referrals/user/4
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+### Get referrals
+GET http://localhost:3000/referrals
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+
+### Get stats
+GET http://localhost:3000/referrals/stats
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9

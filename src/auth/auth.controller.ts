@@ -13,7 +13,10 @@ import { ResendVerificationEmailDto } from './dto/resend-verification-email.dto'
 import { UsersService } from 'src/users/users.service';
 import { randomBytes } from 'crypto';
 import { addHours } from 'date-fns';
-import { TaskService } from "../shared/bullmq/task.service";
+import { TaskService } from '../shared/bullmq/task.service';
+import { User } from 'src/users/entities/user.entity';
+import { JwtService } from '@nestjs/jwt';
+import { generateCryptCode } from 'src/shared/helpers/crypto-generator.helper';
 
 @Controller('auth')
 export class AuthController {
@@ -21,6 +24,7 @@ export class AuthController {
     private readonly authService: AuthService,
     private readonly userService: UsersService,
     private readonly taskService: TaskService,
+    private readonly jwtService: JwtService,
   ) {}
 
   @Post('/add')
@@ -52,7 +56,21 @@ export class AuthController {
   @Post('signup')
   async signup(@Body() createUserDto: CreateUserDto) {
     try {
-      const user = await this.authService.signup(createUserDto);
+      const { referralCode } = createUserDto;
+      let referrer: User | null = null;
+      if (referralCode) {
+        referrer = await this.userService.findUserByReferralCode(referralCode);
+      }
+      delete createUserDto.referralCode;
+      const userReferralCode = generateCryptCode();
+      const user = await this.authService.signup({
+        ...createUserDto,
+        referralCode: userReferralCode,
+      });
+      if (referrer) {
+        user.referrer = referrer;
+        await this.userService.update(user.id, { referrer });
+      }
       await this.authService.sendVerificationEmail(user);
       return user;
     } catch (error) {

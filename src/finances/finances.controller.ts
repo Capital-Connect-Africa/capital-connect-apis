@@ -1,6 +1,7 @@
 import { 
   Controller, Get, Post, Body, Param, Delete, Put, HttpCode, HttpStatus, UseGuards,
-  Request
+  Request,
+  NotFoundException
 } from '@nestjs/common';
 import { FinancesService } from './finances.service';
 import { CreateFinanceDto } from './dto/create-finance.dto';
@@ -44,6 +45,16 @@ export class FinancesController {
   @Put(':id')
   async update(@Param('id') id: number, @Body() updateFinanceDto: UpdateFinanceDto){
     return this.financesService.update(id, updateFinanceDto);
+  }
+
+  @Get('report/:id')
+  async generateReport(@Param('id') id: number): Promise<Finances> {
+    try {
+      const report = await this.financesService.generateReport(id);
+      return report;
+    } catch (error) {
+      throw new NotFoundException(`Finances with id ${id} not found`);
+    }
   }
 
   @Roles(Role.Admin, Role.Advisor)
