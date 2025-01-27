@@ -4,9 +4,11 @@ import {
   ManyToOne,
   Column,
   CreateDateColumn,
+  OneToMany,
 } from 'typeorm';
 import { Deal } from './deal.entity';
 import { DealStage } from './deal-stage.entity';
+import { DealAttachment } from './deal-attachments.entity';
 
 @Entity('deal-stage-history')
 export class DealStageHistory {
@@ -23,4 +25,9 @@ export class DealStageHistory {
 
   @CreateDateColumn({ type: 'timestamp' })
   movedAt: Date;
+
+  @OneToMany(() => DealAttachment, (attachment) => attachment.history, {
+    cascade: true,
+  })
+  attachments: DealAttachment[];
 }

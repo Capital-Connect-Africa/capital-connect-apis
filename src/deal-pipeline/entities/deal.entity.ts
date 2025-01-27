@@ -36,14 +36,12 @@ export class Deal {
   @Column({ type: 'enum', enum: DealStatus, default: DealStatus.ACTIVE })
   status: DealStatus;
 
+  @Column({ type: 'timestamp', nullable: true })
+  closedAt: Date;
+
   @CreateDateColumn({ type: 'timestamp' })
   createdAt: Date;
 
   @UpdateDateColumn({ type: 'timestamp' })
   updatedAt: Date;
-
-  @OneToMany(() => DealAttachment, (attachment) => attachment.deal, {
-    cascade: true,
-  })
-  attachments: DealAttachment[];
 }
