@@ -68,6 +68,18 @@ Content-Type: application/json
     "password": "pass112"
 }
 
+### Sign up with referral code
+POST http://localhost:3000/auth/signup
+Content-Type: application/json
+
+{
+    "username": "test@gmail.com",
+    "password": "pass1234",
+    "firstName": "Mkuu",
+    "hasAcceptedTerms": true,
+    "referralCode": "ec29818a"
+}
+
 #####
 # Sign up prod
 POST https://capitalconnect-0060e0fb0eb4.herokuapp.com/auth/login
