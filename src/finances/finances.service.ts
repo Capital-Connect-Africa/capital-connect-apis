@@ -155,7 +155,8 @@ export class FinancesService {
         where: { id: In(costOfSales) },
       });
     }
-  
+
+    finance.calculateFields();  
     return await this.financeRepository.save(finance);
   }   
   
@@ -247,6 +248,7 @@ export class FinancesService {
       netProfit,
       grossMargin: Math.round(grossMargin) + '%',
       ebitdaMargin: Math.round(ebitdaMargin) + '%',
+      calculateFields: finance.calculateFields, // Add this line
     };
   }  
 
