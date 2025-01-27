@@ -62,25 +62,25 @@ export class Finances {
     @JoinColumn({ name: 'userId' })
     user: User; 
 
-    @Column({ nullable: true })
+    @Column('bigint', { nullable: true })
     totalRevenues?: number;
 
-    @Column({ nullable: true })
+    @Column('bigint', { nullable: true })
     totalCosts?: number;
 
-    @Column({ nullable: true })
+    @Column('bigint', { nullable: true })
     grossProfit?: number;
 
-    @Column({ nullable: true })
+    @Column('bigint', { nullable: true })
     ebitda?: number;
 
-    @Column({ nullable: true })
+    @Column('bigint', { nullable: true })
     ebit?: number;
 
-    @Column({ nullable: true })
+    @Column('bigint', { nullable: true })
     profitBeforeTax?: number;
 
-    @Column({ nullable: true })
+    @Column('bigint', { nullable: true })
     netProfit?: number;
 
     @Column({ nullable: true })
