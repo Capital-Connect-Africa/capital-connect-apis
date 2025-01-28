@@ -3,15 +3,16 @@ import {
   Column,
   PrimaryGeneratedColumn,
   ManyToOne,
-  OneToMany,
   CreateDateColumn,
   UpdateDateColumn,
+  OneToMany,
 } from 'typeorm';
 import { DealCustomer } from './deal-customer.entity';
 import { DealStage } from './deal-stage.entity';
 import { DealStatus } from 'src/shared/enums/deal.status.enum';
 import { User } from 'src/users/entities/user.entity';
 import { DealAttachment } from './deal-attachments.entity';
+import { DealStageHistory } from './deal-stage-history.entity';
 
 @Entity('deals')
 export class Deal {
@@ -19,25 +20,32 @@ export class Deal {
   id: number;
 
   @ManyToOne(() => User, (user) => user.deals, { nullable: false })
-  user: User;
+  owner: User;
 
   @Column()
   name: string;
 
   @ManyToOne(() => DealCustomer, (customer) => customer.deals, {
-    cascade: true,
     nullable: false,
   })
   customer: DealCustomer;
 
-  @ManyToOne(() => DealStage, (stage) => stage.deals, { nullable: false })
-  stage: DealStage;
+  @OneToMany(() => DealStage, (stage) => stage.deal, { nullable: false })
+  stages: DealStage[];
+
+  @Column({ type: 'decimal', precision: 20, scale: 2 }) // for huge value caps
+  value: number;
 
   @Column({ type: 'enum', enum: DealStatus, default: DealStatus.ACTIVE })
   status: DealStatus;
 
   @Column({ type: 'timestamp', nullable: true })
   closedAt: Date;
+  @OneToMany(() => DealAttachment, (attachment) => attachment.deal, { cascade: true })
+  attachments: DealAttachment[];
+
+  @OneToMany(() => DealStageHistory, (history) => history.deal, { cascade: true })
+  history: DealStageHistory[];
 
   @CreateDateColumn({ type: 'timestamp' })
   createdAt: Date;
