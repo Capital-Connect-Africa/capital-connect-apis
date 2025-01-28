@@ -26,12 +26,13 @@ export class CreateDealDto {
   currentStageId: number;
 
   @IsEnum(DealStatus)
+  @IsOptional()
   @ApiProperty({
     description: 'Status of the deal',
     enum: DealStatus,
     required: true,
   })
-  status: DealStatus;
+  status?: DealStatus;
 
   @IsInt()
   @ApiProperty({
