@@ -25,6 +25,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Referral } from 'src/user-referral/entities/referral.entity';
 import { Deal } from 'src/deal-pipeline/entities/deal.entity';
 import { DealCustomer } from 'src/deal-pipeline/entities/deal-customer.entity';
+import { DealStage } from 'src/deal-pipeline/entities/deal-stage.entity';
 
 @Entity('users')
 export class User {
@@ -156,8 +157,11 @@ export class User {
   referral: Referral;
 
   // deal pipeline
-  @OneToMany(() => Deal, (deal) => deal.user)
+  @OneToMany(() => Deal, (deal) => deal.owner)
   deals: Deal[];
+
+  @OneToMany(() => DealStage, (stage) => stage.user)
+  dealStages: DealStage[];
 
   @OneToMany(() => DealCustomer, (customer) => customer.user, { cascade: true })
   customers: DealCustomer[];
