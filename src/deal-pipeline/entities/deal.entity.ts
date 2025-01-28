@@ -39,12 +39,19 @@ export class Deal {
   @Column({ type: 'enum', enum: DealStatus, default: DealStatus.ACTIVE })
   status: DealStatus;
 
+  @ManyToOne(() => DealStage, { nullable: false, onDelete: 'CASCADE' })
+  currentStage: DealStage;
+
   @Column({ type: 'timestamp', nullable: true })
   closedAt: Date;
-  @OneToMany(() => DealAttachment, (attachment) => attachment.deal, { cascade: true })
+  @OneToMany(() => DealAttachment, (attachment) => attachment.deal, {
+    cascade: true,
+  })
   attachments: DealAttachment[];
 
-  @OneToMany(() => DealStageHistory, (history) => history.deal, { cascade: true })
+  @OneToMany(() => DealStageHistory, (history) => history.deal, {
+    cascade: true,
+  })
   history: DealStageHistory[];
 
   @CreateDateColumn({ type: 'timestamp' })
