@@ -1,25 +1,35 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToOne } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  OneToMany,
+  ManyToOne,
+  CreateDateColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 import { Deal } from './deal.entity';
-import { DealStageHistory } from './deal-stage-history.entity';
-import { User } from 'src/users/entities/user.entity';
+import { DealPipeline } from './deal-pipeline.entity';
 
 @Entity('deal-stages')
 export class DealStage {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() =>User, user =>user.deals)
-  user:User
-
-  @Column({ unique: true })
+  @Column()
   name: string;
 
   @Column({ type: 'int', width: 3 }) // Progress as percentage (0-100)
   progress: number;
 
-  @ManyToOne(() => Deal, (deal) => deal.stages)
-  deal: Deal[];
+  @OneToMany(() => Deal, (deal) => deal.stage)
+  deals: Deal[];
 
-  @OneToMany(() => DealStageHistory, (history) => history.deal)
-  stageHistory: DealStageHistory[];
+  @ManyToOne(() => DealPipeline, (pipeline) => pipeline.stages)
+  pipeline: DealPipeline;
+
+  @CreateDateColumn({ type: 'timestamp' })
+  createdAt: Date;
+
+  @UpdateDateColumn({ type: 'timestamp' })
+  updatedAt: Date;
 }
