@@ -91,4 +91,37 @@ export class DealPipelineService {
     }
     return data;
   }
+
+  async findOnePipeline(pipelineId: number): Promise<DealPipeline> {
+    const pipeline = await this.dealPipelineRepository.findOne({
+      where: { id: pipelineId },
+      relations: ['stages', 'owner'],
+    });
+    if (!pipeline) throw new NotFoundException(`Deal pipeline not found`);
+    return pipeline;
+  }
+
+  async updatePipeline(
+    pipelineId: number,
+    payload: Partial<DealPipelineDto>,
+  ): Promise<DealPipeline> {
+    const pipeline = await this.dealPipelineRepository.findOne({
+      where: { id: pipelineId },
+    });
+    if (!pipeline) throw new NotFoundException(`Deal pipeline not found`);
+    const { name, maxNumberOfStages } = payload;
+    if (name) pipeline.name = name;
+    if (maxNumberOfStages) pipeline.maxNumberOfStages = maxNumberOfStages;
+    await this.dealPipelineRepository.update(pipelineId, pipeline);
+    return pipeline;
+  }
+
+  async removePipeline(pipelineId: number): Promise<void> {
+    const pipeline = await this.dealPipelineRepository.findOne({
+      where: { id: pipelineId },
+    });
+    if (!pipeline) throw new NotFoundException(`Deal pipeline not found`);
+    await this.dealPipelineRepository.remove(pipeline);
+    return;
+  }
 }

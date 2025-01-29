@@ -1,9 +1,11 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Post,
+  Put,
   Query,
   Req,
   RequestMethod,
@@ -14,6 +16,7 @@ import {
   ApiCreatedResponse,
   ApiForbiddenResponse,
   ApiInternalServerErrorResponse,
+  ApiNoContentResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
@@ -33,6 +36,7 @@ import { DealStageDto } from './dto/deal-stage.dto';
 import { DealStage } from './entities/deal-stage.entity';
 import { DealCustomerDto } from './dto/deal-customer.dto';
 import { DealPipelineDto } from './dto/deal-pipeline.dto';
+import { DealPipeline } from './entities/deal-pipeline.entity';
 
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Roles(Role.Admin, Role.Investor)
@@ -44,7 +48,7 @@ export class DealPipelineController {
   @ApiOperation({ summary: 'Creates a new deal deal pipeline' })
   @ApiCreatedResponse({
     description: 'New deal pipeline created successfully',
-    type: Deal,
+    type: DealPipeline,
   })
   @ApiUnauthorizedResponse({
     description: 'Login required. Possibly user session expired',
@@ -71,10 +75,10 @@ export class DealPipelineController {
   }
 
   @Get('owner/:ownerId')
-  @ApiOperation({ summary: 'Fetch a list of deal pipelines.' })
+  @ApiOperation({ summary: 'Fetch a list of user deal pipelines.' })
   @ApiOkResponse({
-    description: 'Deal pipelines retrieved successfully',
-    type: Deal,
+    description: 'User Deal pipelines retrieved successfully',
+    type: DealPipeline,
     isArray: true,
   })
   @ApiUnauthorizedResponse({
@@ -85,13 +89,91 @@ export class DealPipelineController {
     description: 'A little server oopsy occured! Not your bad 😃',
     type: ErrorDto,
   })
-  async findDeals(@Param('ownerId') ownerId: number) {
+  async findAllUserPipelines(@Param('ownerId') ownerId: number) {
     try {
-      const deals =
-        await this.dealPipelineService.findAllUserPipelines(ownerId);
-      return deals;
+      return this.dealPipelineService.findAllUserPipelines(ownerId);
     } catch (error) {
       handleError(error, RequestMethod.GET);
+    }
+  }
+
+  @Get(':pipelineId')
+  @ApiOperation({ summary: 'Fetch a deal pipeline by id' })
+  @ApiOkResponse({
+    description: 'A Deal pipeline retrieved successfully',
+    type: DealPipeline,
+  })
+  @ApiNotFoundResponse({
+    description: 'Deal pipeline Id was not found',
+    type: ErrorDto,
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Login required. Possibly user session expired',
+    type: ErrorDto,
+  })
+  @ApiInternalServerErrorResponse({
+    description: 'A little server oopsy occured! Not your bad 😃',
+    type: ErrorDto,
+  })
+  async findOnePipeline(@Param('pipelineId') pipelineId: number) {
+    try {
+      return await this.dealPipelineService.findOnePipeline(pipelineId);
+    } catch (error) {
+      handleError(error, RequestMethod.GET);
+    }
+  }
+
+  @Put(':pipelineId')
+  @ApiOperation({ summary: 'Updates details of a deal pipeline by id' })
+  @ApiOkResponse({
+    description: 'Deal pipeline was updated successfully',
+    type: DealPipeline,
+  })
+  @ApiNotFoundResponse({
+    description: 'Deal pipeline Id was not found',
+    type: ErrorDto,
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Login required. Possibly user session expired',
+    type: ErrorDto,
+  })
+  @ApiInternalServerErrorResponse({
+    description: 'A little server oopsy occured! Not your bad 😃',
+    type: ErrorDto,
+  })
+  async updatePipeline(
+    @Body() payload: Partial<DealPipelineDto>,
+    @Param('pipelineId') pipelineId: number,
+  ) {
+    try {
+      return await this.dealPipelineService.updatePipeline(pipelineId, payload);
+    } catch (error) {
+      handleError(error, RequestMethod.PUT);
+    }
+  }
+
+  @Delete(':pipelineId')
+  @ApiOperation({ summary: 'Removes a deal pipeline' })
+  @ApiNoContentResponse({
+    description: 'Deal pipeline was removed successfully',
+  })
+  @ApiNotFoundResponse({
+    description: 'Deal pipeline Id was not found',
+    type: ErrorDto,
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Login required. Possibly user session expired',
+    type: ErrorDto,
+  })
+  @ApiInternalServerErrorResponse({
+    description: 'A little server oopsy occured! Not your bad 😃',
+    type: ErrorDto,
+  })
+  async removePipeline(@Param('pipelineId') pipelineId: number) {
+    try {
+      return await this.dealPipelineService.removePipeline(pipelineId);
+    } catch (error) {
+      handleError(error, RequestMethod.DELETE);
     }
   }
 }
