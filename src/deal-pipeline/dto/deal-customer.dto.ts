@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsOptional } from 'class-validator';
 
-export class CreateDealCustomerDto {
+export class DealCustomerDto {
   @IsOptional()
   @ApiProperty({
     description: 'New customer name',
@@ -29,5 +29,4 @@ export class CreateDealCustomerDto {
     required: false,
   })
   userId: number;
-  
 }

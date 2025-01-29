@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsEnum, IsInt, IsNumber, IsOptional, IsString } from 'class-validator';
 import { DealStatus } from 'src/shared/enums/deal.status.enum';
 
-export class CreateDealDto {
+export class DealDto {
   @IsInt()
   ownerId: number;
   @ApiProperty({

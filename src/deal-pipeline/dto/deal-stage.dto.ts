@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsInt, IsNumber } from 'class-validator';
 
-export class CreateDealStageDto {
+export class DealStageDto {
   @IsInt()
   @ApiProperty({
     description: 'ID of the deal stage owner',
