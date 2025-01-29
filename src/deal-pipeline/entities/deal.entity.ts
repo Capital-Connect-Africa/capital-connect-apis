@@ -19,9 +19,6 @@ export class Deal {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => User, (user) => user.deals, { nullable: false })
-  owner: User;
-
   @Column()
   name: string;
 
@@ -30,24 +27,17 @@ export class Deal {
   })
   customer: DealCustomer;
 
-  @OneToMany(() => DealStage, (stage) => stage.deal, { nullable: false })
-  stages: DealStage[];
-
   @Column({ type: 'decimal', precision: 20, scale: 2 }) // for huge value caps
   value: number;
 
   @Column({ type: 'enum', enum: DealStatus, default: DealStatus.ACTIVE })
   status: DealStatus;
 
-  @ManyToOne(() => DealStage, { nullable: false, onDelete: 'CASCADE' })
-  currentStage: DealStage;
+  @ManyToOne(() => DealStage, (stage) => stage.deals)
+  stage: DealStage;
 
   @Column({ type: 'timestamp', nullable: true })
   closedAt: Date;
-  @OneToMany(() => DealAttachment, (attachment) => attachment.deal, {
-    cascade: true,
-  })
-  attachments: DealAttachment[];
 
   @OneToMany(() => DealStageHistory, (history) => history.deal, {
     cascade: true,
