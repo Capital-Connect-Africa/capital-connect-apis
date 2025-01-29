@@ -8,6 +8,7 @@ import { User } from 'src/users/entities/user.entity';
 import { DealAttachment } from './entities/deal-attachments.entity';
 import { DealStageHistory } from './entities/deal-stage-history.entity';
 import { DealCustomer } from './entities/deal-customer.entity';
+import { DealPipeline } from './entities/deal-pipeline.entity';
 
 @Module({
   providers: [DealPipelineService],
@@ -21,6 +22,7 @@ import { DealCustomer } from './entities/deal-customer.entity';
       DealCustomer,
       DealAttachment,
       DealStageHistory,
+      DealPipeline,
     ]),
   ],
 })
