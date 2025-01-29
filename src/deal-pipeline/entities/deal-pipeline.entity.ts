@@ -22,7 +22,7 @@ export class DealPipeline {
   stages: DealStage[];
 
   @Column({ type: 'integer', default: 7 })
-  maxNumberOfStages?: string;
+  maxNumberOfStages?: number;
 
   @ManyToOne(() => User, (user) => user.pipelines, {
     nullable: true,
