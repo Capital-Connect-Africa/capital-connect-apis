@@ -23,7 +23,7 @@ export class CreateDealDto {
     type: 'integer',
     required: true,
   })
-  currentStageId: number;
+  stageId: number;
 
   @IsEnum(DealStatus)
   @IsOptional()
