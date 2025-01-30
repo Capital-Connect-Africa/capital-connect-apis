@@ -7,7 +7,7 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Deal } from './entities/deal.entity';
-import { Repository } from 'typeorm';
+import { ILike, Repository } from 'typeorm';
 import { DealStage } from './entities/deal-stage.entity';
 import { DealDto } from './dto/deal.dto';
 import { User } from 'src/users/entities/user.entity';
@@ -20,6 +20,7 @@ import { DealAttachment } from './entities/deal-attachments.entity';
 import { Role } from 'src/auth/role.enum';
 import { DealPipeline } from './entities/deal-pipeline.entity';
 import { DealPipelineDto } from './dto/deal-pipeline.dto';
+import { textToTitlteCase } from 'src/shared/helpers/text-to-title-case';
 
 @Injectable()
 export class DealPipelineService {
@@ -183,6 +184,29 @@ export class DealPipelineService {
       {
         skip,
         take: limit,
+        relations: ['pipeline', 'deals'],
+        order: { id: 'DESC' },
+      },
+    );
+
+    return { data: stages, total_count: records_count };
+  }
+
+  async findAllUserStages(
+    userId: number,
+    page: number = 1,
+    limit: number = 10,
+  ): Promise<{ data: DealStage[]; total_count: number }> {
+    const skip = (page - 1) * limit;
+    const [stages, records_count] = await this.dealStageRepository.findAndCount(
+      {
+        skip,
+        take: limit,
+        where: {
+          pipeline: {
+            owner: { id: userId },
+          },
+        },
         relations: ['pipeline', 'deals'],
         order: { id: 'DESC' },
       },
@@ -364,6 +388,32 @@ export class DealPipelineService {
     return customer;
   }
 
+  async searchDealCustomers(q: string) {
+    const customers = await this.dealCustomerRepository.find({
+      where: [
+        { name: ILike(`%${q}%`) },
+        { phone: ILike(`%${q}%`) },
+        { email: ILike(`%${q}%`) },
+        { user: { firstName: ILike(`%${q}%`) } },
+        { user: { lastName: ILike(`%${q}%`) } },
+        { user: { username: ILike(`%${q}%`) } },
+      ],
+      relations: ['user'],
+    });
+
+    return customers
+      .map((customer) => {
+        return (
+          customer.name ??
+          (customer.user
+            ? `${customer.user.firstName ?? ''} ${customer.user.lastName ?? ''}`.trim()
+            : null)
+        );
+      })
+      .filter((name) => name)
+      .map((name) => textToTitlteCase(name));
+  }
+
   async removeDealCustomer(customerId: number) {
     const customer = await this.dealCustomerRepository.findOneBy({
       id: customerId,
@@ -372,6 +422,217 @@ export class DealPipelineService {
       throw new NotFoundException(`Customer not found. Unable to remove`);
     }
     await this.dealCustomerRepository.remove(customer);
+    return;
+  }
+
+  /* ================Deal========================== */
+  async createDeal(payload: DealDto): Promise<Deal> {
+    const { customerId, stageId, name, value, status } = payload;
+    const stage = await this.dealStageRepository.findOne({
+      where: {
+        id: stageId,
+      },
+      relations: ['deals'],
+    });
+
+    if (!stage) {
+      throw new BadRequestException(`Stage not found. Unable to create deal`);
+    }
+
+    const customer = await this.dealCustomerRepository.findOne({
+      where: { id: customerId },
+      relations: ['user'],
+    });
+
+    if (!customer) {
+      throw new BadRequestException(
+        `Customer not found. Unable to create deal.`,
+      );
+    }
+
+    const deals = stage.deals;
+
+    if (
+      deals
+        .map((deal) => deal.name.toLowerCase().trim())
+        .includes(name.toLowerCase().trim())
+    ) {
+      throw new BadRequestException(`Deal with name '${name}' already exists`);
+    }
+
+    let deal = this.dealRepository.create({
+      name,
+      value,
+      status: status ?? DealStatus.ACTIVE,
+      stage: stage,
+      customer,
+    });
+
+    deal = await this.dealRepository.save(deal);
+    if (customer.user) {
+      const user = customer.user;
+      const userPhoneNumber = (user.mobileNumbers || []).at(0);
+      deal.customer = {
+        ...deal.customer,
+        name: `${user.firstName ?? ''} ${user.lastName ?? ''}`.trim(),
+        email: user.username,
+        phone: userPhoneNumber ? userPhoneNumber.phoneNo : '',
+      };
+    }
+    return deal;
+  }
+
+  async updateDeal(payload: Partial<DealDto>, dealId: number): Promise<Deal> {
+    const deal = await this.dealRepository.findOne({
+      where: { id: dealId },
+      relations: ['stage', 'stage.deals'],
+    });
+    if (!deal) {
+      throw new NotFoundException('Deal not found. Unable to update.');
+    }
+
+    const { customerId, stageId, name, value, status, closureDate } = payload;
+    const history: Partial<DealStageHistory> = {};
+
+    // Update deal customer
+    if (customerId) {
+      const customer = await this.dealCustomerRepository.findOneBy({
+        id: customerId,
+      });
+      if (!customer) {
+        throw new BadRequestException('Customer not found.');
+      }
+      deal.customer = customer;
+    }
+
+    // advance deal stage
+    if (stageId) {
+      const stage = await this.dealStageRepository.findOneBy({
+        id: stageId,
+      });
+      if (!stage) {
+        throw new BadRequestException('Stage not found. Unable to update');
+      }
+      if (stageId !== deal.stage.id) {
+        history.toStage = stage;
+        history.fromStage = deal.stage;
+        history.valueShift = (value ?? deal.value) - deal.value;
+      }
+      deal.stage = stage;
+    }
+
+    // Update other fields (name, value, status)
+    if (name) {
+      const deals = deal.stage.deals;
+      if (
+        deals
+          .map((deal) => deal.name.toLowerCase().trim())
+          .includes(name.toLowerCase().trim())
+      ) {
+        throw new BadRequestException(
+          `Deal with name '${name}' already exists`,
+        );
+      }
+      deal.name = name;
+    }
+    if (closureDate) deal.closedAt = closureDate;
+    if (value) {
+      if (!stageId || stageId === deal.stage.id) {
+        const currentDealHistoryLog =
+          await this.dealStageHistoryRepository.find({
+            where: {
+              deal: { id: dealId },
+              toStage: { id: deal.stage.id },
+            },
+            order: { id: 'DESC' },
+          });
+        if (currentDealHistoryLog.length) {
+          const dealHistory = currentDealHistoryLog.at(0);
+          dealHistory.valueShift = value - deal.value;
+          await this.dealStageHistoryRepository.update(
+            dealHistory.id,
+            dealHistory,
+          );
+        }
+      }
+      deal.value = value;
+    }
+    if (status) {
+      deal.status = status;
+      if (status !== DealStatus.ACTIVE) {
+        deal.closedAt = new Date();
+      } else {
+        deal.closedAt = null;
+      }
+    }
+
+    // Save updated deal
+    await this.dealRepository.update(dealId, deal);
+
+    // Save history if stage changed
+    if (history.toStage) {
+      history.deal = deal;
+      const dealStageHistory = this.dealStageHistoryRepository.create(history);
+      await this.dealStageHistoryRepository.save(dealStageHistory);
+    }
+    return deal;
+  }
+
+  async findAllDeals(
+    page: number = 1,
+    limit: number = 10,
+  ): Promise<{ data: Deal[]; total_count: number }> {
+    const skip = (page - 1) * limit;
+    const [deals, records_count] = await this.dealRepository.findAndCount({
+      skip,
+      take: limit,
+      relations: ['stage', 'customer', 'customer.user'],
+      order: { id: 'DESC' },
+    });
+    return { data: deals, total_count: records_count };
+  }
+
+  async findAllUserDeals(userId: number, page: number, limit: number) {
+    const skip = (page - 1) * limit;
+    const [deals, records_count] = await this.dealRepository.findAndCount({
+      skip,
+      take: limit,
+      relations: ['stage', 'customer', 'customer.user'],
+      where: {
+        stage: {
+          pipeline: {
+            owner: {
+              id: userId,
+            },
+          },
+        },
+      },
+      order: { id: 'DESC' },
+    });
+    return { data: deals, total_count: records_count };
+  }
+
+  async findOneDeal(dealId: number): Promise<Deal> {
+    const deal = await this.dealRepository.findOne({
+      where: { id: dealId },
+      relations: [
+        'stage',
+        'stage.pipeline',
+        'stage.pipeline.owner',
+        'history',
+        'history.attachments',
+      ],
+    });
+    if (!deal) throw new NotFoundException('Deal was not found');
+    return deal;
+  }
+
+  async removeDeal(dealId: number) {
+    const deal = await this.dealRepository.findOneBy({
+      id: dealId,
+    });
+    if (!deal) throw new NotFoundException('Deal not found. Unable to remove');
+    await this.dealRepository.remove(deal);
     return;
   }
 }

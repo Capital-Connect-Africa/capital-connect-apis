@@ -99,6 +99,37 @@ export class DealPipelineController {
     }
   }
 
+  @Get('stages/owner/:userId')
+  @ApiOperation({ summary: 'Fetch a paginated list of user deal stages.' })
+  @ApiOkResponse({
+    description: 'User Deal stages retrieved successfully',
+    type: DealStage,
+    isArray: true,
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Login required. Possibly user session expired',
+    type: ErrorDto,
+  })
+  @ApiInternalServerErrorResponse({
+    description: 'A little server oopsy occured! Not your bad 😃',
+    type: ErrorDto,
+  })
+  async findUserStages(
+    @Param('userId') userId: number,
+    @Query('page') page: number,
+    @Query('limit') limit: number,
+  ) {
+    try {
+      return await this.dealPipelineService.findAllUserStages(
+        userId,
+        page,
+        limit,
+      );
+    } catch (error) {
+      handleError(error, RequestMethod.GET);
+    }
+  }
+
   @Get('stages/:stageId')
   @ApiOperation({ summary: 'Gets a single stage by id.' })
   @ApiOkResponse({
@@ -177,6 +208,7 @@ export class DealPipelineController {
       handleError(error, RequestMethod.DELETE);
     }
   }
+
   /* ================Deal Customer========================== */
   @Post('customers')
   @ApiOperation({ summary: 'Creates a new deal customer' })
@@ -259,6 +291,193 @@ export class DealPipelineController {
   async removeDealCustomer(@Param('customerId') customerId: number) {
     try {
       return await this.dealPipelineService.removeDealCustomer(customerId);
+    } catch (error) {
+      handleError(error, RequestMethod.DELETE);
+    }
+  }
+  @Get('customers/search')
+  @ApiOperation({ summary: 'Search customers by name, email & phone number.' })
+  @ApiOkResponse({
+    description: 'Filtered customers fetched successfully',
+    type: Deal,
+    isArray: true,
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Login required. Possibly user session expired',
+    type: ErrorDto,
+  })
+  @ApiInternalServerErrorResponse({
+    description: 'A little server oopsy occured! Not your bad 😃',
+    type: ErrorDto,
+  })
+  async searchDealCustomers(@Query('q') q: string) {
+    try {
+      return await this.dealPipelineService.searchDealCustomers(q);
+    } catch (error) {
+      handleError(error, RequestMethod.GET);
+    }
+  }
+
+  /* ===============Deal=============== */
+  @Post('deals')
+  @ApiOperation({ summary: 'Creates a new deal' })
+  @ApiCreatedResponse({
+    description: 'New deal created successfully',
+    type: Deal,
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Login required. Possibly user session expired',
+    type: ErrorDto,
+  })
+  @ApiForbiddenResponse({
+    description: 'User access not allowed',
+    type: ErrorDto,
+  })
+  @ApiBadRequestResponse({
+    description: 'Invalid data provided',
+    type: ErrorDto,
+  })
+  @ApiInternalServerErrorResponse({
+    description: 'A little server oopsy occured! Not your bad 😃',
+    type: ErrorDto,
+  })
+  async createDeal(@Body() body: DealDto) {
+    try {
+      return await this.dealPipelineService.createDeal(body);
+    } catch (error) {
+      handleError(error, RequestMethod.POST);
+    }
+  }
+
+  @Get('deals')
+  @ApiOperation({ summary: 'Fetch a paginated list of deals.' })
+  @ApiOkResponse({
+    description: 'Deals retrieved successfully',
+    type: Deal,
+    isArray: true,
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Login required. Possibly user session expired',
+    type: ErrorDto,
+  })
+  @ApiInternalServerErrorResponse({
+    description: 'A little server oopsy occured! Not your bad 😃',
+    type: ErrorDto,
+  })
+  async findDeals(@Query('page') page: number, @Query('limit') limit: number) {
+    try {
+      return await this.dealPipelineService.findAllDeals(page, limit);
+    } catch (error) {
+      handleError(error, RequestMethod.GET);
+    }
+  }
+
+  @Get('deals/owner/:userId')
+  @ApiOperation({ summary: 'Fetch a paginated list of deals.' })
+  @ApiOkResponse({
+    description: 'Deals retrieved successfully',
+    type: Deal,
+    isArray: true,
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Login required. Possibly user session expired',
+    type: ErrorDto,
+  })
+  @ApiInternalServerErrorResponse({
+    description: 'A little server oopsy occured! Not your bad 😃',
+    type: ErrorDto,
+  })
+  async findAllUserDeals(
+    @Param('userId') userId: number,
+    @Query('page') page: number,
+    @Query('limit') limit: number,
+  ) {
+    try {
+      const deals = await this.dealPipelineService.findAllUserDeals(
+        userId,
+        page,
+        limit,
+      );
+      return deals;
+    } catch (error) {
+      handleError(error, RequestMethod.GET);
+    }
+  }
+
+  @Get('deals/:dealId')
+  @ApiOperation({ summary: 'Gets a single deal by id.' })
+  @ApiOkResponse({
+    description: 'Deal retrieved successfully',
+    type: Deal,
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Login required. Possibly user session expired',
+    type: ErrorDto,
+  })
+  @ApiNotFoundResponse({
+    description: 'Deal with id not found',
+    type: ErrorDto,
+  })
+  @ApiInternalServerErrorResponse({
+    description: 'A little server oopsy occured! Not your bad 😃',
+    type: ErrorDto,
+  })
+  async findOneDeal(@Param('dealId') dealId: number) {
+    try {
+      return await this.dealPipelineService.findOneDeal(dealId);
+    } catch (error) {
+      handleError(error, RequestMethod.GET);
+    }
+  }
+
+  @Put('deals/:dealId')
+  @ApiOperation({ summary: 'Updates details of a deal by id' })
+  @ApiOkResponse({
+    description: 'Deal was updated successfully',
+    type: DealPipeline,
+  })
+  @ApiNotFoundResponse({
+    description: 'Deal Id was not found',
+    type: ErrorDto,
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Login required. Possibly user session expired',
+    type: ErrorDto,
+  })
+  @ApiInternalServerErrorResponse({
+    description: 'A little server oopsy occured! Not your bad 😃',
+    type: ErrorDto,
+  })
+  async updateDeal(
+    @Body() payload: Partial<DealDto>,
+    @Param('dealId') dealId: number,
+  ) {
+    try {
+      return await this.dealPipelineService.updateDeal(payload, dealId);
+    } catch (error) {
+      handleError(error, RequestMethod.PUT);
+    }
+  }
+  @Delete('deals/:dealId')
+  @ApiOperation({ summary: 'Removes a deal' })
+  @ApiNoContentResponse({
+    description: 'Deal was removed successfully',
+  })
+  @ApiNotFoundResponse({
+    description: 'Deal Id was not found',
+    type: ErrorDto,
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Login required. Possibly user session expired',
+    type: ErrorDto,
+  })
+  @ApiInternalServerErrorResponse({
+    description: 'A little server oopsy occured! Not your bad 😃',
+    type: ErrorDto,
+  })
+  async removeDeal(@Param('dealId') dealId: number) {
+    try {
+      return await this.dealPipelineService.removeDeal(dealId);
     } catch (error) {
       handleError(error, RequestMethod.DELETE);
     }
