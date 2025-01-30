@@ -71,13 +71,16 @@ export class DealPipelineService {
     const message = this._validateUser(owner, Role.Investor);
 
     if (message) throw new BadRequestException(message);
+    console.log(user);
+
     const pipeline = this.dealPipelineRepository.create({
       name,
       maxNumberOfStages,
-      owner: user,
+      owner,
     });
 
-    return await this.dealPipelineRepository.save(pipeline);
+    // return await this.dealPipelineRepository.save(pipeline);
+    return pipeline;
   }
 
   async findAllUserPipelines(ownerId: number): Promise<DealPipeline[]> {
