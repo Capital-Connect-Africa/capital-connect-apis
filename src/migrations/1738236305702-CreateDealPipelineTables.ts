@@ -1,9 +1,9 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
-export class CreateDealPipelineTables1738156688593
+export class CreateDealPipelineTables1738236305702
   implements MigrationInterface
 {
-  name = 'CreateDealPipelineTables1738156688593';
+  name = 'CreateDealPipelineTables1738236305702';
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(
@@ -16,7 +16,7 @@ export class CreateDealPipelineTables1738156688593
       `CREATE TABLE "deal-attachments" ("id" SERIAL NOT NULL, "historyId" integer, "attachmentId" integer NOT NULL, CONSTRAINT "PK_b6f51be0e4ee224107104a8f3cd" PRIMARY KEY ("id"))`,
     );
     await queryRunner.query(
-      `CREATE TABLE "deal-stage-history" ("id" SERIAL NOT NULL, "valueShift" numeric(20,2) NOT NULL DEFAULT '0', "movedAt" TIMESTAMP NOT NULL DEFAULT now(), "dealId" integer, "fromStageId" integer, "toStageId" integer NOT NULL, CONSTRAINT "PK_a1519077d68714e470951e8d348" PRIMARY KEY ("id"))`,
+      `CREATE TABLE "deal-stage-history" ("id" SERIAL NOT NULL, "valueShift" numeric(20,2) NOT NULL DEFAULT '0', "movedAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), "dealId" integer, "fromStageId" integer, "toStageId" integer NOT NULL, CONSTRAINT "PK_a1519077d68714e470951e8d348" PRIMARY KEY ("id"))`,
     );
     await queryRunner.query(
       `CREATE TABLE "deals" ("id" SERIAL NOT NULL, "name" character varying NOT NULL, "value" numeric(20,2) NOT NULL, "status" "public"."deals_status_enum" NOT NULL DEFAULT 'active', "closedAt" TIMESTAMP, "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), "customerId" integer NOT NULL, "stageId" integer, CONSTRAINT "PK_8c66f03b250f613ff8615940b4b" PRIMARY KEY ("id"))`,
