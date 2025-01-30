@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable, LoggerService, NotFoundException } from '@nestjs/common';
 import { UpdateBookingDto } from './dto/update-booking.dto';
 
 import { InjectRepository } from '@nestjs/typeorm';
@@ -79,10 +79,14 @@ export class BookingService {
     if (Object.keys(updates).length > 0)
       await this.bookingRepository.update(id, updateBookingDto);
 
-    const booking = this.bookingRepository.findOneBy({ id })
 
-    if (user.roles.includes('advisor')) {
-      this.sendAdvisoryRemarksEmail((await booking).user, (await booking).notes, (await booking).advisor)
+    const booking = await this.bookingRepository.findOne({
+      where: { id },
+      relations: ['user', 'advisor'], 
+    });
+
+    if (user.roles.includes('advisor')) {    
+      await this.sendAdvisoryRemarksEmail(booking.user, booking.notes, booking.advisor)
     }
     return booking;
   }
@@ -93,54 +97,72 @@ export class BookingService {
 
 
   async sendAdvisoryRemarksEmail(user: User, notes: string, advisor: User) {
-    const msg = {
-      to: user.username,
-      from: process.env.FROM_EMAIL,
-      subject: 'Reminder: Review Advisor`s Remarks Before Your Session',
-      html: advisoryRemarksEmailTemplate(notes, user.firstName, advisor.firstName),
-    };
-
-    await this.sendAdvisoryRemarksEmailViaBrevo(msg, user);
-
+    if(user.username && user.firstName && advisor.firstName){
+      const msg = {
+        to: user.username,
+        from: process.env.FROM_EMAIL,
+        subject: 'Reminder: Review Advisor`s Remarks Before Your Session',
+        html: advisoryRemarksEmailTemplate(notes, user.firstName, advisor.firstName),
+      };
+  
+      try{
+        await this.sendAdvisoryRemarksEmailViaBrevo(msg, user);
+      }catch(e){
+        console.log("The error in sending the advisory reminder remarks is ", e)
+      }
+    } 
   }
 
 
 
   async sendAdvisoryRemarksEmailViaBrevo(msg: any, user: User) {
     const apiInstance = new brevo.TransactionalEmailsApi();
+  
+    try {
+      if (!process.env.BREVO_API_KEY || !process.env.FROM_EMAIL) {
+        throw new Error('Brevo API key or FROM_EMAIL is missing in environment variables');
+      }
+  
+      const apiKey = apiInstance.authentications['apiKey'];
+      apiKey.apiKey = process.env.BREVO_API_KEY;
+  
 
-    const apiKey = apiInstance.authentications['apiKey'];
-    apiKey.apiKey = process.env.BREVO_API_KEY;
-
-    const sendSmtpEmail = new brevo.SendSmtpEmail();
-
-    sendSmtpEmail.subject = msg.subject;
-    sendSmtpEmail.htmlContent = msg.html;
-    sendSmtpEmail.sender = {
-      name: 'Capital Connect',
-      email: process.env.FROM_EMAIL,
-    };
-    sendSmtpEmail.to = [
-      { email: msg.to, name: `${user.firstName} ${user.lastName}` },
-    ];
-    sendSmtpEmail.replyTo = {
-      name: 'Capital Connect',
-      email: process.env.FROM_EMAIL,
-    };
-
-    apiInstance.sendTransacEmail(sendSmtpEmail).then(
-      function (data) {
-        console.log(
-          'API called successfully. Returned data: ' + JSON.stringify(data),
-        );
-      },
-      function (error) {
-        console.error(error);
-      },
-    );
+      const sendSmtpEmail = new brevo.SendSmtpEmail();
+      sendSmtpEmail.subject = msg.subject;
+      sendSmtpEmail.htmlContent = msg.html;
+      sendSmtpEmail.sender = {
+        name: 'Capital Connect',
+        email: process.env.FROM_EMAIL,
+      };
+      sendSmtpEmail.to = [
+        { email: msg.to, name: `${user.firstName} ${user.lastName}` },
+      ];
+      sendSmtpEmail.replyTo = {
+        name: 'Capital Connect',
+        email: process.env.FROM_EMAIL,
+      };
+  
+      const response = await apiInstance.sendTransacEmail(sendSmtpEmail);
+      console.log('Brevo API success:', JSON.stringify(response));
+      return response;  
+  
+    } catch (error) {
+      console.error('Brevo API error:', {
+        message: error.message,
+        statusCode: error.statusCode,
+        body: error.body,
+        stack: error.stack,
+      });
+  
+      if (error.statusCode === 401) {
+        throw new Error('Failed to send email: Invalid or missing Brevo API key');
+      } else if (error.statusCode >= 500) {
+        throw new Error('Failed to send email: Brevo API server error');
+      } else {
+        throw new Error(`Failed to send email: ${error.message}`);
+      }
+    }
   }
-
-
 
 
 
