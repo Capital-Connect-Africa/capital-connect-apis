@@ -5,6 +5,7 @@ import {
   CreateDateColumn,
   Column,
   OneToMany,
+  UpdateDateColumn,
 } from 'typeorm';
 import { Deal } from './deal.entity';
 import { DealStage } from './deal-stage.entity';
@@ -32,4 +33,7 @@ export class DealStageHistory {
 
   @OneToMany(() => DealAttachment, (attachment) => attachment.history)
   attachments: DealAttachment[];
+
+  @UpdateDateColumn()
+  updatedAt: Date;
 }
