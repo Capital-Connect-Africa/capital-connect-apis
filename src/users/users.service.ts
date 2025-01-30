@@ -117,9 +117,9 @@ export class UsersService {
     usertype: Role,
     page: number = 1,
     limit: number = 30,
-  ): Promise<any[]> {
+  ): Promise<{ data: any[]; total_count: number }> {
     const skip = (page - 1) * limit;
-    const [users, total] = await this.usersRepository.findAndCount({
+    const [users, total_count] = await this.usersRepository.findAndCount({
       skip,
       take: limit,
       where: { roles: usertype },
@@ -130,15 +130,14 @@ export class UsersService {
       ],
       order: { id: 'DESC' },
     });
-
-    return users.map((user) => {
+    const data = users.map((user) => {
       const activeSubscription = user.subscriptions.find((sub) => sub.isActive);
       return {
         ...user,
         activeSubscription: activeSubscription || null,
-        total,
       };
     });
+    return { data, total_count };
   }
 
   async update(id: number, updateUserDto: Partial<User>): Promise<User> {
