@@ -151,17 +151,11 @@ export class User {
     nullable: true,
     onDelete: 'SET NULL',
   })
-  @ManyToOne(() => User, (user) => user.referredUsers, {
-    nullable: true,
-    onDelete: 'SET NULL',
-  })
   referrer: User;
 
   @OneToMany(() => User, (user) => user.referrer)
-  @OneToMany(() => User, (user) => user.referrer)
   referredUsers: User[];
 
-  @OneToOne(() => Referral, (referral) => referral.user)
   @OneToOne(() => Referral, (referral) => referral.user)
   referral: Referral;
 
