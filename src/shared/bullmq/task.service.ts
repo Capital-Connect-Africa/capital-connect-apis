@@ -61,4 +61,8 @@ export class TaskService {
   async sendEmailVerificationMailViaBrevo(data: any) {
     await this.taskQueue.add('send-verification-email-bravo', data);
   }
+
+  async sendSmsViaAfricasTalking(data: any) {
+    await this.taskQueue.add('send-sms-africastalking', data);
+  }
 }

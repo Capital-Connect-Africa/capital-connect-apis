@@ -9,6 +9,7 @@ import { BullmqModule } from './bullmq.module';
 async function initializeWorker() {
   const appContext = await NestFactory.createApplicationContext(BullmqModule);
   const brevoService = appContext.get('BrevoService');
+  const otpService = appContext.get('OtpService');
 
   const taskWorker = new Worker(
     'task-queue',
@@ -36,7 +37,10 @@ async function initializeWorker() {
             break;
 
           case 'send-sms-africastalking':
-            // await sendSms(job.data);
+            await otpService.sendSmsViaAfricasTalking(
+              job.data.mobileNumber,
+              job.data.message,
+            );
             break;
 
           default:
