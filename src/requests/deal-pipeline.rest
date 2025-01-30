@@ -12,12 +12,12 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 {
     "name": "Deal Pipeline",
     "ownerId": 3,
-    "maxNumberOfStages": 7
+    "maxNumberOfStages": 5
 }
 
 
 ### Get pipeline by id
-GET http://localhost:3000/deal-pipelines/3
+GET http://localhost:3000/deal-pipelines/1
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
@@ -45,7 +45,7 @@ Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
 {
-    "pipelineId": 3,
+    "pipelineId": 1,
     "name": "Initial Stage",
     "progress": 0
 }
@@ -58,13 +58,13 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
 
 #### Get deal stage by id
-GET http://localhost:3000/deal-pipelines/stages/2
+GET http://localhost:3000/deal-pipelines/stages/1
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
 
 #### Update deal stage
-PUT http://localhost:3000/deal-pipelines/stages/2
+PUT http://localhost:3000/deal-pipelines/stages/1
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
@@ -104,7 +104,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
 
 ### Update deal customer details
-PUT http://localhost:3000/deal-pipelines/customers/3
+PUT http://localhost:3000/deal-pipelines/customers/2
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
@@ -118,11 +118,23 @@ Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
 
-
 ### Remove deal customer details
 DELETE  http://localhost:3000/deal-pipelines/customers/3
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+
+### Create deal
+POST  http://localhost:3000/deal-pipelines/deals
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+{
+    "value": 3000,
+    "name": "Marketing Strategy",
+    "stageId": 1,
+    "customerId": 2
+}
 
 
 ### Advance deal to another stage
