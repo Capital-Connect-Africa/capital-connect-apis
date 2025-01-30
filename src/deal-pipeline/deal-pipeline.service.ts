@@ -71,16 +71,35 @@ export class DealPipelineService {
     const message = this._validateUser(owner, Role.Investor);
 
     if (message) throw new BadRequestException(message);
-    console.log(user);
+    const pipelines = await this.dealPipelineRepository.find({
+      where: {
+        owner: { id: ownerId },
+      },
+    });
+
+    if ([name, maxNumberOfStages].filter((v) => !v).length) {
+      throw new BadRequestException('All fields are required*');
+    }
+
+    const pipelineName = textToTitlteCase(name);
+
+    if (
+      pipelines
+        .map((pipeline) => textToTitlteCase(pipeline.name))
+        .includes(pipelineName)
+    ) {
+      throw new ConflictException(
+        `Pipeline with name '${name}' already exists`,
+      );
+    }
 
     const pipeline = this.dealPipelineRepository.create({
-      name,
+      name: pipelineName,
       maxNumberOfStages,
       owner,
     });
 
-    // return await this.dealPipelineRepository.save(pipeline);
-    return pipeline;
+    return await this.dealPipelineRepository.save(pipeline);
   }
 
   async findAllUserPipelines(ownerId: number): Promise<DealPipeline[]> {
