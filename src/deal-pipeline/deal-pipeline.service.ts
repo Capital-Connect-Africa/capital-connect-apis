@@ -77,7 +77,10 @@ export class DealPipelineService {
       },
     });
 
-    if ([name, maxNumberOfStages].filter((v) => !v).length) {
+    if (
+      [name, maxNumberOfStages].filter((v) => v === null || v === undefined)
+        .length
+    ) {
       throw new BadRequestException('All fields are required*');
     }
 
@@ -155,7 +158,7 @@ export class DealPipelineService {
   async createDealStage(payload: DealStageDto): Promise<DealStage> {
     const { name, progress, pipelineId } = payload;
 
-    if ([name, progress].filter((v) => !v).length) {
+    if ([name, progress].filter((v) => v === null || v === undefined).length) {
       throw new BadRequestException('All fields are required*');
     }
 
@@ -454,7 +457,11 @@ export class DealPipelineService {
   async createDeal(payload: DealDto): Promise<Deal> {
     const { customerId, stageId, name, value, status } = payload;
 
-    if ([name, customerId, stageId, value, status].filter((v) => !v).length) {
+    if (
+      [name, customerId, stageId, value].filter(
+        (v) => v === null || v === undefined,
+      ).length
+    ) {
       throw new BadRequestException('All fields are required*');
     }
     const stage = await this.dealStageRepository.findOne({
