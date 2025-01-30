@@ -100,3 +100,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
     "voucherCode": "DE1EEB83" 
 }
 
+### redeem voucher
+GET http://localhost:3000/vouchers/search-referrer?q=test
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
