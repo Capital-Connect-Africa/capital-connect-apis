@@ -20,5 +20,5 @@ export class CreateUserDto {
   roles: string; // user, investor, advisor
 
   @IsOptional()
-  referralToken?:string
+  referralCode?: string;
 }

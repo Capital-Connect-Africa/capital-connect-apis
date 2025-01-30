@@ -14,4 +14,21 @@ export class TaskService {
       repeat: { pattern: '0 * * * *' }, // Run every hour
     });
   }
+
+  async deleteRepeatingTask(taskData: any) {
+    const repeatableJobKey = {
+      name: 'repeating-task', // The name of the job
+      pattern: '0 * * * *', // The cron pattern used to schedule the job
+    };
+
+    try {
+      await this.taskQueue.removeRepeatable(repeatableJobKey.name, {
+        pattern: repeatableJobKey.pattern,
+      });
+
+      console.log('Repeating job removed successfully');
+    } catch (error) {
+      console.error('Error removing repeating job:', error.message);
+    }
+  }
 }

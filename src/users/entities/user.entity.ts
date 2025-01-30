@@ -103,6 +103,7 @@ export class User {
   mobileNumbers: MobileNumber[];
 
   @OneToMany(() => Booking, (booking) => booking.advisor)
+  @OneToMany(() => Booking, (booking) => booking.advisor)
   advisedBookings: Booking[];
 
   @OneToOne(
@@ -127,7 +128,6 @@ export class User {
     onDelete: 'CASCADE',
   })
   finances: Finances[];
-
   @OneToMany(() => UserVoucher, (voucher) => voucher.user)
   vouchers: UserVoucher[];
 
@@ -143,6 +143,14 @@ export class User {
   investorProfiles: InvestorProfile[];
 
   // Referrals
+  @Column({ nullable: true, unique: true })
+  @ApiProperty({ description: 'User referral identifier', required: false })
+  referralCode: string;
+
+  @ManyToOne(() => User, (user) => user.referredUsers, {
+    nullable: true,
+    onDelete: 'SET NULL',
+  })
   @ManyToOne(() => User, (user) => user.referredUsers, {
     nullable: true,
     onDelete: 'SET NULL',
@@ -150,8 +158,10 @@ export class User {
   referrer: User;
 
   @OneToMany(() => User, (user) => user.referrer)
+  @OneToMany(() => User, (user) => user.referrer)
   referredUsers: User[];
 
+  @OneToOne(() => Referral, (referral) => referral.user)
   @OneToOne(() => Referral, (referral) => referral.user)
   referral: Referral;
 

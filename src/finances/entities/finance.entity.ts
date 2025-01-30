@@ -1,4 +1,5 @@
 import { 
+  AfterUpdate,
     BeforeInsert,
     BeforeUpdate,
     Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn 
@@ -9,6 +10,7 @@ import { File } from "src/files/entities/file.entity";
 import { Revenue } from "./revenue.entity";
 import { Opex } from "./opex.entity";
 import { User } from "src/users/entities/user.entity";
+import { CostOfSales } from "./costs.entity";
 
 @Entity('finances')
 export class Finances {
@@ -19,13 +21,10 @@ export class Finances {
     year: number; 
 
     @Column('bigint', { default: 0 })
-    costOfSales: number;
+    amorDep: number;
 
     @Column('bigint', { default: 0 })
-    ebitda: number;
-
-    @Column('bigint', { default: 0 })
-    ebit: number;
+    interests: number;
 
     @Column('bigint', { default: 0 })
     taxes: number;
@@ -48,6 +47,9 @@ export class Finances {
     @OneToMany(() => Opex, (opex) => opex.finances, { cascade: true })
     opex: Opex[];
 
+    @OneToMany(() => CostOfSales, (costOfSales) => costOfSales.finances, { cascade: true })
+    costOfSales: CostOfSales[];
+
     @OneToOne(() => File)
     @JoinColumn()
     attachments: File;
@@ -59,4 +61,55 @@ export class Finances {
     @ManyToOne(() => User, (user) => user.finances)
     @JoinColumn({ name: 'userId' })
     user: User; 
+
+    @Column('bigint', { nullable: true })
+    totalRevenues?: number;
+
+    @Column('bigint', { nullable: true })
+    totalCosts?: number;
+
+    @Column('bigint', { nullable: true })
+    grossProfit?: number;
+
+    @Column('bigint', { nullable: true })
+    ebitda?: number;
+
+    @Column('bigint', { nullable: true })
+    ebit?: number;
+
+    @Column('bigint', { nullable: true })
+    profitBeforeTax?: number;
+
+    @Column('bigint', { nullable: true })
+    netProfit?: number;
+
+    @Column({ nullable: true })
+    grossMargin?: string;
+
+    @Column({ nullable: true })
+    ebitdaMargin?: string;
+
+    // Calculate fields
+    @BeforeInsert()
+    @BeforeUpdate()
+    calculateFields() {
+        // Map revenue, costs and opex values to numbers
+        const revenueValues = this.revenues.map(revenue => Number(revenue.value));
+        const costsValues = this.costOfSales.map(costOfSales => Number(costOfSales.value));
+        const opexValues = this.opex.map(opex => Number(opex.value));
+      
+        this.totalRevenues = revenueValues.reduce((a, b) => a + b, 0);
+        this.totalCosts = costsValues.reduce((a, b) => a + b, 0);      
+        const totalOpex = opexValues.reduce((a, b) => a + b, 0);
+      
+        this.grossProfit = this.totalRevenues - this.totalCosts;
+        this.ebitda = this.grossProfit - totalOpex;
+        this.ebit = this.ebitda + Number(this.amorDep || 0);
+        this.profitBeforeTax = this.ebit + Number(this.interests || 0);
+        this.netProfit = this.profitBeforeTax - Number(this.taxes || 0);
+
+        this.grossMargin = `${Math.round((this.grossProfit / this.totalRevenues) * 100)}%`;
+        this.ebitdaMargin = `${Math.round((this.ebitda / this.totalRevenues) * 100)}%`;
+      }
+      
 }
