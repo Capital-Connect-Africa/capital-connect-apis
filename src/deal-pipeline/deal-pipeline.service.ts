@@ -155,12 +155,15 @@ export class DealPipelineService {
   async createDealStage(payload: DealStageDto): Promise<DealStage> {
     const { name, progress, pipelineId } = payload;
 
+    if ([name, progress].filter((v) => !v).length) {
+      throw new BadRequestException('All fields are required*');
+    }
+
     if (progress < 0 || progress > 100) {
       throw new BadRequestException(
         `Unable to create stage. Stage progress must between 0% and 100%`,
       );
     }
-
     const pipeline = await this.dealPipelineRepository.findOne({
       where: { id: pipelineId },
       relations: ['stages'],
@@ -450,6 +453,10 @@ export class DealPipelineService {
   /* ================Deal========================== */
   async createDeal(payload: DealDto): Promise<Deal> {
     const { customerId, stageId, name, value, status } = payload;
+
+    if ([name, customerId, stageId, value, status].filter((v) => !v).length) {
+      throw new BadRequestException('All fields are required*');
+    }
     const stage = await this.dealStageRepository.findOne({
       where: {
         id: stageId,
@@ -476,14 +483,14 @@ export class DealPipelineService {
 
     if (
       deals
-        .map((deal) => deal.name.toLowerCase().trim())
-        .includes(name.toLowerCase().trim())
+        .map((deal) => textToTitlteCase(deal.name))
+        .includes(textToTitlteCase(name))
     ) {
       throw new BadRequestException(`Deal with name '${name}' already exists`);
     }
 
     let deal = this.dealRepository.create({
-      name,
+      name: textToTitlteCase(name),
       value,
       status: status ?? DealStatus.ACTIVE,
       stage: stage,
@@ -548,14 +555,14 @@ export class DealPipelineService {
       const deals = deal.stage.deals;
       if (
         deals
-          .map((deal) => deal.name.toLowerCase().trim())
-          .includes(name.toLowerCase().trim())
+          .map((deal) => textToTitlteCase(deal.name))
+          .includes(textToTitlteCase(name))
       ) {
         throw new BadRequestException(
           `Deal with name '${name}' already exists`,
         );
       }
-      deal.name = name;
+      deal.name = textToTitlteCase(name);
     }
     if (closureDate) deal.closedAt = closureDate;
     if (value) {
