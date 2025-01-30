@@ -44,6 +44,141 @@ import { DealPipeline } from './entities/deal-pipeline.entity';
 @Controller('deal-pipelines')
 export class DealPipelineController {
   constructor(private dealPipelineService: DealPipelineService) {}
+
+  /* ================Deal Stages========================== */
+  @Post('stages')
+  @ApiOperation({ summary: 'Creates a new deal stage' })
+  @ApiCreatedResponse({
+    description: 'New deal stage created successfully',
+    type: DealStage,
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Login required. Possibly user session expired',
+    type: ErrorDto,
+  })
+  @ApiForbiddenResponse({
+    description: 'User access not allowed',
+    type: ErrorDto,
+  })
+  @ApiBadRequestResponse({
+    description: 'Invalid data provided',
+    type: ErrorDto,
+  })
+  @ApiInternalServerErrorResponse({
+    description: 'A little server oopsy occured! Not your bad 😃',
+    type: ErrorDto,
+  })
+  async createDealStage(@Body() body: DealStageDto) {
+    try {
+      return await this.dealPipelineService.createDealStage(body);
+    } catch (error) {
+      handleError(error, RequestMethod.POST);
+    }
+  }
+
+  @Get('stages')
+  @ApiOperation({ summary: 'Fetch a paginated list of deal stages.' })
+  @ApiOkResponse({
+    description: 'Deal stages retrieved successfully',
+    type: DealStage,
+    isArray: true,
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Login required. Possibly user session expired',
+    type: ErrorDto,
+  })
+  @ApiInternalServerErrorResponse({
+    description: 'A little server oopsy occured! Not your bad 😃',
+    type: ErrorDto,
+  })
+  async findStages(@Query('page') page: number, @Query('limit') limit: number) {
+    try {
+      return await this.dealPipelineService.findAllStages(page, limit);
+    } catch (error) {
+      handleError(error, RequestMethod.GET);
+    }
+  }
+
+  @Get('stages/:stageId')
+  @ApiOperation({ summary: 'Gets a single stage by id.' })
+  @ApiOkResponse({
+    description: 'Deal stage retrieved successfully',
+    type: DealStage,
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Login required. Possibly user session expired',
+    type: ErrorDto,
+  })
+  @ApiNotFoundResponse({
+    description: 'Deal Stage with id not found',
+    type: ErrorDto,
+  })
+  @ApiInternalServerErrorResponse({
+    description: 'A little server oopsy occured! Not your bad 😃',
+    type: ErrorDto,
+  })
+  async findOneStage(@Param('stageId') stageId: number) {
+    try {
+      return await this.dealPipelineService.findOneStage(stageId);
+    } catch (error) {
+      handleError(error, RequestMethod.GET);
+    }
+  }
+  @Put('stages/:stageId')
+  @ApiOperation({ summary: 'Updates details of a deal stage by id' })
+  @ApiOkResponse({
+    description: 'Deal stage was updated successfully',
+    type: DealPipeline,
+  })
+  @ApiNotFoundResponse({
+    description: 'Deal stage with Id was not found',
+    type: ErrorDto,
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Login required. Possibly user session expired',
+    type: ErrorDto,
+  })
+  @ApiInternalServerErrorResponse({
+    description: 'A little server oopsy occured! Not your bad 😃',
+    type: ErrorDto,
+  })
+  async updateDealStage(
+    @Body() payload: Partial<DealStageDto>,
+    @Param('stageId') stageId: number,
+  ) {
+    try {
+      return await this.dealPipelineService.updateDealStage(payload, stageId);
+    } catch (error) {
+      handleError(error, RequestMethod.PUT);
+    }
+  }
+
+  @Delete('stages/:stageId')
+  @ApiOperation({ summary: 'Removes a deal stage' })
+  @ApiNoContentResponse({
+    description: 'Deal stage was removed successfully',
+  })
+  @ApiNotFoundResponse({
+    description: 'Deal stage with Id was not found',
+    type: ErrorDto,
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Login required. Possibly user session expired',
+    type: ErrorDto,
+  })
+  @ApiInternalServerErrorResponse({
+    description: 'A little server oopsy occured! Not your bad 😃',
+    type: ErrorDto,
+  })
+  async removeDealStage(@Param('stageId') stageId: number) {
+    try {
+      return await this.dealPipelineService.removeDealStage(stageId);
+    } catch (error) {
+      handleError(error, RequestMethod.DELETE);
+    }
+  }
+
+  /* ===============Deal Pipeline=============== */
   @Post()
   @ApiOperation({ summary: 'Creates a new deal deal pipeline' })
   @ApiCreatedResponse({
