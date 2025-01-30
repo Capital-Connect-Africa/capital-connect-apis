@@ -43,6 +43,7 @@ import { VoucherModule } from './voucher/voucher.module';
 import { WebexIntegrationModule } from './webex_integration/webex_integration.module';
 import { FinancesModule } from './finances/finances.module';
 import { UserReferralModule } from './user-referral/user-referral.module';
+import { DealPipelineModule } from './deal-pipeline/deal-pipeline.module';
 
 @Module({
   imports: [
@@ -92,6 +93,7 @@ import { UserReferralModule } from './user-referral/user-referral.module';
     WebexIntegrationModule,
     FinancesModule,
     UserReferralModule,
+    DealPipelineModule,
   ],
   providers: [
     AppService,
