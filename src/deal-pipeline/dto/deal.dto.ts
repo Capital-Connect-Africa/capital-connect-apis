@@ -3,13 +3,6 @@ import { IsEnum, IsInt, IsNumber, IsOptional, IsString } from 'class-validator';
 import { DealStatus } from 'src/shared/enums/deal.status.enum';
 
 export class DealDto {
-  @IsInt()
-  ownerId: number;
-  @ApiProperty({
-    description: 'ID of the deal owner',
-    type: 'integer',
-    required: true,
-  })
   @IsString()
   name: string;
   @ApiProperty({
