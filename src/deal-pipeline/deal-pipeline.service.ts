@@ -245,4 +245,133 @@ export class DealPipelineService {
     await this.dealStageRepository.remove(stage);
     return;
   }
+
+  /* ================Deal Customer========================== */
+  async createDealCustomer(payload: DealCustomerDto): Promise<DealCustomer> {
+    const { userId, name, phone, email } = payload;
+    let customer: DealCustomer | null = null;
+    let newDealCustomer: Partial<DealCustomer>;
+    if (name && phone && email) {
+      customer = await this.dealCustomerRepository.findOneBy({
+        name,
+        email,
+        phone,
+      });
+
+      if (!customer) {
+        customer = await this.dealCustomerRepository.findOne({
+          where: [{ name }, { email }, { phone }],
+        });
+        if (customer) {
+          if (customer.name == name) {
+            throw new ConflictException(
+              `User with name '${name}' already exists`,
+            );
+          }
+          if (customer.email == email) {
+            throw new ConflictException(
+              `User with email '${email}' already exists`,
+            );
+          }
+          if (customer.phone == phone) {
+            throw new ConflictException(
+              `User with phone number '${phone}' already exists`,
+            );
+          }
+        }
+      }
+      customer =
+        customer ?? this.dealCustomerRepository.create({ name, phone, email });
+      newDealCustomer = customer;
+    } else if (userId) {
+      let userFound = await this.dealCustomerRepository.findOne({
+        where: { user: { id: userId } },
+        relations: ['user'],
+      });
+
+      const user =
+        (userFound && userFound.user) ??
+        (await this.userRepository.findOneBy({ id: userId }));
+      if (!user) {
+        throw new BadRequestException(`User was not found. Unable to proceed`);
+      }
+      const message = this._validateUser(user);
+      if (message) {
+        throw new BadRequestException(message);
+      }
+      customer = userFound || this.dealCustomerRepository.create({ user });
+      const userPhoneNumber = (user.mobileNumbers || []).at(0);
+      newDealCustomer = {
+        name: `${user.firstName ?? ''} ${user.lastName ?? ''}`.trim(),
+        email: user.username,
+        phone: userPhoneNumber ? userPhoneNumber.phoneNo : '',
+      };
+    }
+    if (!customer)
+      throw new BadRequestException(`All customer fields are required*`);
+    const savedDealCustomerDetails =
+      await this.dealCustomerRepository.save(customer);
+    newDealCustomer.id = savedDealCustomerDetails.id;
+    newDealCustomer.deals = savedDealCustomerDetails.deals;
+    return newDealCustomer as DealCustomer;
+  }
+
+  async updateDealCustomer(
+    payload: Partial<DealCustomerDto>,
+    customerId: number,
+  ) {
+    const customer = await this.dealCustomerRepository.findOne({
+      where: { id: customerId },
+      relations: ['user'],
+    });
+    if (!customer) {
+      throw new NotFoundException(`Customer not found. Unable to update`);
+    }
+
+    if (customer.user) {
+      throw new ForbiddenException(`Forbidden operation. Unable to update`);
+    }
+
+    const { name, email, phone } = payload;
+    const existingCustomer = await this.dealCustomerRepository.findOne({
+      where: [{ name }, { email }, { phone }],
+    });
+
+    if (name) {
+      if (existingCustomer?.name == name) {
+        throw new ConflictException(`User with name '${name}' already exists`);
+      }
+      customer.name = name;
+    }
+    if (email) {
+      if (existingCustomer?.email == email) {
+        throw new ConflictException(
+          `User with email '${email}' already exists`,
+        );
+      }
+      customer.email = email;
+    }
+    if (phone) {
+      if (existingCustomer?.phone == phone) {
+        throw new ConflictException(
+          `User with phone number '${phone}' already exists`,
+        );
+      }
+      customer.phone = phone;
+    }
+
+    await this.dealCustomerRepository.update(customerId, customer);
+    return customer;
+  }
+
+  async removeDealCustomer(customerId: number) {
+    const customer = await this.dealCustomerRepository.findOneBy({
+      id: customerId,
+    });
+    if (!customer) {
+      throw new NotFoundException(`Customer not found. Unable to remove`);
+    }
+    await this.dealCustomerRepository.remove(customer);
+    return;
+  }
 }

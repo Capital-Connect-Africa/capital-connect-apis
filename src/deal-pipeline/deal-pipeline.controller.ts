@@ -177,6 +177,92 @@ export class DealPipelineController {
       handleError(error, RequestMethod.DELETE);
     }
   }
+  /* ================Deal Customer========================== */
+  @Post('customers')
+  @ApiOperation({ summary: 'Creates a new deal customer' })
+  @ApiCreatedResponse({
+    description: 'New deal customer created successfully',
+    type: DealStage,
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Login required. Possibly user session expired',
+    type: ErrorDto,
+  })
+  @ApiForbiddenResponse({
+    description: 'User access not allowed',
+    type: ErrorDto,
+  })
+  @ApiBadRequestResponse({
+    description: 'Invalid data provided',
+    type: ErrorDto,
+  })
+  @ApiInternalServerErrorResponse({
+    description: 'A little server oopsy occured! Not your bad 😃',
+    type: ErrorDto,
+  })
+  async createDealCustomer(@Body() body: DealCustomerDto) {
+    try {
+      return await this.dealPipelineService.createDealCustomer(body);
+    } catch (error) {
+      handleError(error, RequestMethod.POST);
+    }
+  }
+  @Put('customers/:customerId')
+  @ApiOperation({ summary: 'Updates details of a deal customer by id' })
+  @ApiOkResponse({
+    description: 'Details of a deal customer with ID were updated successfully',
+    type: DealPipeline,
+  })
+  @ApiNotFoundResponse({
+    description: 'Deal customer with Id was not found',
+    type: ErrorDto,
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Login required. Possibly user session expired',
+    type: ErrorDto,
+  })
+  @ApiInternalServerErrorResponse({
+    description: 'A little server oopsy occured! Not your bad 😃',
+    type: ErrorDto,
+  })
+  async updateDealCustomer(
+    @Body() payload: Partial<DealPipelineDto>,
+    @Param('customerId') customerId: number,
+  ) {
+    try {
+      return await this.dealPipelineService.updateDealCustomer(
+        payload,
+        customerId,
+      );
+    } catch (error) {
+      handleError(error, RequestMethod.PUT);
+    }
+  }
+
+  @Delete('customers/:customerId')
+  @ApiOperation({ summary: 'Removes a deal customer' })
+  @ApiNoContentResponse({
+    description: 'Deal customer with id was removed successfully',
+  })
+  @ApiNotFoundResponse({
+    description: 'Deal customer with Id was not found',
+    type: ErrorDto,
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Login required. Possibly user session expired',
+    type: ErrorDto,
+  })
+  @ApiInternalServerErrorResponse({
+    description: 'A little server oopsy occured! Not your bad 😃',
+    type: ErrorDto,
+  })
+  async removeDealCustomer(@Param('customerId') customerId: number) {
+    try {
+      return await this.dealPipelineService.removeDealCustomer(customerId);
+    } catch (error) {
+      handleError(error, RequestMethod.DELETE);
+    }
+  }
 
   /* ===============Deal Pipeline=============== */
   @Post()
