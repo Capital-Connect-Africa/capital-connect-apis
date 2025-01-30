@@ -1,14 +1,15 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsInt, IsNumber } from 'class-validator';
+import { IsInt, IsNumber, IsOptional } from 'class-validator';
 
 export class DealStageDto {
   @IsInt()
+  @IsOptional()
   @ApiProperty({
-    description: 'ID of the deal stage owner',
+    description: 'ID of the pipeline id',
     type: 'integer',
-    required: true,
+    required: false,
   })
-  userId: number;
+  pipelineId: number;
 
   @ApiProperty({
     description: 'Name of the deal stage',
