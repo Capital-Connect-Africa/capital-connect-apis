@@ -15,6 +15,7 @@ import throwInternalServer from '../shared/utils/exceptions.util';
 import { BrevoService } from '../shared/brevo.service';
 import { connectionApproval } from '../templates/connection-approval';
 import { connectionRequest } from '../templates/connection-request';
+import { TaskService } from '../shared/bullmq/task.service';
 
 @Injectable()
 export class ConnectionRequestService {
@@ -27,6 +28,7 @@ export class ConnectionRequestService {
     private readonly companyRepository: Repository<Company>,
     private matchmakingService: MatchmakingService,
     private readonly brevoService: BrevoService,
+    private readonly taskService: TaskService,
   ) {}
 
   async create(
@@ -74,7 +76,8 @@ export class ConnectionRequestService {
         investorProfile,
         company,
       });
-      const connectionRequest = await this.connectionRequestRepository.save(newRequest);
+      const connectionRequest =
+        await this.connectionRequestRepository.save(newRequest);
       this.sendConnectionRequestEmail(company.id, connectionRequest.uuid);
       return connectionRequest;
     }
@@ -88,7 +91,7 @@ export class ConnectionRequestService {
       relations: ['investorProfile', 'company'],
       take: limit,
       skip: (page - 1) * limit,
-      order: {id: 'DESC'},
+      order: { id: 'DESC' },
     });
   }
 
@@ -113,7 +116,7 @@ export class ConnectionRequestService {
       relations: ['company'],
       take: limit,
       skip: (page - 1) * limit,
-      order: {id: 'DESC'},
+      order: { id: 'DESC' },
     });
   }
 
@@ -134,7 +137,7 @@ export class ConnectionRequestService {
       relations: ['investorProfile'],
       take: limit,
       skip: (page - 1) * limit,
-      order: {id: 'DESC'},
+      order: { id: 'DESC' },
     });
   }
 
@@ -144,7 +147,9 @@ export class ConnectionRequestService {
       relations: ['investorProfile', 'company'],
     });
     if (!approvalRequest) {
-      throw new NotFoundException(`Valid connection request with ID ${id} not found`);
+      throw new NotFoundException(
+        `Valid connection request with ID ${id} not found`,
+      );
     }
     await this.matchmakingService.connectWithCompany(
       approvalRequest.investorProfile.id,
@@ -154,24 +159,29 @@ export class ConnectionRequestService {
     return this.update(approvalRequest.id, { isApproved: true });
   }
 
-  async declineConnectionRequest(id: string, declineReasons: string[] = ['Declined by business owner.']) {
+  async declineConnectionRequest(
+    id: string,
+    declineReasons: string[] = ['Declined by business owner.'],
+  ) {
     const approvalRequest = await this.connectionRequestRepository.findOne({
       where: { uuid: id, isApproved: IsNull() },
       relations: ['investorProfile', 'company'],
     });
-  
+
     if (!approvalRequest) {
-      throw new NotFoundException(`Valid connection request with ID ${id} not found`);
+      throw new NotFoundException(
+        `Valid connection request with ID ${id} not found`,
+      );
     }
-  
+
     await this.matchmakingService.markAsDeclined(
       approvalRequest.investorProfile.id,
       approvalRequest.company.id,
       declineReasons,
     );
-  
+
     return this.update(approvalRequest.id, { isApproved: false });
-  }  
+  }
 
   async findOne(id: number): Promise<ConnectionRequest> {
     const connectionRequest = await this.connectionRequestRepository.findOne({
@@ -257,7 +267,8 @@ export class ConnectionRequestService {
         name: `Capital Connect`,
       },
     ];
-    await this.brevoService.sendEmailViaBrevo(msg, recipients);
+    // await this.brevoService.sendEmailViaBrevo(msg, recipients);
+    await this.taskService.sendEmailBrevo({ msg, recipients });
   }
 
   private async sendConnectionRequestEmail(id: number, uuid: string) {
@@ -287,6 +298,6 @@ export class ConnectionRequestService {
         name: `Capital Connect`,
       },
     ];
-    await this.brevoService.sendEmailViaBrevo(msg, recipients);
+    await this.taskService.sendEmailBrevo({ msg, recipients });
   }
 }

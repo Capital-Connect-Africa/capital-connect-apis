@@ -10,10 +10,10 @@ import { AuthController } from './auth.controller';
 import { UsersService } from 'src/users/users.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ContactPerson } from 'src/contact-person/entities/contact-person.entity';
-import { BullModule } from "@nestjs/bullmq";
-import { TaskService } from "../shared/bullmq/task.service";
-import { Queue } from "bullmq";
-import { redisOptions } from "../shared/redis/redis.config";
+import { BullModule } from '@nestjs/bullmq';
+import { TaskService } from '../shared/bullmq/task.service';
+import { Queue } from 'bullmq';
+import { redisOptions } from '../shared/redis/redis.config';
 
 @Module({
   imports: [
@@ -27,15 +27,18 @@ import { redisOptions } from "../shared/redis/redis.config";
       }),
       inject: [ConfigService],
     }),
-    TypeOrmModule.forFeature([
-      ContactPerson,
-    ]),
+    TypeOrmModule.forFeature([ContactPerson]),
     BullModule.registerQueue({
       name: 'task-queue',
       connection: redisOptions,
     }),
   ],
-  providers: [AuthService, UsersService, LocalStrategy, JwtStrategy,  TaskService,
+  providers: [
+    AuthService,
+    UsersService,
+    LocalStrategy,
+    JwtStrategy,
+    TaskService,
     {
       provide: 'TASK_QUEUE',
       useFactory: (queue: Queue) => queue,
