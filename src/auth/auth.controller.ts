@@ -5,6 +5,7 @@ import {
   Body,
   BadRequestException,
   NotFoundException,
+  Delete,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
@@ -37,6 +38,12 @@ export class AuthController {
   async addRepeatingTask(@Body() taskData: any) {
     await this.taskService.addRepeatingTask(taskData);
     return { message: 'Repeating task added successfully!' };
+  }
+
+  @Delete('/delete-repeating')
+  async deleteRepeatingTask(@Body() taskData: any) {
+    await this.taskService.deleteRepeatingTask(taskData);
+    return { message: 'Repeating task deleted successfully!' };
   }
 
   @Post('login')

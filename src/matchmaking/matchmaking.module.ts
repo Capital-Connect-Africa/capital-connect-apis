@@ -22,6 +22,10 @@ import { ConnectionRequestController } from './connectionRequest.controller';
 import { ConnectionRequest } from './entities/connectionRequest.entity';
 import { BrevoService } from '../shared/brevo.service';
 import { UsersService } from 'src/users/users.service';
+import { TaskService } from '../shared/bullmq/task.service';
+import { Queue } from 'bullmq';
+import { BullModule } from '@nestjs/bullmq';
+import { redisOptions } from '../shared/redis/redis.config';
 
 @Module({
   imports: [
@@ -41,6 +45,10 @@ import { UsersService } from 'src/users/users.service';
     ]),
     CompanyModule,
     InvestorProfileModule,
+    BullModule.registerQueue({
+      name: 'task-queue',
+      connection: redisOptions,
+    }),
   ],
   providers: [
     BrevoService,
@@ -48,6 +56,12 @@ import { UsersService } from 'src/users/users.service';
     DeclineService,
     ConnectionRequestService,
     UsersService,
+    TaskService,
+    {
+      provide: 'TASK_QUEUE',
+      useFactory: (queue: Queue) => queue,
+      inject: ['BullQueue_task-queue'],
+    },
   ],
   controllers: [
     MatchmakingController,

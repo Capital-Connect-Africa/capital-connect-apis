@@ -1,14 +1,10 @@
-### Landing 
-
+### Landing
 GET http://localhost:3000
 
-#####
 ### Landing
-
 GET http://localhost:3000/home
 
-#####
-# Sign up
+### Sign up
 POST http://localhost:3000/auth/signup
 Content-Type: application/json
 
@@ -41,14 +37,13 @@ POST http://localhost:3000/auth/signup
 Content-Type: application/json
 
 {
-    "username": "test@gmail.com",
+    "username": "captain@gmail.com",
     "password": "pass1234",
     "firstName": "Mkuu",
     "hasAcceptedTerms": true
 }
 
 ### Login
-
 POST http://localhost:3000/auth/login
 Content-Type: application/json
 
@@ -57,9 +52,7 @@ Content-Type: application/json
     "password": "pass123"
 }
 
-###
-# Login wrong creds || user
-
+### Login wrong creds || user
 POST http://localhost:3000/auth/login
 Content-Type: application/json
 
@@ -68,8 +61,7 @@ Content-Type: application/json
     "password": "pass112"
 }
 
-#####
-# Sign up prod
+### Sign up prod
 POST https://capitalconnect-0060e0fb0eb4.herokuapp.com/auth/login
 Content-Type: application/json
 
@@ -78,9 +70,7 @@ Content-Type: application/json
   "password": "asvdjkfvadjsgvfagjw"
 }
 
-###
-# Resend verification email
-
+### Resend verification email
 POST http://localhost:3000/auth/resend-verification-email
 Content-Type: application/json
 
@@ -88,9 +78,7 @@ Content-Type: application/json
     "email": "vic@gmail.com"
 }
 
-###
-# Resend verification email
-
+### Resend verification email
 POST http://api.capitalconnect.africa/auth/resend-verification-email
 Content-Type: application/json
 
@@ -117,7 +105,16 @@ Content-Type: application/json
   "description": "This task repeats every hour b"
 }
 
-### Add a Task
+### Delete a Repeating Task
+DELETE http://localhost:3000/auth/delete-repeating
+Content-Type: application/json
+
+{
+  "taskName": "Repeating Task",
+  "description": "This task repeats every hour b"
+}
+
+### Add a Task prod
 POST https://capitalconnect-0060e0fb0eb4.herokuapp.com/auth/add
 Content-Type: application/json
 
@@ -127,8 +124,17 @@ Content-Type: application/json
   "priority": "high"
 }
 
-### Add a Repeating Task
+### Add a Repeating Task prod
 POST https://capitalconnect-0060e0fb0eb4.herokuapp.com/auth/add-repeating
+Content-Type: application/json
+
+{
+  "taskName": "Repeating Task",
+  "description": "This task repeats every hour b"
+}
+
+### Delete a Repeating Task prod
+DELETE https://capitalconnect-0060e0fb0eb4.herokuapp.com/auth/delete-repeating
 Content-Type: application/json
 
 {
@@ -140,5 +146,5 @@ Content-Type: application/json
 GET http://localhost:3000/admin/queues?authorization=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
 
-### Access BullMQ dashboard
+### Access BullMQ dashboard prod
 GET https://capitalconnect-0060e0fb0eb4.herokuapp.com/admin/queues?authorization=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
