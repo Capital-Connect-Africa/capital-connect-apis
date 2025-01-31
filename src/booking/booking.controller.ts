@@ -10,6 +10,7 @@ import {
   Put,
   Query,
   Req,
+  UnauthorizedException,
   UseGuards,
 } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
@@ -148,9 +149,10 @@ export class BookingController {
     @Param('id') id: string,
     @Req() req,
     @Body() updateBookingDto: UpdateBookingDto) {
-
-
-    return this.bookingService.update(+id, updateBookingDto, req.user);
+    
+    const user = req.user;
+       
+    return this.bookingService.update(+id, updateBookingDto, user);
   }
 
   @Delete(':id')

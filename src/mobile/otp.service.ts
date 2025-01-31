@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import axios from 'axios';
-import * as process from "node:process";
+import * as process from 'node:process';
 const SibApiV3Sdk = require('sib-api-v3-typescript');
 
 @Injectable()
@@ -9,24 +9,29 @@ export class OtpService {
   private readonly username = process.env.AT_USERNAME;
   private readonly apiUrl = process.env.AT_API_URL;
 
-  async sendSmsViaAfricasTalking(mobileNumber: string, message: string): Promise<any> {
+  async sendSmsViaAfricasTalking(
+    mobileNumber: string,
+    message: string,
+  ): Promise<any> {
     const data = new URLSearchParams({
       username: this.username,
       to: mobileNumber,
       message: message,
     });
-    
+
     const headers = {
       'Content-Type': 'application/x-www-form-urlencoded',
-      'apiKey': this.apiKey,
+      apiKey: this.apiKey,
     };
 
     try {
-      const response = await axios.post(this.apiUrl, data.toString(), { headers });
+      const response = await axios.post(this.apiUrl, data.toString(), {
+        headers,
+      });
       console.log(response);
       return response.data;
     } catch (error) {
-      console.log('error', error)
+      console.log('error', error);
       throw new Error('Failed to send SMS');
     }
   }
@@ -67,12 +72,12 @@ export class OtpService {
     sendTransacSms.webUrl = 'https://example.com/notifyUrl';
 
     apiInstance.sendTransacSms(sendTransacSms).then(
-      function(data) {
+      function (data) {
         console.log(
           'API called successfully. Returned data: ' + JSON.stringify(data),
         );
       },
-      function(error) {
+      function (error) {
         console.error(error);
       },
     );

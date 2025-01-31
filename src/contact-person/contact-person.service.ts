@@ -7,9 +7,10 @@ import { ContactPerson } from './entities/contact-person.entity';
 import { InvestorProfile } from '../investor-profile/entities/investor-profile.entity';
 import { GrantAccessDto } from './dto/grant-access.dto';
 import { UsersService } from '../users/users.service';
-import { User } from "../users/entities/user.entity";
-import { AuthService } from "../auth/auth.service";
-import { contactPersonWelcomeEmailTemplate } from "../templates/contact-persons-welcome-email";
+import { User } from '../users/entities/user.entity';
+import { AuthService } from '../auth/auth.service';
+import { contactPersonWelcomeEmailTemplate } from '../templates/contact-persons-welcome-email';
+import { TaskService } from '../shared/bullmq/task.service';
 
 @Injectable()
 export class ContactPersonService {
@@ -21,7 +22,8 @@ export class ContactPersonService {
     @InjectRepository(User)
     private usersRepository: Repository<User>,
     private usersService: UsersService,
-    private authService: AuthService
+    private authService: AuthService,
+    private readonly taskService: TaskService,
   ) {}
 
   async create(
@@ -74,22 +76,26 @@ export class ContactPersonService {
       where: { id: contactPersonId },
     });
     if (!contactPerson) {
-      throw new NotFoundException(`Contact person with id ${contactPersonId} was not found`);
+      throw new NotFoundException(
+        `Contact person with id ${contactPersonId} was not found`,
+      );
     }
 
     const existingUser = await this.usersRepository.findOne({
-      where: { username: contactPerson.emailAddress},
+      where: { username: contactPerson.emailAddress },
       relations: ['investorProfiles'],
-   });
+    });
 
-   if (existingUser && existingUser.roles !== 'contact_person') {
-    throw new NotFoundException(`The email ${contactPerson.emailAddress} is already taken by another user.`);
+    if (existingUser && existingUser.roles !== 'contact_person') {
+      throw new NotFoundException(
+        `The email ${contactPerson.emailAddress} is already taken by another user.`,
+      );
     }
 
     if (existingUser) {
-        contactPerson.hasAccess ||= true; 
-        await this.contactPersonRepository.save(contactPerson);
-        return existingUser;
+      contactPerson.hasAccess ||= true;
+      await this.contactPersonRepository.save(contactPerson);
+      return existingUser;
     }
 
     const investorProfile = await this.investorProfileRepository.findOne({
@@ -97,7 +103,9 @@ export class ContactPersonService {
     });
 
     if (!investorProfile) {
-      throw new NotFoundException(`Investor profile with id ${investorProfileId} was not found`);
+      throw new NotFoundException(
+        `Investor profile with id ${investorProfileId} was not found`,
+      );
     }
 
     const password = Math.random().toString(36).slice(-10);
@@ -130,7 +138,7 @@ export class ContactPersonService {
     };
 
     // await this.sendEmailVerificatioinMailViaSendGrid(msg);
-    await this.authService.sendEmailVerificationMailViaBrevo(msg, user);
+    await this.taskService.sendEmailVerificationMailViaBrevo({ msg, user });
   }
 
   async revokeAccess(revokeAccessDto: GrantAccessDto) {
@@ -139,10 +147,14 @@ export class ContactPersonService {
       where: { id: contactPersonId },
     });
     if (!contactPerson) {
-      throw new NotFoundException(`Contact person with id ${contactPersonId} was not found`);
+      throw new NotFoundException(
+        `Contact person with id ${contactPersonId} was not found`,
+      );
     }
     if (!contactPerson.hasAccess) {
-      return { message: `Contact person with id ${contactPersonId} does not have access to the profile` };
+      return {
+        message: `Contact person with id ${contactPersonId} does not have access to the profile`,
+      };
     }
 
     contactPerson.hasAccess = false;
@@ -153,9 +165,13 @@ export class ContactPersonService {
       relations: ['contactPersons'],
     });
     if (!investorProfile) {
-      throw new NotFoundException(`Investor profile with id ${investorProfileId} was not found`);
+      throw new NotFoundException(
+        `Investor profile with id ${investorProfileId} was not found`,
+      );
     }
-      
-    return { message: `Access revoked for contact person with id ${contactPersonId}` };
-  }   
+
+    return {
+      message: `Access revoked for contact person with id ${contactPersonId}`,
+    };
+  }
 }

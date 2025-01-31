@@ -8,12 +8,16 @@ import { UsersModule } from '../users/users.module';
 import { InvestorProfile } from '../investor-profile/entities/investor-profile.entity';
 import { Sector } from '../sector/entities/sector.entity';
 import { SubSector } from '../subsector/entities/subsector.entity';
-import { AuthService } from "../auth/auth.service";
-import { AuthModule } from "../auth/auth.module";
-import { PassportModule } from "@nestjs/passport";
-import { JwtModule } from "@nestjs/jwt";
-import { ConfigModule, ConfigService } from "@nestjs/config";
+import { AuthModule } from '../auth/auth.module';
+import { PassportModule } from '@nestjs/passport';
+import { JwtModule } from '@nestjs/jwt';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { User } from 'src/users/entities/user.entity';
+import { TaskService } from '../shared/bullmq/task.service';
+import { Queue } from 'bullmq';
+import { BullModule } from '@nestjs/bullmq';
+import { redisOptions } from '../shared/redis/redis.config';
+import { AuthService } from '../auth/auth.service';
 
 @Module({
   imports: [
@@ -35,8 +39,22 @@ import { User } from 'src/users/entities/user.entity';
       SubSector,
       User,
     ]),
+    BullModule.registerQueue({
+      name: 'task-queue',
+      connection: redisOptions,
+    }),
   ],
   controllers: [ContactPersonController],
-  providers: [ContactPersonService, AuthService, UsersService],
+  providers: [
+    ContactPersonService,
+    TaskService,
+    AuthService,
+    UsersService,
+    {
+      provide: 'TASK_QUEUE',
+      useFactory: (queue: Queue) => queue,
+      inject: ['BullQueue_task-queue'],
+    },
+  ],
 })
 export class ContactPersonModule {}

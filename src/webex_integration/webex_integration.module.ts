@@ -14,6 +14,7 @@ import { UserVoucher } from 'src/voucher/entities/user-voucher.entity';
 import { BullModule } from '@nestjs/bullmq';
 import { redisOptions } from '../shared/redis/redis.config';
 import { Queue } from 'bullmq';
+import { TaskService } from "../shared/bullmq/task.service";
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { Queue } from 'bullmq';
     WebexIntegrationService,
     BookingService,
     VoucherService,
+    TaskService,
     {
       provide: 'TASK_QUEUE',
       useFactory: (queue: Queue) => queue,

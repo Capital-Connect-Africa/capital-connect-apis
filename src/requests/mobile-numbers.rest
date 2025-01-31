@@ -5,8 +5,8 @@ Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
 {
-    "phoneNo": "+254727206415",
-    "userId": 1
+    "phoneNo": "+254763206415",
+    "userId": 11
 }
 
 ###
