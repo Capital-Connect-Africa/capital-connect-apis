@@ -1,42 +1,57 @@
-import { ApiProperty } from "@nestjs/swagger";
-import { Country } from "src/country/entities/country.entity";
-import { InvestorType } from "src/investor-types/entities/investor-type.entity";
-import { Sector } from "src/sector/entities/sector.entity";
-import { User } from "src/users/entities/user.entity";
-import { Column, Entity, JoinColumn, JoinTable, ManyToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
-import { InvestorsRepositorySupportedOrganization } from "./investors-repository-supported-organizations.entity";
-import { Currency } from "src/shared/enums/currency.enum";
+import { InvestorType } from 'src/investor-types/entities/investor-type.entity';
+import { Sector } from 'src/sector/entities/sector.entity';
+import {
+  Column,
+  Entity,
+  JoinTable,
+  ManyToMany,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { InvestorRespostoryInvestees } from './investor-repository-investees.entity';
+import { Currency } from 'src/shared/enums/currency.enum';
+import { SubSector } from 'src/subsector/entities/subsector.entity';
 
 @Entity('investors-repository')
-export class InvestorsRepository{
-    @PrimaryGeneratedColumn()
-    id: number;
+export class InvestorsRepository {
+  @PrimaryGeneratedColumn()
+  id: number;
 
-    @Column()
-    name: string;
+  @Column({ unique: true })
+  name: string;
 
-    @ManyToMany(() =>Sector)
-    @JoinTable()
-    sectors: Sector[];
+  @ManyToMany(() => Sector, (sector) => sector.investors)
+  @JoinTable()
+  sectors: Sector[];
 
-    @Column()
-    type: InvestorType;
+  @ManyToOne(() => InvestorType, (type) => type.investors)
+  type: InvestorType;
 
-    @ManyToMany(() =>Country)
-    @JoinTable()
-    countries: Country[]
+  @Column('text', { array: true })
+  countries: string[];
 
-    @Column()
-    supportedOrganizations: InvestorsRepositorySupportedOrganization
+  @ManyToMany(() => InvestorRespostoryInvestees, (org) => org.investors)
+  investees: InvestorRespostoryInvestees[];
 
-    @Column()
-    website?: string;
-    @Column()
-    minFunding: number;
+  @ManyToMany(() => SubSector, (subSector) => subSector)
+  @JoinTable()
+  subSectors: SubSector[];
 
-    @Column()
-    maxFunding: number;
+  @Column({ nullable: true })
+  website?: string;
 
-    @Column({type: 'enum', default: Currency.USD})
-    currency: Currency;
+  @Column({ type: 'decimal', precision: 20, scale: 2 })
+  minFunding: number;
+
+  @Column({ type: 'decimal', precision: 20, scale: 2 })
+  maxFunding: number;
+
+  @Column({ type: 'enum', enum: Currency, default: Currency.USD })
+  currency: Currency;
+
+  @Column({ nullable: true })
+  fundingVehicle: string;
+
+  @Column('text', { array: true })
+  esgFocusAreas: string[];
 }
