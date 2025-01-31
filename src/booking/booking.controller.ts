@@ -150,11 +150,9 @@ export class BookingController {
     @Req() req,
     @Body() updateBookingDto: UpdateBookingDto) {
     
-    if (!req.user) {
-      throw new UnauthorizedException('User not authenticated');
-    }
-   
-    return this.bookingService.update(+id, updateBookingDto, req.user);
+    const user = req.user;
+       
+    return this.bookingService.update(+id, updateBookingDto, user);
   }
 
   @Delete(':id')
