@@ -8,6 +8,7 @@ import { User } from 'src/users/entities/user.entity';
 import { VoucherService } from 'src/voucher/voucher.service';
 import { VoucherType } from 'src/shared/enums/voucher.type.enum';
 import { advisoryRemarksEmailTemplate } from 'src/templates/advisory-remarks-email';
+import { TaskService } from 'src/shared/bullmq/task.service';
 const brevo = require('@getbrevo/brevo');
 
 
@@ -19,6 +20,7 @@ export class BookingService {
     private readonly bookingRepository: Repository<Booking>,
     @InjectRepository(User)
     private readonly usersRepository: Repository<User>,
+    private readonly taskService: TaskService
   ) { }
 
   async createBooking(
@@ -107,71 +109,12 @@ export class BookingService {
       };
   
       try{
-        await this.sendAdvisoryRemarksEmailViaBrevo(msg, user);
+        await this.taskService.sendAdvisoryRemarksEmailViaBrevo({msg, user});
       }catch(e){
         console.log("The error in sending the advisory reminder remarks is ", e)
       }
     } 
   }
-
-
-
-  async sendAdvisoryRemarksEmailViaBrevo(msg: any, user: User) {
-    const apiInstance = new brevo.TransactionalEmailsApi();
-  
-    try {
-      if (!process.env.BREVO_API_KEY || !process.env.FROM_EMAIL) {
-        throw new Error('Brevo API key or FROM_EMAIL is missing in environment variables');
-      }
-  
-      const apiKey = apiInstance.authentications['apiKey'];
-      apiKey.apiKey = process.env.BREVO_API_KEY;
-  
-
-      const sendSmtpEmail = new brevo.SendSmtpEmail();
-      sendSmtpEmail.subject = msg.subject;
-      sendSmtpEmail.htmlContent = msg.html;
-      sendSmtpEmail.sender = {
-        name: 'Capital Connect',
-        email: process.env.FROM_EMAIL,
-      };
-      sendSmtpEmail.to = [
-        { email: msg.to, name: `${user.firstName} ${user.lastName}` },
-      ];
-      sendSmtpEmail.replyTo = {
-        name: 'Capital Connect',
-        email: process.env.FROM_EMAIL,
-      };
-  
-      const response = await apiInstance.sendTransacEmail(sendSmtpEmail);
-      console.log('Brevo API success:', JSON.stringify(response));
-      return response;  
-  
-    } catch (error) {
-      console.error('Brevo API error:', {
-        message: error.message,
-        statusCode: error.statusCode,
-        body: error.body,
-        stack: error.stack,
-      });
-  
-      if (error.statusCode === 401) {
-        throw new Error('Failed to send email: Invalid or missing Brevo API key');
-      } else if (error.statusCode >= 500) {
-        throw new Error('Failed to send email: Brevo API server error');
-      } else {
-        throw new Error(`Failed to send email: ${error.message}`);
-      }
-    }
-  }
-
-
-
-
-
-
-
-
 
 
 

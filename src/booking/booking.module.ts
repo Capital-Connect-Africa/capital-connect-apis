@@ -15,6 +15,10 @@ import { EligibilityRule } from 'src/voucher/entities/eligibility-rule.entity';
 import { Voucher } from 'src/voucher/entities/voucher.entity';
 import { User } from 'src/users/entities/user.entity';
 import { UserVoucher } from 'src/voucher/entities/user-voucher.entity';
+import { TaskService } from 'src/shared/bullmq/task.service';
+import { Queue } from 'bullmq';
+import { BullModule } from '@nestjs/bullmq';
+import { redisOptions } from '../shared/redis/redis.config';
 
 @Module({
   imports: [
@@ -29,9 +33,19 @@ import { UserVoucher } from 'src/voucher/entities/user-voucher.entity';
       UserVoucher,
     ]),
     HttpModule,
+    BullModule.registerQueue({
+      name: 'task-queue',
+      connection: redisOptions,
+    }),
   ],
   controllers: [BookingController],
-  providers: [BookingService, PaymentService, TokenService, VoucherService],
+  providers: [BookingService, PaymentService, TokenService, VoucherService,TaskService,
+    {
+      provide: 'TASK_QUEUE',
+      useFactory: (queue: Queue) => queue,
+      inject: ['BullQueue_task-queue'],
+    },
+  ],
 })
 export class BookingModule {
   configure(consumer: MiddlewareConsumer) {

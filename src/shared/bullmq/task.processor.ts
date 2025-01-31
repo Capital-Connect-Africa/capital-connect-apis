@@ -29,6 +29,15 @@ async function initializeWorker() {
             );
             break;
 
+            
+
+          case 'send-advisory-remarks-email-via-brevo':
+            await brevoService.sendAdvisoryRemarksEmailViaBrevo(
+              job.data.msg,
+              job.data.user,
+            );
+            break;
+
           case 'send-verification-email-bravo':
             await brevoService.sendEmailVerificationMailViaBrevo(
               job.data.msg,
@@ -51,7 +60,8 @@ async function initializeWorker() {
         throw error; // This ensures the job is marked as failed
       }
     },
-    { connection: redisOptions },
+    {
+      connection: redisOptions },
   );
 
   taskWorker.on('completed', (job) => {
