@@ -37,7 +37,7 @@ POST http://localhost:3000/auth/signup
 Content-Type: application/json
 
 {
-    "username": "test@gmail.com",
+    "username": "captain@gmail.com",
     "password": "pass1234",
     "firstName": "Mkuu",
     "hasAcceptedTerms": true
