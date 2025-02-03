@@ -27,7 +27,7 @@ import { BillingTierGuard } from 'src/guards/billing-tier.guard';
 import { SubscriptionTierEnum } from 'src/subscription/subscription-tier.enum';
 import { SubscriptionTierRequired } from 'src/decorators/subscription-tier.decorator';
 
-@UseGuards(JwtAuthGuard, BillingTierGuard)
+@UseGuards(JwtAuthGuard)
 @Controller('matchmaking')
 export class MatchmakingController {
   constructor(private matchmakingService: MatchmakingService) {}
