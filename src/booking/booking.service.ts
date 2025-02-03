@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable, LoggerService, NotFoundException } from '@nestjs/common';
 import { UpdateBookingDto } from './dto/update-booking.dto';
 
 import { InjectRepository } from '@nestjs/typeorm';
@@ -8,6 +8,7 @@ import { User } from 'src/users/entities/user.entity';
 import { VoucherService } from 'src/voucher/voucher.service';
 import { VoucherType } from 'src/shared/enums/voucher.type.enum';
 import { advisoryRemarksEmailTemplate } from 'src/templates/advisory-remarks-email';
+import { TaskService } from 'src/shared/bullmq/task.service';
 const brevo = require('@getbrevo/brevo');
 
 
@@ -19,6 +20,7 @@ export class BookingService {
     private readonly bookingRepository: Repository<Booking>,
     @InjectRepository(User)
     private readonly usersRepository: Repository<User>,
+    private readonly taskService: TaskService
   ) { }
 
   async createBooking(
@@ -79,10 +81,15 @@ export class BookingService {
     if (Object.keys(updates).length > 0)
       await this.bookingRepository.update(id, updateBookingDto);
 
-    const booking = this.bookingRepository.findOneBy({ id })
 
-    if (user.roles.includes('advisor')) {
-      this.sendAdvisoryRemarksEmail((await booking).user, (await booking).notes, (await booking).advisor)
+    const booking = await this.bookingRepository.findOne({
+      where: { id },
+      relations: ['user', 'advisor'], 
+    });
+
+    //The email is only sent if the user role is advisor
+    if (user.roles.includes('advisor')) {    
+      await this.sendAdvisoryRemarksEmail(booking.user, booking.notes, booking.advisor)
     }
     return booking;
   }
@@ -93,62 +100,21 @@ export class BookingService {
 
 
   async sendAdvisoryRemarksEmail(user: User, notes: string, advisor: User) {
-    const msg = {
-      to: user.username,
-      from: process.env.FROM_EMAIL,
-      subject: 'Reminder: Review Advisor`s Remarks Before Your Session',
-      html: advisoryRemarksEmailTemplate(notes, user.firstName, advisor.firstName),
-    };
-
-    await this.sendAdvisoryRemarksEmailViaBrevo(msg, user);
-
+    if(user.username && user.firstName && advisor.firstName){
+      const msg = {
+        to: user.username,
+        from: process.env.FROM_EMAIL,
+        subject: 'Reminder: Review Advisor`s Remarks Before Your Session',
+        html: advisoryRemarksEmailTemplate(notes, user.firstName, advisor.firstName),
+      };
+  
+      try{
+        await this.taskService.sendAdvisoryRemarksEmailViaBrevo({msg, user});
+      }catch(e){
+        console.log("The error in sending the advisory reminder remarks is ", e)
+      }
+    } 
   }
-
-
-
-  async sendAdvisoryRemarksEmailViaBrevo(msg: any, user: User) {
-    const apiInstance = new brevo.TransactionalEmailsApi();
-
-    const apiKey = apiInstance.authentications['apiKey'];
-    apiKey.apiKey = process.env.BREVO_API_KEY;
-
-    const sendSmtpEmail = new brevo.SendSmtpEmail();
-
-    sendSmtpEmail.subject = msg.subject;
-    sendSmtpEmail.htmlContent = msg.html;
-    sendSmtpEmail.sender = {
-      name: 'Capital Connect',
-      email: process.env.FROM_EMAIL,
-    };
-    sendSmtpEmail.to = [
-      { email: msg.to, name: `${user.firstName} ${user.lastName}` },
-    ];
-    sendSmtpEmail.replyTo = {
-      name: 'Capital Connect',
-      email: process.env.FROM_EMAIL,
-    };
-
-    apiInstance.sendTransacEmail(sendSmtpEmail).then(
-      function (data) {
-        console.log(
-          'API called successfully. Returned data: ' + JSON.stringify(data),
-        );
-      },
-      function (error) {
-        console.error(error);
-      },
-    );
-  }
-
-
-
-
-
-
-
-
-
-
 
 
 
