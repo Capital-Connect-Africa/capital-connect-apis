@@ -4,13 +4,11 @@ import {
   Delete,
   Get,
   HttpException,
-  NotFoundException,
   Param,
   Post,
   Put,
   Query,
   Req,
-  UnauthorizedException,
   UseGuards,
 } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
@@ -30,7 +28,7 @@ export class BookingController {
     private readonly bookingService: BookingService,
     private readonly paymentService: PaymentService,
     private readonly httpService: HttpService,
-  ) { }
+  ) {}
 
   @Post()
   async createBooking(
@@ -148,10 +146,10 @@ export class BookingController {
   update(
     @Param('id') id: string,
     @Req() req,
-    @Body() updateBookingDto: UpdateBookingDto) {
-    
+    @Body() updateBookingDto: UpdateBookingDto,
+  ) {
     const user = req.user;
-       
+
     return this.bookingService.update(+id, updateBookingDto, user);
   }
 

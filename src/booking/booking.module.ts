@@ -39,7 +39,12 @@ import { redisOptions } from '../shared/redis/redis.config';
     }),
   ],
   controllers: [BookingController],
-  providers: [BookingService, PaymentService, TokenService, VoucherService,TaskService,
+  providers: [
+    BookingService,
+    PaymentService,
+    TokenService,
+    VoucherService,
+    TaskService,
     {
       provide: 'TASK_QUEUE',
       useFactory: (queue: Queue) => queue,
