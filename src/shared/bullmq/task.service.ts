@@ -59,16 +59,18 @@ export class TaskService {
   }
 
   async sendEmailVerificationMailViaBrevo(data: any) {
-    await this.taskQueue.add('send-verification-email-bravo', data);
+    await this.taskQueue.add('send-verification-email-brevo', data);
   }
 
-  async sendAdvisoryRemarksEmailViaBrevo(data: any) {   
-    try{
+  async sendAdvisoryRemarksEmailViaBrevo(data: any) {
+    try {
       await this.taskQueue.add('send-advisory-remarks-email-via-brevo', data);
-    }catch(e){
-      console.log("***************************The error with sending the email is", e)
+    } catch (e) {
+      console.log(
+        '***************************The error with sending the email is',
+        e,
+      );
     }
-
   }
 
   async sendSmsViaAfricasTalking(data: any) {
