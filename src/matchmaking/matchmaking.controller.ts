@@ -51,7 +51,7 @@ export class MatchmakingController {
     }
   }
 
-  @Roles(Role.Advisor, Role.Admin)
+  @Roles(Role.Advisor, Role.Partner, Role.Admin)
   @Get('companies/:investorId')
   async getMatchingCompaniesByInvestorId(
     @Param('investorId') investorId: number,

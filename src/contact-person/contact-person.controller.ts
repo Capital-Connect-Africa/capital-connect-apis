@@ -70,7 +70,13 @@ export class ContactPersonController {
     }
   }
 
-  @Roles(Role.Admin, Role.Investor, Role.Advisor, Role.ContactPerson)
+  @Roles(
+    Role.Admin,
+    Role.Investor,
+    Role.Advisor,
+    Role.Partner,
+    Role.ContactPerson,
+  )
   @Get()
   async findAll(@Query('page') page: number, @Query('limit') limit: number) {
     try {
@@ -81,7 +87,13 @@ export class ContactPersonController {
     }
   }
 
-  @Roles(Role.Admin, Role.Investor, Role.Advisor, Role.ContactPerson)
+  @Roles(
+    Role.Admin,
+    Role.Investor,
+    Role.Advisor,
+    Role.Partner,
+    Role.ContactPerson,
+  )
   @Get(':id')
   findOne(@Param('id') id: string) {
     try {
