@@ -26,6 +26,10 @@ export class BillingTierGuard implements CanActivate {
 
     const { user } = context.switchToHttp().getRequest();
 
+    if (user.roles && !user.roles.includes('user')) {
+      return true;
+    }
+
     // Assuming the user's subscription tier is stored in the user object
     if (!user || !user.subscriptionTier) {
       throw new ForbiddenException('Subscription tier is missing.');
