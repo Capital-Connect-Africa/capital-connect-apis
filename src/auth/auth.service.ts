@@ -106,8 +106,9 @@ export class AuthService {
     }
     if (
       user.roles &&
-      [Role.Advisor, Role.Investor, Role.User].indexOf(user.roles as Role) ===
-        -1
+      [Role.Advisor, Role.Partner, Role.Investor, Role.User].indexOf(
+        user.roles as Role,
+      ) === -1
     ) {
       throw new BadRequestException('Invalid role');
     }

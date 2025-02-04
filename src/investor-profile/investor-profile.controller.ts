@@ -66,7 +66,14 @@ export class InvestorProfileController {
     return this.investorProfileService.findAll(page, limit);
   }
 
-  @Roles(Role.Admin, Role.Investor, Role.Advisor, Role.User, Role.ContactPerson)
+  @Roles(
+    Role.Admin,
+    Role.Investor,
+    Role.Advisor,
+    Role.Partner,
+    Role.User,
+    Role.ContactPerson,
+  )
   @Get(':id')
   async findOne(@Request() req, @Param('id') id: string) {
     try {
@@ -128,14 +135,28 @@ export class InvestorProfileController {
       throwInternalServer(error);
     }
   }
-  @Roles(Role.Admin, Role.Investor, Role.Advisor, Role.ContactPerson)
+  @Roles(
+    Role.Admin,
+    Role.Investor,
+    Role.Advisor,
+    Role.Partner,
+    Role.ContactPerson,
+  )
   @Get('contact/:contactPersonId')
   async getInvestorProfileByContactPersonId(
     @Param('contactPersonId') contactPersonId: number,
   ): Promise<InvestorProfile> {
-    return await this.investorProfileService.findOneByContactPersonId(contactPersonId);
+    return await this.investorProfileService.findOneByContactPersonId(
+      contactPersonId,
+    );
   }
-  @Roles(Role.Admin, Role.Investor, Role.Advisor, Role.ContactPerson)
+  @Roles(
+    Role.Admin,
+    Role.Investor,
+    Role.Advisor,
+    Role.Partner,
+    Role.ContactPerson,
+  )
   @Get('contacts/:userId')
   async getProfileByContactUserId(
     @Param('userId') userId: number,
