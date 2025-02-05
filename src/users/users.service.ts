@@ -368,4 +368,11 @@ export class UsersService {
   async save(user: User) {
     return this.usersRepository.save(user);
   }
+
+  async getReferrals(id) {
+    const referrer = { id: id } as User;
+    return this.usersRepository.find({
+      where: { referrer: referrer },
+    });
+  }
 }
