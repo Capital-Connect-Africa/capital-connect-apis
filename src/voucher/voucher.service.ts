@@ -385,7 +385,6 @@ export class VoucherService {
       skip,
       take: limit,
       where: { rules: [rule] },
-      relations: ['vouchers'],
       order: {
         id: 'DESC',
       },
