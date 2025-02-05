@@ -23,8 +23,11 @@ import { CreateDeclineReasonDto } from './dto/create-decline-reason.dto';
 import { DeclineReasonsDto } from './dto/decline-reasons.dto';
 import throwInternalServer from '../shared/utils/exceptions.util';
 import { MatchStatus } from './MatchStatus.enum';
+import { BillingTierGuard } from 'src/guards/billing-tier.guard';
+import { SubscriptionTierEnum } from 'src/subscription/subscription-tier.enum';
+import { SubscriptionTierRequired } from 'src/decorators/subscription-tier.decorator';
 
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, BillingTierGuard)
 @Controller('matchmaking')
 export class MatchmakingController {
   constructor(private matchmakingService: MatchmakingService) {}
@@ -48,7 +51,7 @@ export class MatchmakingController {
     }
   }
 
-  @Roles(Role.Advisor, Role.Admin)
+  @Roles(Role.Advisor, Role.Partner, Role.Admin)
   @Get('companies/:investorId')
   async getMatchingCompaniesByInvestorId(
     @Param('investorId') investorId: number,
@@ -65,6 +68,7 @@ export class MatchmakingController {
     }
   }
 
+  // @SubscriptionTierRequired(SubscriptionTierEnum.PLUS)
   @Roles(Role.User)
   @Get('investor-profiles')
   async getMatchingInvestorProfiles(

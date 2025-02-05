@@ -5,11 +5,13 @@ import axios from 'axios'; // Using axios directly for HTTP requests
 import { WebexConfig } from '../webex.config';
 import { NestFactory } from '@nestjs/core';
 import { BullmqModule } from './bullmq.module';
+import { BrevoService } from '../brevo.service';
+import { OtpService } from '../../mobile/otp.service';
 
 async function initializeWorker() {
   const appContext = await NestFactory.createApplicationContext(BullmqModule);
-  const brevoService = appContext.get('BrevoService');
-  const otpService = appContext.get('OtpService');
+  const brevoService = appContext.get(BrevoService);
+  const otpService = appContext.get(OtpService);
 
   const taskWorker = new Worker(
     'task-queue',
@@ -29,8 +31,6 @@ async function initializeWorker() {
             );
             break;
 
-            
-
           case 'send-advisory-remarks-email-via-brevo':
             await brevoService.sendAdvisoryRemarksEmailViaBrevo(
               job.data.msg,
@@ -39,6 +39,13 @@ async function initializeWorker() {
             break;
 
           case 'send-verification-email-bravo':
+            await brevoService.sendEmailVerificationMailViaBrevo(
+              job.data.msg,
+              job.data.user,
+            );
+            break;
+
+          case 'send-verification-email-brevo':
             await brevoService.sendEmailVerificationMailViaBrevo(
               job.data.msg,
               job.data.user,
@@ -61,7 +68,8 @@ async function initializeWorker() {
       }
     },
     {
-      connection: redisOptions },
+      connection: redisOptions,
+    },
   );
 
   taskWorker.on('completed', (job) => {

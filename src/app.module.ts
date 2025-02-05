@@ -44,6 +44,7 @@ import { WebexIntegrationModule } from './webex_integration/webex_integration.mo
 import { FinancesModule } from './finances/finances.module';
 import { UserReferralModule } from './user-referral/user-referral.module';
 import { BalanceSheetModule } from './balance-sheet/balance-sheet.module';
+import { BullmqModule } from './shared/bullmq/bullmq.module';
 
 @Module({
   imports: [
@@ -94,6 +95,7 @@ import { BalanceSheetModule } from './balance-sheet/balance-sheet.module';
     FinancesModule,
     UserReferralModule,
     BalanceSheetModule,
+    BullmqModule,
   ],
   providers: [
     AppService,

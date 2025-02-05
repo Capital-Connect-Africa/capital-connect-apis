@@ -1,4 +1,18 @@
-import { Controller, Get, Post, Body, Param, Delete, UseGuards, Put, Query, BadRequestException, NotFoundException, HttpCode, HttpStatus } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  Delete,
+  UseGuards,
+  Put,
+  Query,
+  BadRequestException,
+  NotFoundException,
+  HttpCode,
+  HttpStatus,
+} from '@nestjs/common';
 import { AnswerService } from './answer.service';
 import { CreateAnswerDto } from './dto/create-answer.dto';
 import { UpdateAnswerDto } from './dto/update-answer.dto';
@@ -15,11 +29,17 @@ import { Answer } from './entities/answer.entity';
 export class AnswerController {
   constructor(
     private readonly answerService: AnswerService,
-    private readonly questionService: QuestionService
+    private readonly questionService: QuestionService,
   ) {}
 
   @Post()
-  @Roles(Role.Admin, Role.Advisor, Role.Investor, Role.ContactPerson)
+  @Roles(
+    Role.Admin,
+    Role.Advisor,
+    Role.Partner,
+    Role.Investor,
+    Role.ContactPerson,
+  )
   async create(@Body() createAnswerDto: CreateAnswerDto) {
     const { text, weight, questionId, recommendation } = createAnswerDto;
     try {
@@ -32,9 +52,11 @@ export class AnswerController {
       return this.answerService.create(answer);
     } catch (error) {
       if (error instanceof NotFoundException) {
-        throw new BadRequestException('An answer must be associated with an existing question.');
+        throw new BadRequestException(
+          'An answer must be associated with an existing question.',
+        );
       }
-      throwInternalServer(error)
+      throwInternalServer(error);
     }
   }
 
@@ -43,7 +65,7 @@ export class AnswerController {
     try {
       return this.answerService.findAll(page, limit);
     } catch (error) {
-      throwInternalServer(error)
+      throwInternalServer(error);
     }
   }
 
@@ -52,20 +74,29 @@ export class AnswerController {
     try {
       return this.answerService.findOne(+id);
     } catch (error) {
-      throwInternalServer(error)
+      throwInternalServer(error);
     }
   }
 
   @Put(':id')
-  @Roles(Role.Admin, Role.Investor, Role.Advisor, Role.ContactPerson)
-  async update(@Param('id') id: string, @Body() updateAnswerDto: UpdateAnswerDto) {
+  @Roles(
+    Role.Admin,
+    Role.Investor,
+    Role.Advisor,
+    Role.Partner,
+    Role.ContactPerson,
+  )
+  async update(
+    @Param('id') id: string,
+    @Body() updateAnswerDto: UpdateAnswerDto,
+  ) {
     try {
       await this.answerService.findOne(+id);
     } catch (error) {
       if (error instanceof NotFoundException) {
         throw new BadRequestException(`Answer with id ${id} not found`);
       }
-      throwInternalServer(error)
+      throwInternalServer(error);
     }
 
     try {
@@ -78,9 +109,11 @@ export class AnswerController {
     } catch (error) {
       console.log(error);
       if (error instanceof NotFoundException) {
-        throw new BadRequestException('An answer must be associated with an existing question.');
+        throw new BadRequestException(
+          'An answer must be associated with an existing question.',
+        );
       }
-      throwInternalServer(error)
+      throwInternalServer(error);
     }
   }
 
@@ -90,9 +123,9 @@ export class AnswerController {
   remove(@Param('id') id: string) {
     try {
       this.answerService.remove(+id);
-      return 
+      return;
     } catch (error) {
-      throwInternalServer(error)
+      throwInternalServer(error);
     }
   }
 }
