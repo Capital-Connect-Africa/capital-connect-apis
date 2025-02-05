@@ -167,6 +167,16 @@ export class UsersController {
     }
   }
 
+  @UseGuards(JwtAuthGuard)
+  @Get('referrals')
+  async getReferrals(@Request() req) {
+    try {
+      return await this.userService.getReferrals(req.user.id);
+    } catch (error) {
+      throwInternalServer(error);
+    }
+  }
+
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Get(':id')
   @Roles(Role.Admin)
