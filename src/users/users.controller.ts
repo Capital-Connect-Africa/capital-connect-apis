@@ -63,7 +63,7 @@ export class UsersController {
 
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Get('role')
-  @Roles(Role.Admin)
+  @Roles(Role.Admin, Role.Advisor, Role.Partner)
   async getUsersByRole(
     @Query('usertype') usertype: string,
     @Query('page') page: number,
@@ -179,7 +179,7 @@ export class UsersController {
 
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Get(':id')
-  @Roles(Role.Admin)
+  @Roles(Role.Admin, Role.Advisor, Role.Partner)
   async getUserById(@Param('id') id: string) {
     try {
       const user = await this.userService.findOne(+id);
