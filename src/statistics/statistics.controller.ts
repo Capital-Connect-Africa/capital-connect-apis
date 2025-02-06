@@ -1,4 +1,13 @@
-import { Body, Controller, Get, NotFoundException, Param, Post, Query, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  NotFoundException,
+  Param,
+  Post,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
 import { StatisticsService } from './statistics.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { Roles } from '../auth/roles.decorator';
@@ -12,15 +21,21 @@ export class StatisticsController {
   constructor(private readonly statisticsService: StatisticsService) {}
 
   @Post('stats-filter')
-  @Roles(Role.Admin, Role.Investor, Role.ContactPerson)
+  @Roles(Role.Admin, Role.Investor, Role.Partner, Role.ContactPerson)
   async filterStats(@Body() filterStatsDto: FilterStatsDto) {
     return this.statisticsService.statsFilter(filterStatsDto);
   }
 
   @Get('users')
-  @Roles(Role.Admin)
+  @Roles(Role.Admin, Role.Partner)
   async getUserStatistics() {
     return this.statisticsService.getUserStatistics();
+  }
+
+  @Get('users/:id')
+  @Roles(Role.Admin, Role.Partner)
+  async getReferralsStatistics(@Param('id') id: number) {
+    return this.statisticsService.getReferralsStatistics(id);
   }
 
   @Get('matchmaking')
@@ -53,22 +68,22 @@ export class StatisticsController {
   @Get('special-criteria')
   @Roles(Role.Admin)
   async getSpecialCriteriaStatistics() {
-    const statistics = await this.statisticsService.getSpecialCriteriaStatistics();
-    return statistics;  
+    const statistics =
+      await this.statisticsService.getSpecialCriteriaStatistics();
+    return statistics;
   }
 
   @Get('special-criteria/:id')
   @Roles(Role.Admin, Role.Investor, Role.ContactPerson)
-  async getSpecialCriteriaStatisticsInvestor(
-    @Param('id') id: number,
-  ) {
-    const statistics = await this.statisticsService.getSpecialCriteriaStatisticsInvestor(id);
-    return statistics;  
+  async getSpecialCriteriaStatisticsInvestor(@Param('id') id: number) {
+    const statistics =
+      await this.statisticsService.getSpecialCriteriaStatisticsInvestor(id);
+    return statistics;
   }
 
   @Get('businesses')
   @Roles(Role.Admin, Role.Investor, Role.ContactPerson)
-  async getTotalBusinesses(){
+  async getTotalBusinesses() {
     return await this.statisticsService.getBusinessesStatistics();
   }
 
@@ -92,7 +107,7 @@ export class StatisticsController {
 
   @Get('investors')
   @Roles(Role.Admin, Role.User)
-  async getTotalInvestors(){
+  async getTotalInvestors() {
     return await this.statisticsService.getInvestorsStatistics();
   }
 
@@ -117,10 +132,12 @@ export class StatisticsController {
   @Get('investors-funds')
   @Roles(Role.Admin, Role.User)
   async getInvestorsPerFunding(
-    @Query('type') type: 'minimumFunding' | 'maximumFunding'
+    @Query('type') type: 'minimumFunding' | 'maximumFunding',
   ) {
     if (type !== 'minimumFunding' && type !== 'maximumFunding') {
-      throw new Error('Invalid funding type. Must be "minimumFunding" or "maximumFunding".');
+      throw new Error(
+        'Invalid funding type. Must be "minimumFunding" or "maximumFunding".',
+      );
     }
 
     return this.statisticsService.getInvestorsPerFunding(type);
@@ -128,12 +145,11 @@ export class StatisticsController {
 
   @Get('requests/:id')
   @Roles(Role.Admin, Role.Investor, Role.ContactPerson)
-  async getConnectionRequestStatistics(
-    @Param('id') id: number,
-  ) {
-    const stats = await this.statisticsService.getConnectionRequestStatistics(id);
-    return stats
-  }  
+  async getConnectionRequestStatistics(@Param('id') id: number) {
+    const stats =
+      await this.statisticsService.getConnectionRequestStatistics(id);
+    return stats;
+  }
 
   @Get('bookings')
   @Roles(Role.Admin)
@@ -159,11 +175,10 @@ export class StatisticsController {
 
   @Get('payments/:id')
   @Roles(Role.Admin, Role.Investor, Role.User, Role.ContactPerson)
-  async getPaymentsStatisticsByUserId(
-    @Param('id') id: number,
-  ) {
+  async getPaymentsStatisticsByUserId(@Param('id') id: number) {
     try {
-      const stats = await this.statisticsService.getPaymentsStatisticsByUserId(id);
+      const stats =
+        await this.statisticsService.getPaymentsStatisticsByUserId(id);
       return stats;
     } catch (error) {
       throw new Error('Error fetching payment statistics');
