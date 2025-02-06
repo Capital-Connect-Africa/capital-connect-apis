@@ -382,13 +382,13 @@ export class UsersService {
     if (usertype) {
       where = { referrer: referrer, roles: usertype };
     }
-    const [records, count] = await this.usersRepository.findAndCount({
+    const [data, count] = await this.usersRepository.findAndCount({
       skip,
       take: limit,
       where,
     });
     return {
-      records,
+      data,
       count,
     };
   }
