@@ -169,9 +169,19 @@ export class UsersController {
 
   @UseGuards(JwtAuthGuard)
   @Get('referrals')
-  async getReferrals(@Request() req) {
+  async getReferrals(
+    @Request() req,
+    @Query('usertype') usertype: string,
+    @Query('page') page: number,
+    @Query('limit') limit: number,
+  ) {
     try {
-      return await this.userService.getReferrals(req.user.id);
+      return await this.userService.getReferrals(
+        req.user.id,
+        usertype as Role,
+        page,
+        limit,
+      );
     } catch (error) {
       throwInternalServer(error);
     }
