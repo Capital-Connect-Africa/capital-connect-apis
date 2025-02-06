@@ -381,7 +381,7 @@ export class VoucherService {
       value: ownerId,
       userProperty: UserProperties.REFERRED_BY,
     } as EligibilityRule;
-    const vouchers = await this.voucherRepository.find({
+    const [data, count] = await this.voucherRepository.findAndCount({
       skip,
       take: limit,
       where: { rules: [rule] },
@@ -391,8 +391,8 @@ export class VoucherService {
     });
 
     return {
-      data: vouchers,
-      total_count: await this.voucherRepository.count(),
+      data: data,
+      total_count: count,
     };
   }
 }
