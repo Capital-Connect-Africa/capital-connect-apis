@@ -369,10 +369,27 @@ export class UsersService {
     return this.usersRepository.save(user);
   }
 
-  async getReferrals(id) {
+  async getReferrals(
+    id: number,
+    usertype: Role,
+    page: number = 1,
+    limit: number = 10,
+  ) {
+    const skip = (page - 1) * limit;
+
     const referrer = { id: id } as User;
-    return this.usersRepository.find({
-      where: { referrer: referrer },
+    let where: any = { referrer: referrer };
+    if (usertype) {
+      where = { referrer: referrer, roles: usertype };
+    }
+    const [records, count] = await this.usersRepository.findAndCount({
+      skip,
+      take: limit,
+      where,
     });
+    return {
+      records,
+      count,
+    };
   }
 }
