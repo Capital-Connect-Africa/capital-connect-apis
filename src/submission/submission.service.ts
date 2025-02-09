@@ -5,8 +5,8 @@ import { Submission } from './entities/submission.entity';
 import { Question } from 'src/question/entities/question.entity';
 import { SubSection } from 'src/subsection/entities/subsection.entity';
 import { UpdateSubmissionDto } from './dto/update-submission.dto';
-import { SpecialCriteriaService } from "../special-criteria/special-criteria.service";
-import { Answer } from "../answer/entities/answer.entity";
+import { SpecialCriteriaService } from '../special-criteria/special-criteria.service';
+import { Answer } from '../answer/entities/answer.entity';
 import { User } from 'src/users/entities/user.entity';
 
 @Injectable()
@@ -64,7 +64,7 @@ export class SubmissionService {
         answer: { id: answerId },
       },
       relations: ['user', 'question', 'answer'],
-      order: {id: 'DESC'},
+      order: { id: 'DESC' },
     });
   }
 
@@ -74,7 +74,9 @@ export class SubmissionService {
     if (text) updates['text'] = text;
     if (Object.keys(updates).length > 0 || answerId) {
       if (answerId) {
-        const answer = await this.answersRepository.findOne({ where: { id: answerId } });
+        const answer = await this.answersRepository.findOne({
+          where: { id: answerId },
+        });
         if (!answer) {
           throw new NotFoundException(`Answer with id ${answerId} not found`);
         }
@@ -123,18 +125,20 @@ export class SubmissionService {
   async findUsersByQuestionIds(
     questionIds: number[],
     page: number = 1,
-    limit: number = 10
+    limit: number = 10,
   ): Promise<User[]> {
     const submissions = await this.submissionRepository.find({
       where: { question: { id: In(questionIds) } },
       relations: ['user'],
     });
-  
-    const userIds = Array.from(new Set(submissions.map(submission => submission.user.id)));
-  
+
+    const userIds = Array.from(
+      new Set(submissions.map((submission) => submission.user.id)),
+    );
+
     const skip = (page - 1) * limit;
     const take = limit;
-  
+
     const users = await this.userRepository.find({
       where: {
         id: In(userIds),
@@ -143,7 +147,7 @@ export class SubmissionService {
       skip,
       take,
     });
-  
+
     return users;
   }
 
@@ -335,7 +339,7 @@ export class SubmissionService {
       sectionQuestionIds,
       userId,
     );
-  
+
     const totalQuestions = sectionQuestionIds.length;
     const answeredQuestions = submissions.length;
     let completenessPercentage = (answeredQuestions / totalQuestions) * 100;
@@ -343,5 +347,5 @@ export class SubmissionService {
     completenessPercentage = Math.min(completenessPercentage, 100);
 
     return { completenessPercentage };
-  }  
+  }
 }

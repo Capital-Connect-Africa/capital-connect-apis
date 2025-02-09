@@ -385,4 +385,32 @@ export class VoucherService {
       .filter((name) => name && name.length)
       .map((name) => name);
   }
+
+  async findVouchersByOwner(
+    ownerId: string,
+    page: number = 1,
+    limit: number = 10,
+  ): Promise<{
+    data: Voucher[];
+    total_count: number;
+  }> {
+    const skip = (page - 1) * limit;
+    const rule = {
+      value: ownerId,
+      userProperty: UserProperties.REFERRED_BY,
+    } as EligibilityRule;
+    const [data, count] = await this.voucherRepository.findAndCount({
+      skip,
+      take: limit,
+      where: { rules: [rule] },
+      order: {
+        id: 'DESC',
+      },
+    });
+
+    return {
+      data: data,
+      total_count: count,
+    };
+  }
 }

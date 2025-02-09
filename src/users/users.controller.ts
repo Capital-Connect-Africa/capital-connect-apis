@@ -63,16 +63,21 @@ export class UsersController {
 
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Get('role')
-  @Roles(Role.Admin)
+  @Roles(Role.Admin, Role.Advisor, Role.Partner)
   async getUsersByRole(
-    @Query('usertype') usertype: string, 
-    @Query('page') page: number, @Query('limit') limit: number
-  ): Promise<any[]> {
+    @Query('usertype') usertype: string,
+    @Query('page') page: number,
+    @Query('limit') limit: number,
+  ): Promise<any> {
     if (!Object.values(Role).includes(usertype as Role)) {
       throw new BadRequestException(`Invalid role: ${usertype}`);
     }
-  
-    return await this.userService.findAllByUserType(usertype as Role, page, limit);
+
+    return await this.userService.findAllByUserType(
+      usertype as Role,
+      page,
+      limit,
+    );
   }
 
   @UseGuards(JwtAuthGuard)
@@ -162,9 +167,29 @@ export class UsersController {
     }
   }
 
+  @UseGuards(JwtAuthGuard)
+  @Get('referrals')
+  async getReferrals(
+    @Request() req,
+    @Query('usertype') usertype: string,
+    @Query('page') page: number,
+    @Query('limit') limit: number,
+  ) {
+    try {
+      return await this.userService.getReferrals(
+        req.user.id,
+        usertype as Role,
+        page,
+        limit,
+      );
+    } catch (error) {
+      throwInternalServer(error);
+    }
+  }
+
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Get(':id')
-  @Roles(Role.Admin)
+  @Roles(Role.Admin, Role.Advisor, Role.Partner)
   async getUserById(@Param('id') id: string) {
     try {
       const user = await this.userService.findOne(+id);
