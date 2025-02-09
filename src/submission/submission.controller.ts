@@ -13,22 +13,25 @@ import {
   Query,
   Request,
   UnauthorizedException,
-  UseGuards
-} from "@nestjs/common";
-import { SubmissionService } from "./submission.service";
-import { CreateMultipleSubmissionsDto, CreateSubmissionDto } from "./dto/create-submission.dto";
-import { Submission } from "./entities/submission.entity";
-import { JwtAuthGuard } from "src/auth/jwt-auth.guard";
-import { RolesGuard } from "src/auth/roles.guard";
-import { Roles } from "src/auth/roles.decorator";
-import { Role } from "src/auth/role.enum";
-import throwInternalServer from "src/shared/utils/exceptions.util";
-import { SectionService } from "src/section/section.service";
-import { UpdateSubmissionDto } from "./dto/update-submission.dto";
-import { User } from "../users/entities/user.entity";
-import { Question } from "../question/entities/question.entity";
-import { Answer } from "../answer/entities/answer.entity";
-import { SpecialCriteriaService } from "../special-criteria/special-criteria.service";
+  UseGuards,
+} from '@nestjs/common';
+import { SubmissionService } from './submission.service';
+import {
+  CreateMultipleSubmissionsDto,
+  CreateSubmissionDto,
+} from './dto/create-submission.dto';
+import { Submission } from './entities/submission.entity';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { RolesGuard } from 'src/auth/roles.guard';
+import { Roles } from 'src/auth/roles.decorator';
+import { Role } from 'src/auth/role.enum';
+import throwInternalServer from 'src/shared/utils/exceptions.util';
+import { SectionService } from 'src/section/section.service';
+import { UpdateSubmissionDto } from './dto/update-submission.dto';
+import { User } from '../users/entities/user.entity';
+import { Question } from '../question/entities/question.entity';
+import { Answer } from '../answer/entities/answer.entity';
+import { SpecialCriteriaService } from '../special-criteria/special-criteria.service';
 
 @Controller('submissions')
 @UseGuards(JwtAuthGuard, RolesGuard)
@@ -300,7 +303,11 @@ export class SubmissionController {
     @Param('userId') userId: number,
     @Param('sectionId') sectionId: number,
   ) {
-    const completeness = await this.submissionService.calculateCompletenessPerSection(userId, sectionId);
+    const completeness =
+      await this.submissionService.calculateCompletenessPerSection(
+        userId,
+        sectionId,
+      );
     return completeness;
   }
 

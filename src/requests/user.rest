@@ -1,23 +1,19 @@
-###
-# Profile
+### Profile
 
 GET http://localhost:3000/users/profile
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
-###
-# Profile
+### Profile
 
 GET http://api.capitalconnect.africa/users/profile
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
-###
-# Get user by id
+### Get user by id
 
 GET http://localhost:3000/users/100
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
-###
-# Get users
+### Get users
 
 GET http://localhost:3000/users?page=2&limit=3
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
@@ -26,8 +22,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 GET http://localhost:3000/users/role?usertype=investor&page=1&limit=1
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
-###
-# Update user
+### Update user
 
 PUT http://localhost:3000/users/14/admin
 Content-Type: application/json
@@ -41,8 +36,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
   "roles": "investor"
 }
 
-###
-# Update user by admin
+### Update user by admin
 
 PUT http://localhost:3000/users/1/admin
 Content-Type: application/json
@@ -52,8 +46,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
     "password": "pass1234"
 }
 
-###
-# Request password reset
+### Request password reset
 
 POST http://api.capitalconnect.africa/users/request-password-reset
 Content-Type: application/json
@@ -62,8 +55,7 @@ Content-Type: application/json
     "email": "tech@capitalconnect.africa"
 }
 
-###
-# Request password reset
+### Request password reset
 
 POST http://localhost:3000/users/request-password-reset
 Content-Type: application/json
@@ -72,8 +64,7 @@ Content-Type: application/json
     "email": "vimc@gmail.com"
 }
 
-###
-# Reset password
+### Reset password
 
 POST http://localhost:3000/users/reset-password
 Content-Type: application/json
@@ -84,8 +75,7 @@ Content-Type: application/json
     "confirmNewPassword": "pass1234"
 }
 
-###
-# Verify email
+### Verify email
 
 GET http://localhost:3000/users/verify-email?token=7b381172e429cb6d024d5f4cdac7efa065b3c3a9e9c47eeeef95a6fb291b7565
 
@@ -100,4 +90,12 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
 ### Delete user prod
 DELETE http://api.capitalconnect.africa/users/38
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+### Get user referrals
+GET http://localhost:3000/users/referrals
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+### Get user referrals
+GET http://api.capitalconnect.africa/users/referrals
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9

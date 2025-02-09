@@ -23,7 +23,6 @@ import { Roles } from 'src/auth/roles.decorator';
 import throwInternalServer from 'src/shared/utils/exceptions.util';
 import { FilterCompanyDto } from './dto/filter-company.dto';
 import { Company } from './entities/company.entity';
-import { User } from 'src/users/entities/user.entity';
 import { RolesGuard } from 'src/auth/roles.guard';
 
 @UseGuards(JwtAuthGuard, RolesGuard)
@@ -46,7 +45,13 @@ export class CompanyController {
     }
   }
 
-  @Roles(Role.Advisor, Role.Admin, Role.Investor, Role.ContactPerson)
+  @Roles(
+    Role.Advisor,
+    Role.Partner,
+    Role.Admin,
+    Role.Investor,
+    Role.ContactPerson,
+  )
   @Get('search')
   async searchCompanies(@Query('query') query: string): Promise<Company[]> {
     console.log('query', query);
@@ -58,15 +63,15 @@ export class CompanyController {
   async findOne(@Param('id') id: number) {
     try {
       const company = await this.companyService.findOne(id);
-      
-      return company; 
+
+      return company;
     } catch (error) {
       if (error instanceof NotFoundException) {
         throw new NotFoundException(error.message);
       }
       throwInternalServer(error);
     }
-  }  
+  }
 
   @Get('owner/:id')
   findOneByOwnerId(@Param('id') id: string) {
@@ -141,7 +146,13 @@ export class CompanyController {
     }
   }
 
-  @Roles(Role.Advisor, Role.Admin, Role.Investor, Role.ContactPerson)
+  @Roles(
+    Role.Advisor,
+    Role.Partner,
+    Role.Admin,
+    Role.Investor,
+    Role.ContactPerson,
+  )
   @Post('filter')
   async filterCompanies(
     @Body() filterDto: FilterCompanyDto,
@@ -149,7 +160,13 @@ export class CompanyController {
     return this.companyService.filterCompanies(filterDto);
   }
 
-  @Roles(Role.Advisor, Role.Admin, Role.Investor, Role.ContactPerson)
+  @Roles(
+    Role.Advisor,
+    Role.Partner,
+    Role.Admin,
+    Role.Investor,
+    Role.ContactPerson,
+  )
   @Post('filter/by-or')
   async filterCompaniesByOr(
     @Body() filterDto: FilterCompanyDto,
@@ -158,14 +175,16 @@ export class CompanyController {
   }
 
   @Get('complete/:id')
-  async getProfileCompleteness(@Param('id') id: number): Promise<{ completeness: number }> {
+  async getProfileCompleteness(
+    @Param('id') id: number,
+  ): Promise<{ completeness: number }> {
     const completeness = await this.companyService.profileCompleteness(id);
-    
+
     if (completeness === null) {
       throw new NotFoundException('Company not found');
     }
 
-    return completeness ;
+    return completeness;
   }
 
   @Roles(Role.User, Role.Admin)
@@ -175,10 +194,10 @@ export class CompanyController {
     @Param('id') companyId: number,
   ): Promise<Company> {
     try {
-      const user = req.user; 
+      const user = req.user;
       return await this.companyService.hideCompanyProfile(companyId, user);
     } catch (error) {
-      throw new Error('Company profile not hidden.'); 
+      throw new Error('Company profile not hidden.');
     }
   }
 
@@ -189,10 +208,10 @@ export class CompanyController {
     @Param('id') companyId: number,
   ): Promise<Company> {
     try {
-      const user = req.user; 
+      const user = req.user;
       return await this.companyService.unhideCompanyProfile(companyId, user);
     } catch (error) {
-      throw new Error('Company profile not unhidden.'); 
+      throw new Error('Company profile not unhidden.');
     }
   }
 }
