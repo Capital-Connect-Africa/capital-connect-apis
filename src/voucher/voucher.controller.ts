@@ -503,5 +503,4 @@ export class VoucherController {
       handleError(error, RequestMethod.POST);
     }
   }
-
 }
