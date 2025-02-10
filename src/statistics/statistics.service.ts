@@ -70,8 +70,37 @@ export class StatisticsService {
       [Role.Advisor]: await this.userRepository.count({
         where: { roles: Role.Advisor },
       }),
+      [Role.Partner]: await this.userRepository.count({
+        where: { roles: Role.Partner },
+      }),
       [Role.ContactPerson]: await this.userRepository.count({
         where: { roles: Role.ContactPerson },
+      }),
+    };
+
+    return stats;
+  }
+
+  async getReferralsStatistics(id): Promise<{ [key in Role]: number }> {
+    const referrer = { id: id } as User;
+    const stats = {
+      [Role.User]: await this.userRepository.count({
+        where: { roles: Role.User, referrer: referrer },
+      }),
+      [Role.Investor]: await this.userRepository.count({
+        where: { roles: Role.Investor, referrer: referrer },
+      }),
+      [Role.Admin]: await this.userRepository.count({
+        where: { roles: Role.Admin, referrer: referrer },
+      }),
+      [Role.Advisor]: await this.userRepository.count({
+        where: { roles: Role.Advisor, referrer: referrer },
+      }),
+      [Role.Partner]: await this.userRepository.count({
+        where: { roles: Role.Partner, referrer: referrer },
+      }),
+      [Role.ContactPerson]: await this.userRepository.count({
+        where: { roles: Role.ContactPerson, referrer: referrer },
       }),
     };
 
@@ -180,10 +209,10 @@ export class StatisticsService {
     };
   }
 
-  async getTotalMatchmakingStatistics(){
+  async getTotalMatchmakingStatistics() {
     const matchmaking = await this.matchMakingRepository.count();
 
-    return {matchmaking};
+    return { matchmaking };
   }
 
   async getMatchMakingStatisticsPerInvestor(investorId: number): Promise<{

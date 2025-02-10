@@ -25,7 +25,7 @@ import throwInternalServer from 'src/shared/utils/exceptions.util';
 import { SubsectionService } from 'src/subsection/subsection.service';
 import { Question } from './entities/question.entity';
 import { QuestionType } from './question.type';
-import { CreateSpecialCriteriaQuestionDto } from "./dto/create-special-criteria-question.dto";
+import { CreateSpecialCriteriaQuestionDto } from './dto/create-special-criteria-question.dto';
 
 @Controller('questions')
 @UseGuards(JwtAuthGuard, RolesGuard)
@@ -59,7 +59,13 @@ export class QuestionController {
   }
 
   @Post('special-criteria')
-  @Roles(Role.Admin, Role.Advisor, Role.Investor, Role.ContactPerson)
+  @Roles(
+    Role.Admin,
+    Role.Advisor,
+    Role.Partner,
+    Role.Investor,
+    Role.ContactPerson,
+  )
   async createSpecialCriteriaQuestion(
     @Body() createSpecialCriteriaQuestionDto: CreateSpecialCriteriaQuestionDto,
   ) {
@@ -109,7 +115,13 @@ export class QuestionController {
   }
 
   @Put(':id')
-  @Roles(Role.Admin, Role.Investor, Role.Advisor, Role.ContactPerson)
+  @Roles(
+    Role.Admin,
+    Role.Investor,
+    Role.Advisor,
+    Role.Partner,
+    Role.ContactPerson,
+  )
   async update(
     @Param('id') id: string,
     @Body() updateQuestionDto: UpdateQuestionDto,

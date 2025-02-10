@@ -1,0 +1,58 @@
+### Create a balance sheet record
+POST http://localhost:3000/balance-sheet
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+{
+    "companyId": 7,
+    "year": 2000,
+    "landProperty": 100,
+    "plantEquipment": 100,
+    "otherNonCurrentAssets": 100,
+    "tradeReceivables": 100,
+    "cash": 100,
+    "inventory": 100,
+    "otherCurrentAssets": 100,
+    "tradePayables": 100,
+    "otherCurrentLiabilities": 200,
+    "loans": 100,
+    "capital": 100,
+    "otherNonCurrentLiabilities": 200
+}
+
+### Get all balance sheet records
+GET http://localhost:3000/balance-sheet
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+### Get balance sheet record by Id
+GET http://localhost:3000/balance-sheet/1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+### Get balance sheet records by companyId
+GET http://localhost:3000/balance-sheet/company/1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+### Update a balance sheet record by Id
+PUT http://localhost:3000/balance-sheet/1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+{
+    "year": 2010,
+    "landProperty": 100,
+    "plantEquipment": 100,
+    "otherNonCurrentAssets": 100,
+    "tradeReceivables": 100,
+    "cash": 100,
+    "inventory": 100,
+    "otherCurrentAssets": 100,
+    "tradePayables": 100,
+    "otherCurrentLiabilities": 300,
+    "loans": 100,
+    "capital": 100,
+    "otherNonCurrentLiabilities": 100
+}
+
+### Delete a balance sheet record by Id
+DELETE http://localhost:3000/balance-sheet/company/1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9

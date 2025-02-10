@@ -31,7 +31,13 @@ export class SpecialCriteriaController {
   ) {}
 
   @Post()
-  @Roles(Role.Admin, Role.Advisor, Role.Investor, Role.ContactPerson)
+  @Roles(
+    Role.Admin,
+    Role.Advisor,
+    Role.Partner,
+    Role.Investor,
+    Role.ContactPerson,
+  )
   create(@Body() createSpecialCriterionDto: CreateSpecialCriterionDto) {
     try {
       return this.specialCriteriaService.create(createSpecialCriterionDto);
@@ -60,7 +66,10 @@ export class SpecialCriteriaController {
   }
 
   @Get('global')
-  async findSharedCriteria(@Query('page') page: number, @Query('limit') limit: number) {
+  async findSharedCriteria(
+    @Query('page') page: number,
+    @Query('limit') limit: number,
+  ) {
     try {
       return await this.specialCriteriaService.findGlobal(page, limit);
     } catch (error) {
@@ -106,11 +115,21 @@ export class SpecialCriteriaController {
     @Query('page') page: number,
     @Query('limit') limit: number,
   ) {
-    return this.specialCriteriaService.findCompaniesThatAnsweredCriteria(specialCriteriaId, page, limit);
+    return this.specialCriteriaService.findCompaniesThatAnsweredCriteria(
+      specialCriteriaId,
+      page,
+      limit,
+    );
   }
 
   @Put(':id')
-  @Roles(Role.Admin, Role.Advisor, Role.Investor, Role.ContactPerson)
+  @Roles(
+    Role.Admin,
+    Role.Advisor,
+    Role.Partner,
+    Role.Investor,
+    Role.ContactPerson,
+  )
   async update(
     @Param('id') id: string,
     @Body() updateSpecialCriterionDto: UpdateSpecialCriterionDto,
@@ -132,7 +151,13 @@ export class SpecialCriteriaController {
   }
 
   @Delete(':id')
-  @Roles(Role.Admin, Role.Advisor, Role.Investor, Role.ContactPerson)
+  @Roles(
+    Role.Admin,
+    Role.Advisor,
+    Role.Partner,
+    Role.Investor,
+    Role.ContactPerson,
+  )
   @HttpCode(HttpStatus.NO_CONTENT)
   async remove(@Param('id') id: string) {
     try {
