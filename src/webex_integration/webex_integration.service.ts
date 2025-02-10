@@ -21,6 +21,20 @@ export class WebexIntegrationService {
     this.taskService.scheduleTokenRefresh(refreshToken, clientId, clientSecret);
   }
 
+  async saveCalendlyMeeting( 
+    calendlyEventId:string,
+    utm_content:string,
+    meetingStartTime:Date,
+    meetingEndTime:Date){
+      try{
+        await this.bookingService.update(parseInt(utm_content), {  calendlyEventId, meetingStartTime, meetingEndTime });
+      }catch (error) {
+      throw new HttpException(error.response?.data || 'Webex API Error', 500);
+    }
+  }
+
+
+
   async createMeeting(
     accessToken: string,
     title: string,
