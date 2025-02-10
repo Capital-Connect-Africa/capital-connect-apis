@@ -29,6 +29,13 @@ export class WebexIntegrationController {
     );
   }
 
+
+  @Post('calendly-callback')
+  async CalendlyCallback( @Body() body: any) {
+    console.log("***************************The data received fron calednly is", body)    
+  }
+
+
   @Get('authorizations')
   async getAuthorizations(
     @WebexToken() webexToken: string,
