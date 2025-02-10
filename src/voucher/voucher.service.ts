@@ -368,7 +368,6 @@ export class VoucherService {
 
     return true; // If all checks pass, voucher can be redeemed
   }
-
   async searchReferrers(q: string) {
     const users = await this.userRepository.find({
       where: [
@@ -385,7 +384,6 @@ export class VoucherService {
       .filter((name) => name && name.length)
       .map((name) => name);
   }
-
   async findVouchersByOwner(
     ownerId: string,
     page: number = 1,

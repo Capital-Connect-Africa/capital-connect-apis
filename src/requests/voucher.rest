@@ -104,6 +104,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 GET http://localhost:3000/vouchers/search-referrer?q=test
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
 ### Get vouchers by owner
 GET http://localhost:3000/vouchers/owner/1
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9

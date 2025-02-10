@@ -154,6 +154,11 @@ export class VoucherController {
   @ApiOkResponse({
     description: 'Rules retrieved successfully',
     type: EligibilityRule,
+  @Get('owner/:id')
+  @ApiOperation({ summary: 'Fetch a paginated list of vouchers.' })
+  @ApiOkResponse({
+    description: 'Vouchers retrieved successfully',
+    type: Voucher,
     isArray: true,
   })
   @ApiUnauthorizedResponse({
@@ -167,17 +172,36 @@ export class VoucherController {
   async findRules(@Query('page') page: number, @Query('limit') limit: number) {
     try {
       const rules = await this.voucherService.findRules(page, limit);
-      return rules;
+  async findVouchersByOwner(
+    @Param('id') ownerId: string,
+    @Query('page') page: number,
+    @Query('limit') limit: number,
+  ) {
+    try {
+      const vouchers = await this.voucherService.findVouchersByOwner(
+        ownerId,
+        page,
+        limit,
+      );
+      return vouchers;
     } catch (error) {
       handleError(error, RequestMethod.GET);
     }
   }
-
   @Get('code/:code')
   @ApiOperation({ summary: 'Fetch a single voucher by code' })
   @ApiOkResponse({
     description: 'Voucher retrieved successfully',
     type: Voucher,
+  @Roles(Role.Admin)
+  @Get('rules')
+  @ApiOperation({
+    summary: 'Fetch a paginated list of voucher application rules.',
+  })
+  @ApiOkResponse({
+    description: 'Rules retrieved successfully',
+    type: EligibilityRule,
+    isArray: true,
   })
   @ApiUnauthorizedResponse({
     description: 'Login required. Possibly user session expired',
@@ -198,6 +222,10 @@ export class VoucherController {
     try {
       const voucher = await this.voucherService.findVoucherByCode(code);
       return voucher;
+  async findRules(@Query('page') page: number, @Query('limit') limit: number) {
+    try {
+      const rules = await this.voucherService.findRules(page, limit);
+      return rules;
     } catch (error) {
       handleError(error, RequestMethod.GET);
     }
@@ -207,10 +235,18 @@ export class VoucherController {
   @ApiOperation({ summary: 'Search referrers' })
   @ApiOkResponse({
     description: 'Results retrieved successfully',
+  @Get('code/:code')
+  @ApiOperation({ summary: 'Fetch a single voucher by code' })
+  @ApiOkResponse({
+    description: 'Voucher retrieved successfully',
     type: Voucher,
   })
   @ApiUnauthorizedResponse({
     description: 'Login required. Possibly user session expired',
+    type: ErrorDto,
+  })
+  @ApiNotFoundResponse({
+    description: 'Voucher with code not found',
     type: ErrorDto,
   })
   @ApiInternalServerErrorResponse({
@@ -220,6 +256,13 @@ export class VoucherController {
   async searchReferrers(@Query('q') q: string) {
     try {
       return await this.voucherService.searchReferrers(q);
+  async findVoucherByCode(@Param('code') code: string) {
+    if (!code) {
+      throw new NotFoundException('Voucher code is required');
+    }
+    try {
+      const voucher = await this.voucherService.findVoucherByCode(code);
+      return voucher;
     } catch (error) {
       handleError(error, RequestMethod.GET);
     }
