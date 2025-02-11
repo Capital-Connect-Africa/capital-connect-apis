@@ -22,10 +22,10 @@ export class WebexIntegrationService {
   }
 
   async saveCalendlyMeeting( 
-    calendlyEventId:string,
-    utm_content:string,
-    meetingStartTime:Date,
-    meetingEndTime:Date){
+    calendlyEventId: string,
+    utm_content: string,
+    meetingStartTime: Date,
+    meetingEndTime: Date){
       try{
         await this.bookingService.update(parseInt(utm_content), {  calendlyEventId, meetingStartTime, meetingEndTime });
       }catch (error) {
