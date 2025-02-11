@@ -1,0 +1,34 @@
+### Initiate a Shufti Pro verification
+POST http://localhost:3000/shufti/initiate
+Content-Type: application/json
+bearer: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+{
+  "reference": "unique-reference-id",
+  "country": "US",
+  "language": "EN",
+  "email": "user@example.com",
+  "phone": "+1234567890",
+  "verification_mode": "image",
+  "document": {
+    "supported_types": ["passport", "id_card"],
+    "name": "John Doe",
+    "dob": "1990-01-01"
+  }
+}
+
+### Post Shufti callback
+POST http://localhost:3000/shufti/callback
+Content-Type: application/json
+bearer: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+{
+  "reference": "unique-reference-id",
+  "status": "verification_status",
+  "reason": "reason_for_verification_status",
+  "verification": {
+    "verification_type": "verification_type",
+    "verification_result": "verification_result",
+    "verification_message": "verification_message"
+  }
+}
