@@ -23,6 +23,7 @@ import { Finances } from 'src/finances/entities/finance.entity';
 import { UserVoucher } from 'src/voucher/entities/user-voucher.entity';
 import { ApiProperty } from '@nestjs/swagger';
 import { Referral } from 'src/user-referral/entities/referral.entity';
+import { AdvisorProfile } from 'src/advisor_profile/entities/advisor_profile.entity';
 
 @Entity('users')
 export class User {
@@ -108,6 +109,12 @@ export class User {
     (investorProfile) => investorProfile.investor,
   )
   investorProfile: InvestorProfile;
+
+  @OneToOne(
+    () => AdvisorProfile,
+    (advisorProfile) => advisorProfile.user,
+  )
+  advisorProfile: AdvisorProfile;
 
   @BeforeInsert()
   async hashPassword() {

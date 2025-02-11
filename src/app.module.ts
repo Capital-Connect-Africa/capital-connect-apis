@@ -46,6 +46,7 @@ import { UserReferralModule } from './user-referral/user-referral.module';
 import { BalanceSheetModule } from './balance-sheet/balance-sheet.module';
 import { BullmqModule } from './shared/bullmq/bullmq.module';
 import { ShuftiIntegrationModule } from './shufti_integration/shufti_integration.module';
+import { AdvisorProfileModule } from './advisor_profile/advisor_profile.module';
 
 @Module({
   imports: [
@@ -98,6 +99,7 @@ import { ShuftiIntegrationModule } from './shufti_integration/shufti_integration
     BalanceSheetModule,
     BullmqModule,
     ShuftiIntegrationModule,
+    AdvisorProfileModule,
   ],
   providers: [
     AppService,
