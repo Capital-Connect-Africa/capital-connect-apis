@@ -19,6 +19,9 @@ export class CreateDealPipelineTables1738236305702
       `CREATE TABLE "deal-stage-history" ("id" SERIAL NOT NULL, "valueShift" numeric(20,2) NOT NULL DEFAULT '0', "movedAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), "dealId" integer, "fromStageId" integer, "toStageId" integer NOT NULL, CONSTRAINT "PK_a1519077d68714e470951e8d348" PRIMARY KEY ("id"))`,
     );
     await queryRunner.query(
+      `CREATE TYPE "public"."deals_status_enum" AS ENUM ('won', 'lost', 'active', 'cancelled')`,
+    );
+    await queryRunner.query(
       `CREATE TABLE "deals" ("id" SERIAL NOT NULL, "name" character varying NOT NULL, "value" numeric(20,2) NOT NULL, "status" "public"."deals_status_enum" NOT NULL DEFAULT 'active', "closedAt" TIMESTAMP, "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), "customerId" integer NOT NULL, "stageId" integer, CONSTRAINT "PK_8c66f03b250f613ff8615940b4b" PRIMARY KEY ("id"))`,
     );
     await queryRunner.query(
@@ -89,6 +92,7 @@ export class CreateDealPipelineTables1738236305702
     );
     await queryRunner.query(`DROP TABLE "deal-customers"`);
     await queryRunner.query(`DROP TABLE "deals"`);
+    await queryRunner.query(`DROP TYPE "public"."deals_status_enum"`);
     await queryRunner.query(`DROP TABLE "deal-stage-history"`);
     await queryRunner.query(`DROP TABLE "deal-attachments"`);
     await queryRunner.query(`DROP TABLE "deal-stages"`);
