@@ -13,6 +13,7 @@ import {
 import { NumberOfEmployees, YearsOfOperation } from '../company.type';
 import { ConnectionRequest } from 'src/matchmaking/entities/connectionRequest.entity';
 import { Finances } from 'src/finances/entities/finance.entity';
+import { BalanceSheet } from 'src/balance-sheet/entities/balance-sheet.entity';
 
 @Entity('companies')
 export class Company {
@@ -96,6 +97,11 @@ export class Company {
     onDelete: 'CASCADE',
   })
   finances: Finances[]; 
+
+  @OneToMany(() => BalanceSheet, (balanceSheet) => balanceSheet.company,{
+    onDelete: 'CASCADE',
+  })
+  balanceSheet: BalanceSheet[]; 
 
   @OneToOne(() => File)
   @JoinColumn()
