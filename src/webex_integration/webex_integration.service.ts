@@ -27,7 +27,7 @@ export class WebexIntegrationService {
     meetingStartTime: Date,
     meetingEndTime: Date){
       try{
-        await this.bookingService.update(parseInt(utm_content), {  calendlyEventId, meetingStartTime, meetingEndTime });
+        await this.bookingService.update(Number(utm_content), {  calendlyEventId, meetingStartTime, meetingEndTime });
       }catch (error) {
       throw new HttpException(error.response?.data || 'Webex API Error', 500);
     }
