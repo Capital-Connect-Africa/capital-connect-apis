@@ -6,14 +6,15 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 {
     "sectors": [1, 2, 3],
     "subsectors": [1, 2, 3],
-    "website": "www.example.com",
-    "name": "Test Investor",
+    "website": "www.capitalafrica.com",
+    "name": "Capital Africa",
     "typeId": 1,
     "countries": ["Kenya", "Uganda", "Tanzania"],
-    "investees": [],
+    "investees": ["Ufuta", "Pika"],
     "esgFocusAreas": ["Top", "Minor"],
     "minFunding": 400,
     "maxFunding": 600,
+    "investees": ["NSE"],
     "businessGrowthStages": ["Idea", "Early", "Pre Revenue"],
     "description": "Test investor"
 }
@@ -39,7 +40,8 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
     "website": "https://www.capicalconnect.africa",
     "countries": ["Kenya", "Uganda"],
     "fundingVehicle": "Sample funding vehicle",
-    "description": "Test investor updated"
+    "description": "Test investor updated",
+    "investees": ["Netcom", "Venture"]
 }
 
 
