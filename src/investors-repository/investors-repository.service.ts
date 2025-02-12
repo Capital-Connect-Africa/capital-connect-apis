@@ -15,6 +15,8 @@ import { InvestorRespostoryInvestees } from './entities/investor-repository-inve
 import { Country } from 'src/country/entities/country.entity';
 import { EsgFocusAreas } from 'src/esg-focus/entities/esg-focus-areas.entity';
 import { Stage } from 'src/stage/entities/stage.entity';
+import { isValidURL } from 'src/shared/helpers/validate-http-url.helper';
+import { textToTitlteCase } from 'src/shared/helpers/text-to-title-case';
 
 @Injectable()
 export class InvestorsRepositoryService {
@@ -62,16 +64,18 @@ export class InvestorsRepositoryService {
       throw new BadRequestException('investors maximum funding required');
     if (!typeId) throw new BadRequestException('investors type required');
 
-    if (await this.investorsRepository.findOneBy({ name: name }))
+    if (
+      await this.investorsRepository.findOneBy({ name: textToTitlteCase(name) })
+    )
       throw new ConflictException('Investor with name already exists');
 
     const newExternalInvestor: Partial<InvestorsRepository> = {
-      name,
+      name: textToTitlteCase(name),
       minFunding,
       maxFunding,
-      website,
       description,
     };
+
     if (minFunding > maxFunding) {
       newExternalInvestor.minFunding = maxFunding;
       newExternalInvestor.maxFunding = minFunding;
@@ -79,6 +83,12 @@ export class InvestorsRepositoryService {
     const type = await this.investorTypeRepository.findOneBy({ id: typeId });
     if (!type) throw new BadRequestException('Unsupported investor type');
     newExternalInvestor.type = type;
+
+    if (website) {
+      if (!isValidURL(website.toLowerCase()))
+        throw new BadRequestException(`invalid url '${website}'`);
+      newExternalInvestor.website = website.toLowerCase();
+    }
 
     if (countries) {
       newExternalInvestor.countries = (
