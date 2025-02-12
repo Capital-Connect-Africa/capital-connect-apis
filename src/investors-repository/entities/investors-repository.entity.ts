@@ -34,6 +34,7 @@ export class InvestorsRepository {
   businessGrowthStages: string[];
 
   @ManyToMany(() => InvestorRespostoryInvestees, (org) => org.investors)
+  @JoinTable()
   investees: InvestorRespostoryInvestees[];
 
   @ManyToMany(() => SubSector, (subSector) => subSector)
