@@ -1,0 +1,14 @@
+### Get Marketplace Data
+GET http://localhost:3000/valutico/your_myvalutico_id
+Content-Type: application/json
+
+### Submit Valuation Data
+POST http://localhost:3000/valutico/your_myvalutico_id/valuations
+Content-Type: application/json
+
+{
+  "valuationType": "discounted_cash_flow",
+  "companyName": "Tech Corp",
+  "revenue": 1000000,
+  "growthRate": 5
+}

@@ -48,6 +48,7 @@ import { BalanceSheetModule } from './balance-sheet/balance-sheet.module';
 import { BullmqModule } from './shared/bullmq/bullmq.module';
 import { ShuftiIntegrationModule } from './shufti_integration/shufti_integration.module';
 import { AdvisorProfileModule } from './advisor_profile/advisor_profile.module';
+import { ValuticoModule } from './valutico/valutico.module';
 
 @Module({
   imports: [
@@ -102,6 +103,7 @@ import { AdvisorProfileModule } from './advisor_profile/advisor_profile.module';
     BullmqModule,
     ShuftiIntegrationModule,
     AdvisorProfileModule,
+    ValuticoModule,
   ],
   providers: [
     AppService,
