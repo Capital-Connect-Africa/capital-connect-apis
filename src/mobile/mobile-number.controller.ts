@@ -22,6 +22,7 @@ import { Repository } from 'typeorm';
 import { generateOtp } from '../shared/otp.util';
 import { OtpService } from './otp.service';
 import { VerifyMobileNumberDto } from './dto/verify-mobile-number.dto';
+import { TaskService } from '../shared/bullmq/task.service';
 
 @Controller('mobile-numbers')
 export class MobileNumberController {
@@ -30,6 +31,7 @@ export class MobileNumberController {
     private readonly otpService: OtpService,
     @InjectRepository(MobileNumber)
     private readonly mobileNumbersRepository: Repository<MobileNumber>,
+    private readonly taskService: TaskService,
   ) {}
 
   @Post()
@@ -40,10 +42,15 @@ export class MobileNumberController {
       const savedMobileNo = await this.mobileNumbersRepository.save(mobileNo);
 
       const message = `Your OTP code is ${savedMobileNo.otp}`;
-      const res = await this.otpService.sendSmsViaAfricasTalking(
+      /* const res = await this.otpService.sendSmsViaAfricasTalking(
         createMobileDto.phoneNo,
         message,
-      );
+      );*/
+      const mobileNumber = createMobileDto.phoneNo;
+      const res = await this.taskService.sendSmsViaAfricasTalking({
+        mobileNumber,
+        message,
+      });
       console.log('res', res);
 
       return { success: true, message: 'OTP sent successfully' };

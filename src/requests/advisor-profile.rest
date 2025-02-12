@@ -1,0 +1,68 @@
+### Create Advisor Profile
+POST http://localhost:3000/advisor-profile
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+{
+    "userId": 6,
+    "fullName": "John Doe",
+    "roles": ["Investment Advisor", "Strategy Expert"],
+    "email": "test@example.com",
+    "phone": "1234567890",
+    "website": "https://example.com",
+    "professionalSummary": "I am a professional investment advisor",
+    "personalPitch": "I am a professional investment advisor",
+    "capitalRaisingStrategies": ["Debt Financing", "Equity Financing"],
+    "industryFocus": ["Technology", "Healthcare"],
+    "countryFocus": ["Nigeria", "Ghana"],
+    "servicesOffered": ["Investor Matching", "Pitch Deck Development"],
+    "pastProjects": "Project A, Project B",
+    "totalCapitalRaised": 1000000,
+    "caseStudies": "Case Study A, Case Study B",
+    "totalTeamMembers": 5,
+    "totalYearsExperience": 10,
+    "keyTeamMembers": "Team Member A, Team Member B",
+    "feeStructure": ["Hourly Rate"]
+}
+
+### Get Advisor profile by id
+GET http://localhost:3000/advisor-profile/1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+### Get All Advisor Profiles
+GET http://localhost:3000/advisor-profile
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+### Update Advisor Profile
+PUT http://localhost:3000/advisor-profile/5
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+{
+    "fullName": "John Doe",
+    "roles": ["Investment Advisor"],
+    "email": "test@example.com",
+    "phone": "1234567890",
+    "website": "https://example.com",
+    "professionalSummary": "I am a professional investment advisor",
+    "personalPitch": "I am a professional investment advisor",
+    "capitalRaisingStrategies": ["Debt Financing", "Equity Financing"],
+    "industryFocus": ["Technology", "Healthcare"],
+    "countryFocus": ["Nigeria", "Ghana"],
+    "servicesOffered": ["Investor Matching", "Pitch Deck Development"],
+    "pastProjects": "Project A, Project B",
+    "totalCapitalRaised": 1000000,
+    "caseStudies": "Case Study A, Case Study B",
+    "totalTeamMembers": 5,
+    "totalYearsExperience": 10,
+    "keyTeamMembers": "Team Member A, Team Member B",
+    "feeStructure": ["Hourly Rate"]
+}
+
+
+### Delete Advisor Profile
+DELETE http://localhost:3000/advisor-profile/2
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9

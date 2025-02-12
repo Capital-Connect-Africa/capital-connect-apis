@@ -29,6 +29,28 @@ export class WebexIntegrationController {
     );
   }
 
+
+  @Post('calendly-callback')
+  async CalendlyCallback(@Body() body: any) {
+    const {
+      payload: {
+          tracking: { utm_content },
+          event: calendlyEventUrl,
+          scheduled_event: { start_time: meetingStartTime, end_time: meetingEndTime }
+      }
+    } = body;
+
+    const calendlyEventId = calendlyEventUrl.split('/').pop();
+
+    return  this.webexService.saveCalendlyMeeting(
+      calendlyEventId,
+      utm_content,
+      meetingStartTime,
+      meetingEndTime
+    ); 
+  }
+
+
   @Get('authorizations')
   async getAuthorizations(
     @WebexToken() webexToken: string,

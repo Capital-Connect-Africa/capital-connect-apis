@@ -19,6 +19,15 @@ Content-Type: application/json
 GET https://capitalconnect-0060e0fb0eb4.herokuapp.com/statistics/users
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
+### Get referrals statistics
+GET http://localhost:3000/statistics/users/1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+Content-Type: application/json
+
+### Get referrals statistics
+GET https://capitalconnect-0060e0fb0eb4.herokuapp.com/statistics/users/1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
 ### Get matchmaking statistics
 GET http://localhost:3000/statistics/matchmaking
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9

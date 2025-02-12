@@ -1,8 +1,8 @@
-import { HttpException, Inject, Injectable } from "@nestjs/common";
+import { HttpException, Injectable } from '@nestjs/common';
 import { WebexConfig } from '../shared/webex.config';
 import axios from 'axios';
 import { BookingService } from '../booking/booking.service';
-import { Queue } from "bullmq";
+import { TaskService } from '../shared/bullmq/task.service';
 
 @Injectable()
 export class WebexIntegrationService {
@@ -10,26 +10,30 @@ export class WebexIntegrationService {
 
   constructor(
     private readonly bookingService: BookingService,
-    @Inject('TASK_QUEUE') private readonly queue: Queue
-    ) {}
+    private readonly taskService: TaskService,
+  ) {}
 
-  async scheduleTokenRefresh(refreshToken: string, clientId: string, clientSecret: string) {
-    const delay = 24 * 60 * 60 * 1000 - 5 * 60 * 1000; // Schedule 5 minutes before expiration (24h lifespan)
-    // const delay = 60 * 60 * 1000 - 55 * 60 * 1000; // Schedule 5 minutes before expiration (test lifespan)
-
-    await this.queue.add(
-      'refresh-token',
-      { refreshToken, clientId, clientSecret },
-      {
-        repeat: { every: delay }, // Repeat the job daily
-        attempts: 5,
-        backoff: {
-          type: 'exponential',
-          delay: 1000,
-        },
-      }
-    );
+  async scheduleTokenRefresh(
+    refreshToken: string,
+    clientId: string,
+    clientSecret: string,
+  ) {
+    this.taskService.scheduleTokenRefresh(refreshToken, clientId, clientSecret);
   }
+
+  async saveCalendlyMeeting( 
+    calendlyEventId: string,
+    utm_content: string,
+    meetingStartTime: Date,
+    meetingEndTime: Date){
+      try{
+        await this.bookingService.update(Number(utm_content), {  calendlyEventId, meetingStartTime, meetingEndTime });
+      }catch (error) {
+      throw new HttpException(error.response?.data || 'Webex API Error', 500);
+    }
+  }
+
+
 
   async createMeeting(
     accessToken: string,
@@ -102,13 +106,12 @@ export class WebexIntegrationService {
   }
 
   async deleteAuthorizations(webexToken: string) {
-     const authorizations = await this.getAuthorizations(webexToken);
-     for (let i = 0; i < 700; i++) {
-       const item = authorizations.items[i + 1];
-       await axios.delete(`${this.apiUrl}/authorizations/${item.id}`, {
-         headers: { Authorization: `Bearer ${webexToken}` },
-       });
-     }
-
+    const authorizations = await this.getAuthorizations(webexToken);
+    for (let i = 0; i < 700; i++) {
+      const item = authorizations.items[i + 1];
+      await axios.delete(`${this.apiUrl}/authorizations/${item.id}`, {
+        headers: { Authorization: `Bearer ${webexToken}` },
+      });
+    }
   }
 }

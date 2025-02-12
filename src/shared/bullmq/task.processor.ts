@@ -1,31 +1,85 @@
 import { Worker, Job } from 'bullmq';
 import { redisOptions } from '../redis/redis.config';
-import redisClient from "../redis/redisClient";
-import axios from "axios"; // Using axios directly for HTTP requests
-import { WebexConfig } from "../webex.config";
+import redisClient from '../redis/redisClient';
+import axios from 'axios'; // Using axios directly for HTTP requests
+import { WebexConfig } from '../webex.config';
+import { NestFactory } from '@nestjs/core';
+import { BullmqModule } from './bullmq.module';
+import { BrevoService } from '../brevo.service';
+import { OtpService } from '../../mobile/otp.service';
 
-const taskWorker = new Worker(
-  'task-queue',
-  async (job: Job) => {
-    console.log(`Processing job ${job.id}:`, job.data);
+async function initializeWorker() {
+  const appContext = await NestFactory.createApplicationContext(BullmqModule);
+  const brevoService = appContext.get(BrevoService);
+  const otpService = appContext.get(OtpService);
 
-    try {
-      await refreshToken();
-    } catch (error) {
-      console.error(`Job ${job.id} failed during processing:`, error.message);
-      throw error; // This ensures the job is marked as failed
-    }
-  },
-  { connection: redisOptions },
-);
+  const taskWorker = new Worker(
+    'task-queue',
+    async (job: Job) => {
+      console.log(`Processing job ${job.id}:`, job.data);
 
-taskWorker.on('completed', (job) => {
-  console.log(`Job ${job.id} completed successfully`);
-});
+      try {
+        switch (job.name) {
+          case 'refresh-token':
+            await refreshToken();
+            break;
 
-taskWorker.on('failed', (job, err) => {
-  console.error(`Job ${job.id} failed: ${err.message}`);
-});
+          case 'send-email-bravo':
+            await brevoService.sendEmailViaBrevo(
+              job.data.msg,
+              job.data.recipients,
+            );
+            break;
+
+          case 'send-advisory-remarks-email-via-brevo':
+            await brevoService.sendAdvisoryRemarksEmailViaBrevo(
+              job.data.msg,
+              job.data.user,
+            );
+            break;
+
+          case 'send-verification-email-bravo':
+            await brevoService.sendEmailVerificationMailViaBrevo(
+              job.data.msg,
+              job.data.user,
+            );
+            break;
+
+          case 'send-verification-email-brevo':
+            await brevoService.sendEmailVerificationMailViaBrevo(
+              job.data.msg,
+              job.data.user,
+            );
+            break;
+
+          case 'send-sms-africastalking':
+            await otpService.sendSmsViaAfricasTalking(
+              job.data.mobileNumber,
+              job.data.message,
+            );
+            break;
+
+          default:
+            throw new Error(`Unknown job name: ${job.name}`);
+        }
+      } catch (error) {
+        console.error(`Job ${job.id} failed during processing:`, error.message);
+        throw error; // This ensures the job is marked as failed
+      }
+    },
+    {
+      connection: redisOptions,
+    },
+  );
+
+  taskWorker.on('completed', (job) => {
+    console.log(`Job ${job.id} completed successfully`);
+  });
+
+  taskWorker.on('failed', (job, err) => {
+    console.error(`Job ${job.id} failed: ${err.message}`);
+  });
+}
 
 async function refreshToken() {
   const accessTokenKey = `accessToken`;
@@ -63,9 +117,16 @@ async function refreshToken() {
 
     console.log('Access token refreshed successfully.');
   } catch (error: any) {
-    console.error('Failed to refresh token:', error.response?.data || error.message);
-    throw new Error(`Token refresh failed: ${error.response?.data?.message || error.message}`);
+    console.error(
+      'Failed to refresh token:',
+      error.response?.data || error.message,
+    );
+    throw new Error(
+      `Token refresh failed: ${error.response?.data?.message || error.message}`,
+    );
   }
 }
 
-export default taskWorker;
+initializeWorker().catch((error) => {
+  console.error('Failed to initialize worker:', error.message);
+});

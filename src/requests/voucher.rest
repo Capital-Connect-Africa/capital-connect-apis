@@ -7,8 +7,8 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
   "type": "advisory-session",                  
   "maxUses": 5, 
   "maxAmount": 10,                     
-  "expiresAt": "2024-12-31",          
-  "rules": [ 1, 2],                        
+  "expiresAt": "2025-02-28",          
+  "rules": [1],                        
   "percentageDiscount": 30           
 }
 
@@ -18,10 +18,10 @@ Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
 {
-  "userProperty": "createdAt",
-  "operator": "gte",
-  "value": 4000,
-  "description": "Test description"      
+  "userProperty": "referredBy",
+  "operator": "eq",
+  "value": 1,
+  "description": "Voucher for all users referred by admin"      
 }
 
 ### Get all vouchers.
@@ -30,12 +30,12 @@ Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
 ### Get voucher by code.
-GET http://localhost:3000/vouchers/code/BB450850
+GET http://localhost:3000/vouchers/code/DE1EEB83
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
 ### Get voucher by id.
-GET http://localhost:3000/vouchers/2
+GET http://localhost:3000/vouchers/1
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
@@ -45,7 +45,7 @@ Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
 ### Get a rule by id.
-GET http://localhost:3000/vouchers/rules/6
+GET http://localhost:3000/vouchers/rules/1
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
@@ -95,8 +95,20 @@ Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
 {
-    "userId": 2,
+    "userId": 7,
     "purchase": "advisory-session",
-    "voucherCode": "BB450850" 
+    "voucherCode": "DE1EEB83" 
 }
 
+### fuzzy search referrers
+GET http://localhost:3000/vouchers/search-referrer?q=test
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+### Get vouchers by owner
+GET http://localhost:3000/vouchers/owner/1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+### Get vouchers by owner prod
+GET http://api.capitalconnect.africa/vouchers/owner/1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9

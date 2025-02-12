@@ -4,7 +4,6 @@ import {
   Delete,
   Get,
   HttpException,
-  NotFoundException,
   Param,
   Post,
   Put,
@@ -49,13 +48,18 @@ export class BookingController {
     bookingResponse.bookingId = booking.id;
 
     /* Thank you CTRL+C / CTRL+V 😀*/
-    let amountDiscounted =0;
+    let amountDiscounted = 0;
     let amount = +process.env.ADVISORY_SESSIONS_COST;
 
-    if(voucherCode) { // redeem voucher if provided
-      const result =await this.bookingService.redeemVoucher(user.id as number, voucherCode, amount);
-      amountDiscounted =result.discount
-      amount =result.amount; 
+    if (voucherCode) {
+      // redeem voucher if provided
+      const result = await this.bookingService.redeemVoucher(
+        user.id as number,
+        voucherCode,
+        amount,
+      );
+      amountDiscounted = result.discount;
+      amount = result.amount;
 
       // @NOTE: code implemented outside try/catch to throw errors due to voucher service 💀
     }
@@ -139,8 +143,14 @@ export class BookingController {
   }
 
   @Put(':id')
-  update(@Param('id') id: string, @Body() updateBookingDto: UpdateBookingDto) {
-    return this.bookingService.update(+id, updateBookingDto);
+  update(
+    @Param('id') id: string,
+    @Req() req,
+    @Body() updateBookingDto: UpdateBookingDto,
+  ) {
+    const user = req.user;
+
+    return this.bookingService.update(+id, updateBookingDto, user);
   }
 
   @Delete(':id')
@@ -150,10 +160,9 @@ export class BookingController {
 
   @Put(':bookingId/assign-advisor')
   async assignAdvisorToBooking(
-    @Param('bookingId') bookingId: number, 
+    @Param('bookingId') bookingId: number,
     @Body('userId') userId: number,
   ): Promise<any> {
-      return await this.bookingService.assignAdvisorToBooking(bookingId, userId);  
+    return await this.bookingService.assignAdvisorToBooking(bookingId, userId);
   }
-
 }

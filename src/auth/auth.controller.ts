@@ -5,6 +5,7 @@ import {
   Body,
   BadRequestException,
   NotFoundException,
+  Delete,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
@@ -13,11 +14,10 @@ import { ResendVerificationEmailDto } from './dto/resend-verification-email.dto'
 import { UsersService } from 'src/users/users.service';
 import { randomBytes } from 'crypto';
 import { addHours } from 'date-fns';
-import { TaskService } from "../shared/bullmq/task.service";
+import { TaskService } from '../shared/bullmq/task.service';
 import { User } from 'src/users/entities/user.entity';
 import { JwtService } from '@nestjs/jwt';
-
-
+import { generateCryptCode } from 'src/shared/helpers/crypto-generator.helper';
 
 @Controller('auth')
 export class AuthController {
@@ -40,6 +40,12 @@ export class AuthController {
     return { message: 'Repeating task added successfully!' };
   }
 
+  @Delete('/delete-repeating')
+  async deleteRepeatingTask(@Body() taskData: any) {
+    await this.taskService.deleteRepeatingTask(taskData);
+    return { message: 'Repeating task deleted successfully!' };
+  }
+
   @Post('login')
   async login(@Request() req) {
     const { username, password } = req.body;
@@ -57,20 +63,23 @@ export class AuthController {
   @Post('signup')
   async signup(@Body() createUserDto: CreateUserDto) {
     try {
-      const { referralToken } =createUserDto;
-      let referrer:User | null =null;
-      if(referralToken){
-        const { userId } = this.jwtService.decode(referralToken) as {userId: number};
-        referrer =await this.userService.findOne(userId);
+      const { referralCode } = createUserDto;
+      let referrer: User | null = null;
+      if (referralCode) {
+        referrer = await this.userService.findUserByReferralCode(referralCode);
       }
-      delete createUserDto.referralToken;
-      const user = await this.authService.signup(createUserDto);
-      if(referrer){
-        user.referrer =referrer;
+      delete createUserDto.referralCode;
+      const userReferralCode = generateCryptCode();
+      const user = await this.authService.signup({
+        ...createUserDto,
+        referralCode: userReferralCode,
+      });
+      if (referrer) {
+        user.referrer = referrer;
         await this.userService.update(user.id, { referrer });
       }
       await this.authService.sendVerificationEmail(user);
-      return {...user, referralToken: this.jwtService.sign({userId: user.id})};
+      return user;
     } catch (error) {
       if (error instanceof BadRequestException) {
         throw new BadRequestException(error.message);

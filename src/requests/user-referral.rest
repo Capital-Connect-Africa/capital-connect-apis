@@ -1,5 +1,5 @@
 ### Click referral link
-PUT http://localhost:3000/referrals/metrics/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+PUT http://localhost:3000/referrals/metrics/ec29818a
 Content-Type: application/json
 
 {
@@ -7,23 +7,11 @@ Content-Type: application/json
 }
 
 ### Visit a page
-PUT http://localhost:3000/referrals/metrics/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+PUT http://localhost:3000/referrals/metrics/ec29818a
 Content-Type: application/json
 
 {
     "visits": true
-}
-
-### Sign up with referral Id
-POST http://localhost:3000/auth/signup
-Content-Type: application/json
-
-{
-    "username": "test4@gmail.com",
-    "password": "pass1234",
-    "firstName": "Mkuu",
-    "hasAcceptedTerms": true,
-    "referralToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9"
 }
 
 ### Get user referrals
