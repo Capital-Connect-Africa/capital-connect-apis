@@ -196,19 +196,62 @@ export class InvestorsRepositoryService {
       minFunding,
       maxFunding,
       currency,
+      businessGrowthStages,
+      description,
     } = payload;
 
     if (name) investor.name = name;
-    if (countries) investor.countries = countries;
     if (currency) investor.currency = currency;
-    if (website) investor.website = website;
-    if (minFunding) investor.minFunding = minFunding;
-    if (maxFunding) investor.maxFunding = maxFunding;
-    if (esgFocusAreas) investor.esgFocusAreas = esgFocusAreas;
+    if (description) investor.description = description;
     if (typeId) {
       const type = await this.investorTypeRepository.findOneBy({ id: typeId });
       if (!type) throw new BadRequestException('Unsupported investor type');
       investor.type = type;
+    }
+    const min_funding = minFunding ?? investor.minFunding;
+    const max_funding = minFunding ?? investor.maxFunding;
+    if (min_funding && max_funding && min_funding > max_funding) {
+      investor.minFunding = max_funding;
+      investor.maxFunding = min_funding;
+    }
+    const type = await this.investorTypeRepository.findOneBy({ id: typeId });
+    if (!type) throw new BadRequestException('Unsupported investor type');
+    investor.type = type;
+
+    if (website) {
+      if (!isValidURL(website.toLowerCase()))
+        throw new BadRequestException(`invalid url '${website}'`);
+      investor.website = website.toLowerCase();
+    }
+
+    if (countries) {
+      investor.countries = (
+        await this.countryRepository.find({
+          where: {
+            name: In(countries),
+          },
+        })
+      ).map((country) => country.name);
+    }
+
+    if (esgFocusAreas) {
+      investor.esgFocusAreas = (
+        await this.esgRepository.find({
+          where: {
+            title: In(esgFocusAreas),
+          },
+        })
+      ).map((esg) => esg.title);
+    }
+
+    if (businessGrowthStages) {
+      investor.businessGrowthStages = (
+        await this.stageRepository.find({
+          where: {
+            title: In(businessGrowthStages),
+          },
+        })
+      ).map((stage) => stage.title);
     }
 
     if (sectors) {
@@ -245,7 +288,9 @@ export class InvestorsRepositoryService {
         id: investorId,
       },
     });
+    console.log(investor);
+
     if (!investor) throw new NotFoundException(`Investor with not found`);
-    await this.investorsRepository.remove(investor);
+    await this.investorsRepository.delete(investorId);
   }
 }
