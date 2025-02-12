@@ -60,6 +60,14 @@ export class InvestorRepositoryDto {
   esgFocusAreas: string[];
 
   @IsOptional()
+  @ApiProperty({
+    description: 'Business growth stages the investor is interested in',
+    isArray: true,
+    required: false,
+  })
+  businessGrowthStages: string[];
+
+  @IsOptional()
   @IsArray()
   @ApiProperty({
     description: 'Investors Investees',
@@ -101,4 +109,9 @@ export class InvestorRepositoryDto {
     required: false,
   })
   currency?: Currency;
+
+  @IsString()
+  @IsOptional()
+  @ApiProperty({ description: 'A brief description about the investor' })
+  description: string;
 }
