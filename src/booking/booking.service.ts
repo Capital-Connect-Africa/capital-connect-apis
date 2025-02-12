@@ -88,7 +88,7 @@ export class BookingService {
     });
 
     //The email is only sent if the user role is advisor
-    if (user.roles.includes('advisor')) {    
+    if (user && user.roles.includes('advisor')) {    
       await this.sendAdvisoryRemarksEmail(booking.user, booking.notes, booking.advisor)
     }
     return booking;
