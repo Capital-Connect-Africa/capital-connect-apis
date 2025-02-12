@@ -54,6 +54,7 @@ export class InvestorsRepositoryService {
       maxFunding,
       businessGrowthStages,
       description,
+      fundingVehicle,
     } = payload;
 
     if (!name.trim())
@@ -74,6 +75,7 @@ export class InvestorsRepositoryService {
       minFunding,
       maxFunding,
       description,
+      fundingVehicle,
     };
 
     if (minFunding > maxFunding) {
@@ -137,12 +139,35 @@ export class InvestorsRepositoryService {
     }
 
     if (investees) {
-      newExternalInvestor.investees =
+      const existingInvestees =
         await this.investorRespostoryInvesteesRepository.find({
           where: {
-            id: In(investees),
+            name: In(investees.map((investee) => textToTitlteCase(investee))),
           },
         });
+
+      const existingInvesteesNames = existingInvestees.map((inv) => inv.name);
+      const missingInvesteesNames = investees.filter(
+        (inv) => !existingInvesteesNames.includes(textToTitlteCase(inv)),
+      );
+
+      let newInvestees = [];
+
+      if (missingInvesteesNames.length > 0) {
+        newInvestees = await Promise.all(
+          missingInvesteesNames.map(async (inv) => {
+            const newInvestee =
+              this.investorRespostoryInvesteesRepository.create({
+                name: textToTitlteCase(inv),
+              });
+            return await this.investorRespostoryInvesteesRepository.save(
+              newInvestee,
+            );
+          }),
+        );
+      }
+
+      newExternalInvestor.investees = [...existingInvestees, ...newInvestees];
     }
 
     const externalInvestor =
@@ -160,6 +185,7 @@ export class InvestorsRepositoryService {
     const [data, total_count] = await this.investorsRepository.findAndCount({
       skip,
       take: limit,
+      relations: ['type', 'investees', 'sectors', 'subSectors'],
     });
     return { data, total_count };
   }
@@ -169,6 +195,7 @@ export class InvestorsRepositoryService {
       where: {
         id: investorId,
       },
+      relations: ['type', 'investees', 'sectors', 'subSectors'],
     });
     if (!investor) throw new NotFoundException(`Investor with not found`);
     return investor;
@@ -183,7 +210,7 @@ export class InvestorsRepositoryService {
         id: investorId,
       },
     });
-    if (!investor) throw new NotFoundException(`Investor with not found`);
+    if (!investor) throw new NotFoundException(`Investor with id not found`);
     const {
       sectors,
       subsectors,
@@ -198,18 +225,20 @@ export class InvestorsRepositoryService {
       currency,
       businessGrowthStages,
       description,
+      fundingVehicle,
     } = payload;
 
-    if (name) investor.name = name;
+    if (name) investor.name = textToTitlteCase(name);
     if (currency) investor.currency = currency;
     if (description) investor.description = description;
+    if (fundingVehicle) investor.fundingVehicle = fundingVehicle;
     if (typeId) {
       const type = await this.investorTypeRepository.findOneBy({ id: typeId });
       if (!type) throw new BadRequestException('Unsupported investor type');
       investor.type = type;
     }
     const min_funding = minFunding ?? investor.minFunding;
-    const max_funding = minFunding ?? investor.maxFunding;
+    const max_funding = maxFunding ?? investor.maxFunding;
     if (min_funding && max_funding && min_funding > max_funding) {
       investor.minFunding = max_funding;
       investor.maxFunding = min_funding;
@@ -271,14 +300,41 @@ export class InvestorsRepositoryService {
     }
 
     if (investees) {
-      investor.investees =
+      const existingInvestees =
         await this.investorRespostoryInvesteesRepository.find({
           where: {
-            id: In(investees),
+            name: In(investees.map((investee) => textToTitlteCase(investee))),
           },
         });
+
+      const existingInvesteesNames = existingInvestees.map((inv) => inv.name);
+      const missingInvesteesNames = investees.filter(
+        (inv) => !existingInvesteesNames.includes(textToTitlteCase(inv)),
+      );
+
+      let newInvestees = [];
+
+      if (missingInvesteesNames.length > 0) {
+        newInvestees = await Promise.all(
+          missingInvesteesNames.map(async (inv) => {
+            const newInvestee =
+              this.investorRespostoryInvesteesRepository.create({
+                name: textToTitlteCase(inv),
+              });
+            return await this.investorRespostoryInvesteesRepository.save(
+              newInvestee,
+            );
+          }),
+        );
+      }
+
+      investor.investees =
+        await this.investorRespostoryInvesteesRepository.findBy({
+          name: In(investees.map((inv) => textToTitlteCase(inv))),
+        });
     }
-    await this.investorsRepository.update(investorId, investor);
+
+    await this.investorsRepository.save(investor);
     return investor;
   }
 
@@ -288,8 +344,6 @@ export class InvestorsRepositoryService {
         id: investorId,
       },
     });
-    console.log(investor);
-
     if (!investor) throw new NotFoundException(`Investor with not found`);
     await this.investorsRepository.delete(investorId);
   }
