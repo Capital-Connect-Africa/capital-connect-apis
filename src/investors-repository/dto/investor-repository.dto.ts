@@ -10,14 +10,12 @@ import {
 import { Currency } from 'src/shared/enums/currency.enum';
 
 export class InvestorRepositoryDto {
-  @IsOptional()
-  @IsArray()
+  @IsString()
   @ApiProperty({ description: 'Unique investor name' })
   name: string;
 
   @IsOptional()
   @IsArray()
-  @IsInt()
   @ApiProperty({
     description: 'Sectors IDS',
     type: 'integer',
@@ -28,7 +26,6 @@ export class InvestorRepositoryDto {
 
   @IsOptional()
   @IsArray()
-  @IsInt()
   @ApiProperty({
     description: 'Sub-sectors IDS',
     type: 'integer',
@@ -52,13 +49,20 @@ export class InvestorRepositoryDto {
     isArray: true,
     required: false,
   })
-  countries: string;
+  countries: string[];
 
   @IsOptional()
-  @IsInt()
+  @ApiProperty({
+    description: 'Investor ESG Focus areas',
+    isArray: true,
+    required: false,
+  })
+  esgFocusAreas: string[];
+
+  @IsOptional()
   @IsArray()
   @ApiProperty({
-    description: 'Maximum funding value',
+    description: 'Investors Investees',
     type: 'integer',
     isArray: true,
     required: false,
