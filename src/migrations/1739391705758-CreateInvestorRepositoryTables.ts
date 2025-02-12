@@ -1,9 +1,9 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
-export class CreateInvestorRepositoryTables1739369570053
+export class CreateInvestorRepositoryTables1739391705758
   implements MigrationInterface
 {
-  name = 'CreateInvestorRepositoryTables1739369570053';
+  name = 'CreateInvestorRepositoryTables1739391705758';
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(
@@ -20,6 +20,15 @@ export class CreateInvestorRepositoryTables1739369570053
     );
     await queryRunner.query(
       `CREATE INDEX "IDX_f77d85122c15fc1464ecb1fc7f" ON "investors-repository_sectors_sectors" ("sectorsId") `,
+    );
+    await queryRunner.query(
+      `CREATE TABLE "investors-repository_investees_investor-repositories-investees" ("investorsRepositoryId" integer NOT NULL, "investorRepositoriesInvesteesId" integer NOT NULL, CONSTRAINT "PK_5e56f2a7340571f722f57384c2e" PRIMARY KEY ("investorsRepositoryId", "investorRepositoriesInvesteesId"))`,
+    );
+    await queryRunner.query(
+      `CREATE INDEX "IDX_8c70cc61a93779c802ad783d17" ON "investors-repository_investees_investor-repositories-investees" ("investorsRepositoryId") `,
+    );
+    await queryRunner.query(
+      `CREATE INDEX "IDX_99e4028c86ee0c49de5b59d6c2" ON "investors-repository_investees_investor-repositories-investees" ("investorRepositoriesInvesteesId") `,
     );
     await queryRunner.query(
       `CREATE TABLE "investors-repository_sub_sectors_subsectors" ("investorsRepositoryId" integer NOT NULL, "subsectorsId" integer NOT NULL, CONSTRAINT "PK_67472db3ab79ffa29967d634aaa" PRIMARY KEY ("investorsRepositoryId", "subsectorsId"))`,
@@ -40,6 +49,12 @@ export class CreateInvestorRepositoryTables1739369570053
       `ALTER TABLE "investors-repository_sectors_sectors" ADD CONSTRAINT "FK_f77d85122c15fc1464ecb1fc7fb" FOREIGN KEY ("sectorsId") REFERENCES "sectors"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`,
     );
     await queryRunner.query(
+      `ALTER TABLE "investors-repository_investees_investor-repositories-investees" ADD CONSTRAINT "FK_8c70cc61a93779c802ad783d17c" FOREIGN KEY ("investorsRepositoryId") REFERENCES "investors-repository"("id") ON DELETE CASCADE ON UPDATE CASCADE`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE "investors-repository_investees_investor-repositories-investees" ADD CONSTRAINT "FK_99e4028c86ee0c49de5b59d6c21" FOREIGN KEY ("investorRepositoriesInvesteesId") REFERENCES "investor-repositories-investees"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`,
+    );
+    await queryRunner.query(
       `ALTER TABLE "investors-repository_sub_sectors_subsectors" ADD CONSTRAINT "FK_63b1abe5ba7054daa031355f777" FOREIGN KEY ("investorsRepositoryId") REFERENCES "investors-repository"("id") ON DELETE CASCADE ON UPDATE CASCADE`,
     );
     await queryRunner.query(
@@ -53,6 +68,12 @@ export class CreateInvestorRepositoryTables1739369570053
     );
     await queryRunner.query(
       `ALTER TABLE "investors-repository_sub_sectors_subsectors" DROP CONSTRAINT "FK_63b1abe5ba7054daa031355f777"`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE "investors-repository_investees_investor-repositories-investees" DROP CONSTRAINT "FK_99e4028c86ee0c49de5b59d6c21"`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE "investors-repository_investees_investor-repositories-investees" DROP CONSTRAINT "FK_8c70cc61a93779c802ad783d17c"`,
     );
     await queryRunner.query(
       `ALTER TABLE "investors-repository_sectors_sectors" DROP CONSTRAINT "FK_f77d85122c15fc1464ecb1fc7fb"`,
@@ -71,6 +92,15 @@ export class CreateInvestorRepositoryTables1739369570053
     );
     await queryRunner.query(
       `DROP TABLE "investors-repository_sub_sectors_subsectors"`,
+    );
+    await queryRunner.query(
+      `DROP INDEX "public"."IDX_99e4028c86ee0c49de5b59d6c2"`,
+    );
+    await queryRunner.query(
+      `DROP INDEX "public"."IDX_8c70cc61a93779c802ad783d17"`,
+    );
+    await queryRunner.query(
+      `DROP TABLE "investors-repository_investees_investor-repositories-investees"`,
     );
     await queryRunner.query(
       `DROP INDEX "public"."IDX_f77d85122c15fc1464ecb1fc7f"`,
