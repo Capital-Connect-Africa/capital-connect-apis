@@ -12,6 +12,9 @@ import { InvestorType } from 'src/investor-types/entities/investor-type.entity';
 import { Sector } from 'src/sector/entities/sector.entity';
 import { SubSector } from 'src/subsector/entities/subsector.entity';
 import { InvestorRespostoryInvestees } from './entities/investor-repository-investees.entity';
+import { Country } from 'src/country/entities/country.entity';
+import { EsgFocusAreas } from 'src/esg-focus/entities/esg-focus-areas.entity';
+import { Stage } from 'src/stage/entities/stage.entity';
 
 @Injectable()
 export class InvestorsRepositoryService {
@@ -26,6 +29,12 @@ export class InvestorsRepositoryService {
     private readonly subSectorRepository: Repository<SubSector>,
     @InjectRepository(InvestorRespostoryInvestees)
     private readonly investorRespostoryInvesteesRepository: Repository<InvestorRespostoryInvestees>,
+    @InjectRepository(Country)
+    private readonly countryRepository: Repository<Country>,
+    @InjectRepository(EsgFocusAreas)
+    private readonly esgRepository: Repository<EsgFocusAreas>,
+    @InjectRepository(Stage)
+    private readonly stageRepository: Repository<Stage>,
   ) {}
   async createInvestor(
     payload: InvestorRepositoryDto,
@@ -41,7 +50,8 @@ export class InvestorsRepositoryService {
       esgFocusAreas,
       minFunding,
       maxFunding,
-      currency,
+      businessGrowthStages,
+      description,
     } = payload;
 
     if (!name.trim())
@@ -50,27 +60,54 @@ export class InvestorsRepositoryService {
       throw new BadRequestException('investors minimum funding required');
     if (!maxFunding)
       throw new BadRequestException('investors maximum funding required');
+    if (!typeId) throw new BadRequestException('investors type required');
 
     if (await this.investorsRepository.findOneBy({ name: name }))
       throw new ConflictException('Investor with name already exists');
 
     const newExternalInvestor: Partial<InvestorsRepository> = {
       name,
-      countries,
       minFunding,
       maxFunding,
-      currency,
-      esgFocusAreas,
       website,
+      description,
     };
     if (minFunding > maxFunding) {
       newExternalInvestor.minFunding = maxFunding;
       newExternalInvestor.maxFunding = minFunding;
     }
-    if (typeId) {
-      const type = await this.investorTypeRepository.findOneBy({ id: typeId });
-      if (!type) throw new BadRequestException('Unsupported investor type');
-      newExternalInvestor.type = type;
+    const type = await this.investorTypeRepository.findOneBy({ id: typeId });
+    if (!type) throw new BadRequestException('Unsupported investor type');
+    newExternalInvestor.type = type;
+
+    if (countries) {
+      newExternalInvestor.countries = (
+        await this.countryRepository.find({
+          where: {
+            name: In(countries),
+          },
+        })
+      ).map((country) => country.name);
+    }
+
+    if (esgFocusAreas) {
+      newExternalInvestor.esgFocusAreas = (
+        await this.esgRepository.find({
+          where: {
+            title: In(esgFocusAreas),
+          },
+        })
+      ).map((esg) => esg.title);
+    }
+
+    if (businessGrowthStages) {
+      newExternalInvestor.businessGrowthStages = (
+        await this.stageRepository.find({
+          where: {
+            title: In(businessGrowthStages),
+          },
+        })
+      ).map((stage) => stage.title);
     }
 
     if (sectors) {
