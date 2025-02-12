@@ -30,6 +30,9 @@ export class InvestorsRepository {
   @Column('text', { array: true })
   countries: string[];
 
+  @Column('text', { array: true })
+  businessGrowthStages: string[];
+
   @ManyToMany(() => InvestorRespostoryInvestees, (org) => org.investors)
   investees: InvestorRespostoryInvestees[];
 
@@ -54,4 +57,7 @@ export class InvestorsRepository {
 
   @Column('text', { array: true })
   esgFocusAreas: string[];
+
+  @Column('text', { nullable: true })
+  description?: string;
 }
