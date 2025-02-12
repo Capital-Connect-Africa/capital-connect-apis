@@ -70,12 +70,12 @@ export class InvestorRepositoryDto {
   @IsOptional()
   @IsArray()
   @ApiProperty({
-    description: 'Investors Investees',
-    type: 'integer',
+    description: 'Investors Investees names',
+    type: 'string',
     isArray: true,
     required: false,
   })
-  investees: number[];
+  investees: string[];
 
   @IsOptional()
   @IsString()
@@ -114,4 +114,9 @@ export class InvestorRepositoryDto {
   @IsOptional()
   @ApiProperty({ description: 'A brief description about the investor' })
   description: string;
+
+  @IsString()
+  @IsOptional()
+  @ApiProperty({ description: 'Investors funding vehicle' })
+  fundingVehicle: string;
 }
