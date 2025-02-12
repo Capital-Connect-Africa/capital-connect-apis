@@ -23,6 +23,8 @@ import { Finances } from 'src/finances/entities/finance.entity';
 import { UserVoucher } from 'src/voucher/entities/user-voucher.entity';
 import { ApiProperty } from '@nestjs/swagger';
 import { Referral } from 'src/user-referral/entities/referral.entity';
+import { DealCustomer } from 'src/deal-pipeline/entities/deal-customer.entity';
+import { DealPipeline } from 'src/deal-pipeline/entities/deal-pipeline.entity';
 
 @Entity('users')
 export class User {
@@ -101,6 +103,7 @@ export class User {
   mobileNumbers: MobileNumber[];
 
   @OneToMany(() => Booking, (booking) => booking.advisor)
+  @OneToMany(() => Booking, (booking) => booking.advisor)
   advisedBookings: Booking[];
 
   @OneToOne(
@@ -125,7 +128,6 @@ export class User {
     onDelete: 'CASCADE',
   })
   finances: Finances[];
-
   @OneToMany(() => UserVoucher, (voucher) => voucher.user)
   vouchers: UserVoucher[];
 
@@ -156,4 +158,13 @@ export class User {
 
   @OneToOne(() => Referral, (referral) => referral.user)
   referral: Referral;
+
+  // deal pipeline
+  @OneToMany(() => DealPipeline, (pipeline) => pipeline.owner, {
+    cascade: true,
+  })
+  pipelines: DealPipeline[];
+
+  @OneToMany(() => DealCustomer, (customer) => customer.user, { cascade: true })
+  customers: DealCustomer[];
 }

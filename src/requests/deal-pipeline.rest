@@ -1,0 +1,182 @@
+### Get User pipelines - creates & returns a default pipeline if none exists for the user
+GET http://localhost:3000/deal-pipelines/owner/5
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+
+### Create a custom deal pipeline
+POST http://localhost:3000/deal-pipelines
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+{
+    "name": "Deal Pipeline",
+    "ownerId": 3,
+    "maxNumberOfStages": 5
+}
+
+
+### Get pipeline by id
+GET http://localhost:3000/deal-pipelines/1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+
+### Update pipeline by id
+PUT http://localhost:3000/deal-pipelines/2
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+{
+    "name": "Default Pipeline",
+    "maxNumberOfStages": 5
+}
+
+
+### Delete pipeline by id
+DELETE  http://localhost:3000/deal-pipelines/3
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+
+#### Create deal stage
+POST http://localhost:3000/deal-pipelines/stages
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+{
+    "pipelineId": 1,
+    "name": "Initial Stage",
+    "progress": 0
+}
+
+
+#### Get all deal stages
+GET http://localhost:3000/deal-pipelines/stages
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+
+#### Get deal stage by id
+GET http://localhost:3000/deal-pipelines/stages/1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+
+#### Update deal stage
+PUT http://localhost:3000/deal-pipelines/stages/1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+{
+    "name": "Requirements Analysis",
+    "progress": 5
+}
+
+
+#### Delete deal stage by id
+DELETE http://localhost:3000/deal-pipelines/stages/2
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+
+
+### Create deal customer from existing system users
+POST http://localhost:3000/deal-pipelines/customers
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+{
+    "userId": 7
+}
+
+
+### Create deal customer for external users
+POST http://localhost:3000/deal-pipelines/customers
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+{
+    "name": "Africa Mali",
+    "email": "info@mali.africa",
+    "phone": "+254 123456789"
+}
+
+
+### Update deal customer details
+PUT http://localhost:3000/deal-pipelines/customers/2
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+{
+    "name": "Mali Access"
+}
+
+### Search deal customerss
+GET  http://localhost:3000/deal-pipelines/customers/search/?q=mali
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+
+### Remove deal customer details
+DELETE  http://localhost:3000/deal-pipelines/customers/3
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+
+### Create deal
+POST  http://localhost:3000/deal-pipelines/deals
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+{
+    "value": 3000,
+    "name": "Marketing Strategy",
+    "stageId": 1,
+    "customerId": 2
+}
+
+
+### Advance deal to another stage
+PUT  http://localhost:3000/deal-pipelines/deals/1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+{
+    "stageId": 2
+}
+
+
+### Update deal value shift, Change Name, Status
+PUT  http://localhost:3000/deal-pipelines/deals/1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+{
+    "value": 35000,
+    "name": "SEO Audit",
+    "status": "cancelled"
+}
+
+
+### Get deals
+GET http://localhost:3000/deal-pipelines/deals?page=1&limit=10
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+
+### Get User Deals
+GET http://localhost:3000/deal-pipelines/deals/owner/5?page=1&limit=10
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+
+### Get deal by ID
+GET http://localhost:3000/deal-pipelines/deals/1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+### Delete deal by ID
+DELETE  http://localhost:3000/deal-pipelines/deals/1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9

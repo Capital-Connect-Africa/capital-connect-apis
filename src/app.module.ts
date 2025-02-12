@@ -43,6 +43,7 @@ import { VoucherModule } from './voucher/voucher.module';
 import { WebexIntegrationModule } from './webex_integration/webex_integration.module';
 import { FinancesModule } from './finances/finances.module';
 import { UserReferralModule } from './user-referral/user-referral.module';
+import { DealPipelineModule } from './deal-pipeline/deal-pipeline.module';
 import { BalanceSheetModule } from './balance-sheet/balance-sheet.module';
 import { BullmqModule } from './shared/bullmq/bullmq.module';
 import { ShuftiIntegrationModule } from './shufti_integration/shufti_integration.module';
@@ -95,6 +96,7 @@ import { ShuftiIntegrationModule } from './shufti_integration/shufti_integration
     WebexIntegrationModule,
     FinancesModule,
     UserReferralModule,
+    DealPipelineModule,
     BalanceSheetModule,
     BullmqModule,
     ShuftiIntegrationModule,

@@ -1,4 +1,4 @@
-import { In, Repository } from 'typeorm';
+import { ILike, In, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Voucher } from './entities/voucher.entity';
 import { User } from 'src/users/entities/user.entity';
@@ -15,6 +15,7 @@ import { Operators } from 'src/shared/enums/operators.enum';
 import { UserVoucher } from './entities/user-voucher.entity';
 import { UserProperties } from 'src/shared/enums/user.properies.enum';
 import { Role } from 'src/auth/role.enum';
+import { textToTitlteCase } from 'src/shared/helpers/text-to-title-case';
 
 @Injectable()
 export class VoucherService {
@@ -367,7 +368,22 @@ export class VoucherService {
 
     return true; // If all checks pass, voucher can be redeemed
   }
+  async searchReferrers(q: string) {
+    const users = await this.userRepository.find({
+      where: [
+        { firstName: ILike(`%${q}%`) },
+        { lastName: ILike(`%${q}%`) },
+        { username: ILike(`%${q}%`) },
+      ],
+    });
 
+    return users
+      .map((user) =>
+        textToTitlteCase(`${user.firstName ?? ''} ${user.lastName ?? ''}`),
+      )
+      .filter((name) => name && name.length)
+      .map((name) => name);
+  }
   async findVouchersByOwner(
     ownerId: string,
     page: number = 1,

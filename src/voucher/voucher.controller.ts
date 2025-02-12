@@ -48,7 +48,6 @@ import { RedeemedVoucherDto } from './dto/redeemed-code-response.dto';
 @Controller('vouchers')
 export class VoucherController {
   constructor(private voucherService: VoucherService) {}
-
   @Roles(Role.Admin)
   @Post()
   @ApiOperation({ summary: 'Creates a new voucher' })
@@ -146,38 +145,6 @@ export class VoucherController {
     }
   }
 
-  @Get('owner/:id')
-  @ApiOperation({ summary: 'Fetch a paginated list of vouchers.' })
-  @ApiOkResponse({
-    description: 'Vouchers retrieved successfully',
-    type: Voucher,
-    isArray: true,
-  })
-  @ApiUnauthorizedResponse({
-    description: 'Login required. Possibly user session expired',
-    type: ErrorDto,
-  })
-  @ApiInternalServerErrorResponse({
-    description: 'A little server oopsy occured! Not your bad 😃',
-    type: ErrorDto,
-  })
-  async findVouchersByOwner(
-    @Param('id') ownerId: string,
-    @Query('page') page: number,
-    @Query('limit') limit: number,
-  ) {
-    try {
-      const vouchers = await this.voucherService.findVouchersByOwner(
-        ownerId,
-        page,
-        limit,
-      );
-      return vouchers;
-    } catch (error) {
-      handleError(error, RequestMethod.GET);
-    }
-  }
-
   @Roles(Role.Admin)
   @Get('rules')
   @ApiOperation({
@@ -200,6 +167,27 @@ export class VoucherController {
     try {
       const rules = await this.voucherService.findRules(page, limit);
       return rules;
+    } catch (error) {
+      handleError(error, RequestMethod.GET);
+    }
+  }
+  @Get('search-referrer')
+  @ApiOperation({ summary: 'Search referrers' })
+  @ApiOkResponse({
+    description: 'Results retrieved successfully',
+    isArray: true,
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Login required. Possibly user session expired',
+    type: ErrorDto,
+  })
+  @ApiInternalServerErrorResponse({
+    description: 'A little server oopsy occured! Not your bad 😃',
+    type: ErrorDto,
+  })
+  async searchReferrers(@Query('q') q: string) {
+    try {
+      return await this.voucherService.searchReferrers(q);
     } catch (error) {
       handleError(error, RequestMethod.GET);
     }
@@ -235,35 +223,6 @@ export class VoucherController {
     }
   }
 
-  @Get(':id')
-  @ApiOperation({ summary: 'Fetch a single voucher by id' })
-  @ApiOkResponse({
-    description: 'Voucher retrieved successfully',
-    type: Voucher,
-  })
-  @ApiUnauthorizedResponse({
-    description: 'Login required. Possibly user session expired',
-    type: ErrorDto,
-  })
-  @ApiNotFoundResponse({
-    description: 'Voucher with code not found',
-    type: ErrorDto,
-  })
-  @ApiInternalServerErrorResponse({
-    description: 'A little server oopsy occured! Not your bad 😃',
-  })
-  async findVoucherById(@Param('id') voucherId: number) {
-    if (!voucherId) {
-      throw new NotFoundException('Voucher ID is required');
-    }
-    try {
-      const voucher = await this.voucherService.findVoucherById(voucherId);
-      return voucher;
-    } catch (error) {
-      handleError(error, RequestMethod.GET);
-    }
-  }
-
   @Roles(Role.Admin)
   @Get('rules/:id')
   @ApiOperation({ summary: 'Fetch a single voucher rule by id' })
@@ -291,6 +250,65 @@ export class VoucherController {
     try {
       const rule = await this.voucherService.findRuleById(ruleId);
       return rule;
+    } catch (error) {
+      handleError(error, RequestMethod.GET);
+    }
+  }
+
+  @Get('/owner/:ownerId')
+  @ApiOperation({ summary: 'Fetch vouchers by owner id' })
+  @ApiOkResponse({
+    description: 'User vouchers retrieved successfully',
+    type: Voucher,
+    isArray: true,
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Login required. Possibly user session expired',
+    type: ErrorDto,
+  })
+  @ApiNotFoundResponse({
+    description: 'Voucher with code not found',
+    type: ErrorDto,
+  })
+  @ApiInternalServerErrorResponse({
+    description: 'A little server oopsy occured! Not your bad 😃',
+  })
+  async findVouchersByOwner(@Param('ownerId') ownerId: string) {
+    if (!ownerId) {
+      throw new NotFoundException('Voucher ID is required');
+    }
+    try {
+      const voucher = await this.voucherService.findVouchersByOwner(ownerId);
+      return voucher;
+    } catch (error) {
+      handleError(error, RequestMethod.GET);
+    }
+  }
+
+  @Get(':id')
+  @ApiOperation({ summary: 'Fetch a single voucher by id' })
+  @ApiOkResponse({
+    description: 'Voucher retrieved successfully',
+    type: Voucher,
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Login required. Possibly user session expired',
+    type: ErrorDto,
+  })
+  @ApiNotFoundResponse({
+    description: 'Voucher with code not found',
+    type: ErrorDto,
+  })
+  @ApiInternalServerErrorResponse({
+    description: 'A little server oopsy occured! Not your bad 😃',
+  })
+  async findVoucherById(@Param('id') voucherId: number) {
+    if (!voucherId) {
+      throw new NotFoundException('Voucher ID is required');
+    }
+    try {
+      const voucher = await this.voucherService.findVoucherById(voucherId);
+      return voucher;
     } catch (error) {
       handleError(error, RequestMethod.GET);
     }
