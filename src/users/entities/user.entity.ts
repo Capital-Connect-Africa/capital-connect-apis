@@ -25,6 +25,8 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Referral } from 'src/user-referral/entities/referral.entity';
 import { DealCustomer } from 'src/deal-pipeline/entities/deal-customer.entity';
 import { DealPipeline } from 'src/deal-pipeline/entities/deal-pipeline.entity';
+import { AdvisorProfile } from 'src/advisor_profile/entities/advisor_profile.entity';
+
 
 @Entity('users')
 export class User {
@@ -111,6 +113,12 @@ export class User {
     (investorProfile) => investorProfile.investor,
   )
   investorProfile: InvestorProfile;
+
+  @OneToOne(
+    () => AdvisorProfile,
+    (advisorProfile) => advisorProfile.user,
+  )
+  advisorProfile: AdvisorProfile;
 
   @BeforeInsert()
   async hashPassword() {
