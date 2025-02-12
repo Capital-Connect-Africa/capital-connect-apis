@@ -1,0 +1,17 @@
+### Add a new external investor to the repository
+POST http://localhost:3000/investors-repository
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+{
+    "sectors": [1, 2, 3],
+    "subsectors": [1, 2, 3],
+    "website": "",
+    "name": "Test Investor",
+    "typeId": 0,
+    "countries": [],
+    "investees": [],
+    "esgFocusAreas": [],
+    "minFunding": 400,
+    "maxFunding": 600
+}
