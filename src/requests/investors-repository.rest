@@ -6,12 +6,44 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 {
     "sectors": [1, 2, 3],
     "subsectors": [1, 2, 3],
-    "website": "",
+    "website": "www.example.com",
     "name": "Test Investor",
-    "typeId": 0,
-    "countries": [],
+    "typeId": 1,
+    "countries": ["Kenya", "Uganda", "Tanzania"],
     "investees": [],
-    "esgFocusAreas": [],
+    "esgFocusAreas": ["Top", "Minor"],
     "minFunding": 400,
-    "maxFunding": 600
+    "maxFunding": 600,
+    "businessGrowthStages": ["Idea", "Early", "Pre Revenue"],
+    "description": "Test investor"
 }
+
+
+### Fetch a paginated list of external investors
+GET http://localhost:3000/investors-repository?page=1&limit=10
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+
+### Fetch a single external investor by id
+GET http://localhost:3000/investors-repository/1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+### Update an external investor's details
+PUT http://localhost:3000/investors-repository/1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+{
+    "website": "https://www.capicalconnect.africa",
+    "countries": ["Kenya", "Uganda"],
+    "fundingVehicle": "Sample funding vehicle",
+    "description": "Test investor updated"
+}
+
+
+### Remove an external investor
+DELETE  http://localhost:3000/investors-repository/1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
