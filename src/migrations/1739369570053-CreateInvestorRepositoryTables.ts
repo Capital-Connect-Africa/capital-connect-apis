@@ -1,22 +1,16 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
-export class CreateInvestorsRepositoryTables1738319324394
+export class CreateInvestorRepositoryTables1739369570053
   implements MigrationInterface
 {
-  name = 'CreateInvestorsRepositoryTables1738319324394';
+  name = 'CreateInvestorRepositoryTables1739369570053';
 
   public async up(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.query(
-      `CREATE TYPE "public"."investor-repositories-investees_type_enum" AS ENUM('in-house', 'out-bound')`,
-    );
     await queryRunner.query(
       `CREATE TABLE "investor-repositories-investees" ("id" SERIAL NOT NULL, "name" character varying NOT NULL, "type" "public"."investor-repositories-investees_type_enum" NOT NULL DEFAULT 'out-bound', CONSTRAINT "UQ_7541eb53b50f2cfb29a41120d69" UNIQUE ("name"), CONSTRAINT "PK_81c519e494952a395dbdda45c52" PRIMARY KEY ("id"))`,
     );
     await queryRunner.query(
-      `CREATE TYPE "public"."investors-repository_currency_enum" AS ENUM('USD', 'KES')`,
-    );
-    await queryRunner.query(
-      `CREATE TABLE "investors-repository" ("id" SERIAL NOT NULL, "name" character varying NOT NULL, "countries" text array NOT NULL, "website" character varying, "minFunding" numeric(20,2) NOT NULL, "maxFunding" numeric(20,2) NOT NULL, "currency" "public"."investors-repository_currency_enum" NOT NULL DEFAULT 'USD', "fundingVehicle" character varying, "esgFocusAreas" text array NOT NULL, "typeId" integer, CONSTRAINT "UQ_15bb65ac7f9451c4e908cc94eef" UNIQUE ("name"), CONSTRAINT "PK_7ede71e9b550eab1e23236fc814" PRIMARY KEY ("id"))`,
+      `CREATE TABLE "investors-repository" ("id" SERIAL NOT NULL, "name" character varying NOT NULL, "countries" text array NOT NULL, "businessGrowthStages" text array NOT NULL, "website" character varying, "minFunding" numeric(20,2) NOT NULL, "maxFunding" numeric(20,2) NOT NULL, "currency" "public"."investors-repository_currency_enum" NOT NULL DEFAULT 'USD', "fundingVehicle" character varying, "esgFocusAreas" text array NOT NULL, "description" text, "typeId" integer, CONSTRAINT "UQ_15bb65ac7f9451c4e908cc94eef" UNIQUE ("name"), CONSTRAINT "PK_7ede71e9b550eab1e23236fc814" PRIMARY KEY ("id"))`,
     );
     await queryRunner.query(
       `CREATE TABLE "investors-repository_sectors_sectors" ("investorsRepositoryId" integer NOT NULL, "sectorsId" integer NOT NULL, CONSTRAINT "PK_5732d91f648df0dcc74d6c1ce8b" PRIMARY KEY ("investorsRepositoryId", "sectorsId"))`,
@@ -88,12 +82,6 @@ export class CreateInvestorsRepositoryTables1738319324394
       `DROP TABLE "investors-repository_sectors_sectors"`,
     );
     await queryRunner.query(`DROP TABLE "investors-repository"`);
-    await queryRunner.query(
-      `DROP TYPE "public"."investors-repository_currency_enum"`,
-    );
     await queryRunner.query(`DROP TABLE "investor-repositories-investees"`);
-    await queryRunner.query(
-      `DROP TYPE "public"."investor-repositories-investees_type_enum"`,
-    );
   }
 }
