@@ -202,6 +202,7 @@ export class UsersService {
       'investor',
       'contact_person',
       'advisor',
+      'partner',
     ];
     return validRoles.includes(role);
   }
