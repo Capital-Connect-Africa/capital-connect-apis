@@ -28,6 +28,10 @@ export class BalanceSheetService {
     });
 
     balanceSheet.calculateFields();
+
+    if (balanceSheet.totalAssets !== balanceSheet.totalLiabilities) {
+      throw new NotFoundException('Total assets must be equal to total liabilities');
+    }
     return await this.balanceSheetRepository.save(balanceSheet);
   }
   
@@ -78,6 +82,10 @@ export class BalanceSheetService {
         if (otherNonCurrentLiabilities !== undefined) balanceSheet.otherNonCurrentLiabilities = otherNonCurrentLiabilities;
 
         balanceSheet.calculateFields();
+
+        if (balanceSheet.totalAssets !== balanceSheet.totalLiabilities) {
+          throw new NotFoundException('Total assets must be equal to total liabilities');
+        }
         return await this.balanceSheetRepository.save(balanceSheet);
   }
   
