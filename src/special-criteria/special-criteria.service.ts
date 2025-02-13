@@ -73,13 +73,19 @@ export class SpecialCriteriaService {
     return specialCriteria;
   }
 
-  async create(createSpecialCriterionDto: CreateSpecialCriterionDto) {
-    const specialCriteria = await this.specialCriteriaRepository.create(
-      createSpecialCriterionDto,
-    );
-    specialCriteria.investorProfile = {
-      id: createSpecialCriterionDto.investorProfileId,
-    } as InvestorProfile;
+  async create(createSpecialCriterionDto: CreateSpecialCriterionDto, user: User) {
+    if (!user.roles.includes('partner') && !createSpecialCriterionDto.investorProfileId) {
+        throw new NotFoundException('Investor Profile ID is required for non-partner roles.');
+    }
+
+    const specialCriteria = this.specialCriteriaRepository.create(createSpecialCriterionDto);
+
+    if (!user.roles.includes('partner')) {
+        specialCriteria.investorProfile = {
+            id: createSpecialCriterionDto.investorProfileId,
+        } as InvestorProfile;
+    }
+
     return await this.specialCriteriaRepository.save(specialCriteria);
   }
 
