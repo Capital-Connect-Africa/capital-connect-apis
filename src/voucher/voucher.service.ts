@@ -368,22 +368,29 @@ export class VoucherService {
 
     return true; // If all checks pass, voucher can be redeemed
   }
+
   async searchReferrers(q: string) {
+    const terms = q.split(' ');
+    const conditions = [
+      ...terms.map((term) => ({ firstName: ILike(`%${term}%`) })),
+      ...terms.map((term) => ({ lastName: ILike(`%${term}%`) })),
+    ];
     const users = await this.userRepository.find({
-      where: [
-        { firstName: ILike(`%${q}%`) },
-        { lastName: ILike(`%${q}%`) },
-        { username: ILike(`%${q}%`) },
-      ],
+      where: [...conditions, { username: q }],
     });
 
     return users
-      .map((user) =>
-        textToTitlteCase(`${user.firstName ?? ''} ${user.lastName ?? ''}`),
-      )
-      .filter((name) => name && name.length)
-      .map((name) => name);
+      .map((user) => ({
+        name: textToTitlteCase(
+          `${user.firstName ?? ''} ${user.lastName ?? ''}`,
+        ),
+        id: user.id,
+        referralCode: user.referralCode,
+      }))
+      .filter((user) => user.name && user.name.trim() && user.referralCode)
+      .map((user) => ({ id: user.id, name: user.name }));
   }
+
   async findVouchersByOwner(
     ownerId: string,
     page: number = 1,
