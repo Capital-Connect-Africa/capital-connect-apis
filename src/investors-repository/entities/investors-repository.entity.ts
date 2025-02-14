@@ -1,16 +1,5 @@
-import { InvestorType } from 'src/investor-types/entities/investor-type.entity';
-import { Sector } from 'src/sector/entities/sector.entity';
-import {
-  Column,
-  Entity,
-  JoinTable,
-  ManyToMany,
-  ManyToOne,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
-import { InvestorRespostoryInvestees } from './investor-repository-investees.entity';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 import { Currency } from 'src/shared/enums/currency.enum';
-import { SubSector } from 'src/subsector/entities/subsector.entity';
 
 @Entity('investors-repository')
 export class InvestorsRepository {
@@ -20,29 +9,32 @@ export class InvestorsRepository {
   @Column({ unique: true })
   name: string;
 
-  @ManyToMany(() => Sector, (sector) => sector.investors)
-  @JoinTable()
-  sectors: Sector[];
-
-  @ManyToOne(() => InvestorType, (type) => type.investors)
-  type: InvestorType;
+  @Column()
+  type: string;
 
   @Column('text', { array: true })
   countries: string[];
 
   @Column('text', { array: true })
+  sectors: string[];
+
+  @Column('text', { array: true })
   businessGrowthStages: string[];
 
-  @ManyToMany(() => InvestorRespostoryInvestees, (org) => org.investors)
-  @JoinTable()
-  investees: InvestorRespostoryInvestees[];
+  @Column('text', { array: true })
+  investees: string[];
 
-  @ManyToMany(() => SubSector, (subSector) => subSector)
-  @JoinTable()
-  subSectors: SubSector[];
+  @Column('text', { array: true })
+  subSectors: string[];
 
   @Column({ nullable: true })
-  website?: string;
+  website: string;
+
+  @Column({ nullable: true })
+  contactEmail: string;
+
+  @Column({ nullable: true })
+  contactName: string;
 
   @Column({ type: 'decimal', precision: 20, scale: 2 })
   minFunding: number;
@@ -57,8 +49,14 @@ export class InvestorsRepository {
   fundingVehicle: string;
 
   @Column('text', { array: true })
+  useOfFunds: string[];
+
+  @Column('text', { array: true })
+  investmentStructures: string[];
+
+  @Column('text', { array: true })
   esgFocusAreas: string[];
 
   @Column('text', { nullable: true })
-  description?: string;
+  description: string;
 }
