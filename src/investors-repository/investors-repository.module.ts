@@ -6,10 +6,12 @@ import { InvestorsRepository } from './entities/investors-repository.entity';
 import { InvestorType } from 'src/investor-types/entities/investor-type.entity';
 import { Sector } from 'src/sector/entities/sector.entity';
 import { SubSector } from 'src/subsector/entities/subsector.entity';
-import { InvestorRespostoryInvestees } from './entities/investor-repository-investees.entity';
 import { Country } from 'src/country/entities/country.entity';
 import { EsgFocusAreas } from 'src/esg-focus/entities/esg-focus-areas.entity';
 import { Stage } from 'src/stage/entities/stage.entity';
+import { InvestmentStructure } from 'src/investment-structures/entities/investment-structure.entity';
+import { UseOfFunds } from 'src/use-of-funds/entities/use-of-funds.entity';
+import { InvestorsRepositorySearchHistory } from './entities/investors-respository-search-history.entity';
 
 @Module({
   controllers: [InvestorsRepositoryController],
@@ -23,7 +25,9 @@ import { Stage } from 'src/stage/entities/stage.entity';
       Country,
       EsgFocusAreas,
       Stage,
-      InvestorRespostoryInvestees,
+      UseOfFunds,
+      InvestmentStructure,
+      InvestorsRepositorySearchHistory,
     ]),
   ],
   exports: [InvestorsRepositoryService],
