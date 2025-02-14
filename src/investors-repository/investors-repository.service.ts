@@ -201,8 +201,17 @@ export class InvestorsRepositoryService {
       throw new ConflictException('Investor with name already exists');
 
     const newExternalInvestor = await this.normalizePayload(payload);
-    const externalInvestor =
-      this.investorsRepository.create(newExternalInvestor);
+    const externalInvestor = this.investorsRepository.create({
+      ...newExternalInvestor,
+      sectors: newExternalInvestor.sectors ?? [],
+      subSectors: newExternalInvestor.subSectors ?? [],
+      useOfFunds: newExternalInvestor.useOfFunds ?? [],
+      investees: newExternalInvestor.investees ?? [],
+      countries: newExternalInvestor.countries ?? [],
+      investmentStructures: newExternalInvestor.investmentStructures ?? [],
+      businessGrowthStages: newExternalInvestor.businessGrowthStages ?? [],
+      esgFocusAreas: newExternalInvestor.esgFocusAreas ?? [],
+    });
     return await this.investorsRepository.save(externalInvestor);
   }
 
