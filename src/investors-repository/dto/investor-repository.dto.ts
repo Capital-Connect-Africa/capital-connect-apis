@@ -2,7 +2,6 @@ import { ApiProperty } from '@nestjs/swagger';
 import {
   IsArray,
   IsEnum,
-  IsInt,
   IsNumber,
   IsOptional,
   IsString,
@@ -17,31 +16,24 @@ export class InvestorRepositoryDto {
   @IsOptional()
   @IsArray()
   @ApiProperty({
-    description: 'Sectors IDS',
-    type: 'integer',
+    description: 'Sector Names',
     isArray: true,
     required: false,
   })
-  sectors: number[];
+  sectors: string[];
 
   @IsOptional()
   @IsArray()
   @ApiProperty({
-    description: 'Sub-sectors IDS',
-    type: 'integer',
+    description: 'Sub-sectors Names',
     isArray: true,
     required: false,
   })
-  subsectors: number[];
+  subSectors: string[];
 
-  @IsOptional()
-  @IsInt()
-  @ApiProperty({
-    description: 'Investor type Id',
-    type: 'integer',
-    required: false,
-  })
-  typeId: number;
+  @IsString()
+  @ApiProperty({ description: 'Investor type name', required: true })
+  investorType: string;
 
   @IsOptional()
   @ApiProperty({
@@ -78,6 +70,16 @@ export class InvestorRepositoryDto {
   investees: string[];
 
   @IsOptional()
+  @IsArray()
+  @ApiProperty({
+    description: 'Investor investment structures',
+    type: 'string',
+    isArray: true,
+    required: false,
+  })
+  investmentStructures: string[];
+
+  @IsOptional()
   @IsString()
   @ApiProperty({
     description: 'Investors website',
@@ -108,7 +110,7 @@ export class InvestorRepositoryDto {
     enum: Currency,
     required: false,
   })
-  currency?: Currency;
+  currency: Currency;
 
   @IsString()
   @IsOptional()
@@ -119,4 +121,18 @@ export class InvestorRepositoryDto {
   @IsOptional()
   @ApiProperty({ description: 'Investors funding vehicle' })
   fundingVehicle: string;
+
+  @IsString()
+  @IsOptional()
+  @ApiProperty({ description: 'Investors contact email' })
+  contactEmail: string;
+
+  @IsString()
+  @IsOptional()
+  @ApiProperty({ description: 'Investors contact person name' })
+  contactName: string;
+
+  @IsArray()
+  @ApiProperty({ description: 'Business use of fund', required: false })
+  useOfFunds: string[];
 }
