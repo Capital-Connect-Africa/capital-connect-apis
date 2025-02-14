@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { InvestorsRepository } from 'src/investors-repository/entities/investors-repository.entity';
 
 @Entity('investor-types')
 export class InvestorType {
@@ -10,4 +11,7 @@ export class InvestorType {
 
   @Column({ type: 'text', nullable: true })
   description: string;
+
+  @OneToMany(() => InvestorsRepository, (investor) => investor.type)
+  investors: InvestorsRepository[];
 }

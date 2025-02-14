@@ -1,0 +1,101 @@
+### Add a new external investor to the repository
+POST http://localhost:3000/investors-repository
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+{
+    "sectors": ["Sector 1", "Sector 2", "Sector 3"],
+    "subSectors": ["Sector 200"],
+    "website": "www.capitalafrica.com",
+    "name": "Capital Africa",
+    "countries": ["Kenya", "Uganda", "Tanzania"],
+    "investees": ["Ufuta", "Pika"],
+    "esgFocusAreas": ["Top", "Minor"],
+    "minFunding": 400,
+    "maxFunding": 600,
+    "investorType": "Angel Investor",
+    "useOfFunds": [],
+    "investees": ["NSE"],
+    "investmentStructures": [],
+    "businessGrowthStages": ["Idea", "Early", "Pre Revenue"],
+    "description": "Test investor"
+}
+
+
+### Fetch a paginated list of external investors
+GET http://localhost:3000/investors-repository?page=1&limit=10
+Content-Type: application/json
+
+### Fetch a single external investor by id
+GET http://localhost:3000/investors-repository/1
+Content-Type: application/json
+
+### Update an external investor's details
+PUT http://localhost:3000/investors-repository/1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+{
+    "website": "https://www.capicalconnect.africa",
+    "countries": ["Kenya", "Uganda"],
+    "fundingVehicle": "Sample funding vehicle",
+    "description": "Test investor updated",
+    "investees": ["Netcom", "Venture"]
+}
+
+
+### Search investor database
+POST  http://localhost:3000/investors-repository/search
+Content-Type: application/json
+
+
+{
+    "sector": "",
+    "subSector": "",
+    "country": "Kenya",
+    "targetAmount": 0,
+    "useOfFunds": ""
+}
+
+### Remove an external investor
+DELETE  http://localhost:3000/investors-repository/1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+
+### Bulk create: Import CSV
+POST http://localhost:3000/investors-repository/upload
+Content-Type: multipart/form-data; boundary=boundary123
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+--boundary123
+Content-Disposition: form-data; name="file"; filename="investors.csv"
+Content-Type: text/csv
+
+< ./investors.csv
+--boundary123--
+
+
+### Bulk create: Import JSON
+POST http://localhost:3000/investors-repository/upload
+Content-Type: multipart/form-data; boundary=boundary123
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+--boundary123
+Content-Disposition: form-data; name="file"; filename="investors.json"
+Content-Type: application/json
+
+< ./investors.json
+--boundary123--
+
+### Bulk create: Import XLSX
+POST http://localhost:3000/investors-repository/upload
+Content-Type: multipart/form-data; boundary=boundary123
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+--boundary123
+Content-Disposition: form-data; name="file"; filename="investors.xlsx"
+Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
+
+< ./investors.xlsx
+--boundary123--

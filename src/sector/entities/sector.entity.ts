@@ -7,6 +7,7 @@ import {
   ManyToMany,
 } from 'typeorm';
 import { InvestorProfile } from '../../investor-profile/entities/investor-profile.entity';
+import { InvestorsRepository } from 'src/investors-repository/entities/investors-repository.entity';
 
 @Entity('sectors')
 export class Sector {
@@ -29,4 +30,7 @@ export class Sector {
     (investorProfile) => investorProfile.sectors,
   )
   investorProfiles: InvestorProfile[];
+
+  @ManyToMany(() => InvestorsRepository, (investor) => investor.sectors)
+  investors: InvestorsRepository[];
 }
