@@ -182,6 +182,23 @@ export class VoucherService {
     if (!voucher) {
       throw new NotFoundException(`Voucher with id ${voucherId} not found`);
     }
+    voucher.rules = await Promise.all(
+      voucher.rules.map(async (rule) => {
+        if (rule.userProperty === UserProperties.REFERRED_BY) {
+          const referrer = await this.userRepository.findOneBy({
+            id: +rule.value,
+          });
+          if (!referrer) return rule;
+          return {
+            ...rule,
+            value:
+              `${referrer.firstName ?? ''} ${referrer.lastName ?? ''}`.trim(),
+          };
+        }
+        return rule;
+      }),
+    );
+
     return voucher;
   }
 
