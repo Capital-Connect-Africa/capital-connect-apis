@@ -13,5 +13,6 @@ export class CreateSpecialCriterionDto {
     globalVisible?: boolean;
 
     @IsNumber()
+    @IsOptional()
     investorProfileId: number;
 }
