@@ -1,20 +1,17 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post } from '@nestjs/common';
 import { ValuticoService } from './valutico.service';
 
 @Controller('valutico')
 export class ValuticoController {
   constructor(private readonly valuticoService: ValuticoService) {}
 
-  @Get(':myValuticoId')
-  async getMarketplace(@Param('myValuticoId') myValuticoId: string) {
-    return this.valuticoService.getMarketplace(myValuticoId);
+  @Get()
+  async getMarketplace() {
+    return this.valuticoService.getMarketplace();
   }
 
-  @Post(':myValuticoId/valuations')
-  async submitValuation(
-    @Param('myValuticoId') myValuticoId: string,
-    @Body() valuationData: any,
-  ) {
-    return this.valuticoService.submitValuation(myValuticoId, valuationData);
+  @Post('valuations')
+  async submitValuation(@Body() valuationData: any) {
+    return this.valuticoService.submitValuation(valuationData);
   }
 }

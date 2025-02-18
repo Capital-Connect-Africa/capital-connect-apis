@@ -3,18 +3,17 @@ import { HttpService } from '@nestjs/axios';
 
 @Injectable()
 export class ValuticoService {
-  private readonly baseUrl = 'https://api.valutico.com/marketplaces';
+  private readonly baseUrl = 'https://app.demo.valutico.dev/api/marketplaces/default';
 
   constructor(private readonly httpService: HttpService) {}
 
-  async getMarketplace(myValuticoId: string) {
-    const url = `${this.baseUrl}/${myValuticoId}`;
-    const response = await this.httpService.get(url).toPromise();
+  async getMarketplace() {
+    const response = await this.httpService.get(this.baseUrl).toPromise();
     return response.data;
   }
 
-  async submitValuation(myValuticoId: string, valuationData: any) {
-    const url = `${this.baseUrl}/${myValuticoId}/valuations`;
+  async submitValuation(valuationData: any) {
+    const url = `${this.baseUrl}/valuations`;
     const response = await this.httpService
       .post(url, valuationData)
       .toPromise();
