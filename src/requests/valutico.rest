@@ -1,0 +1,1019 @@
+### Get Marketplace Data
+GET http://localhost:3000/valutico
+Content-Type: application/json
+
+### Submit Valuation Data
+POST http://localhost:3000/valutico/valuations
+Content-Type: application/json
+
+{
+  "id": "default",
+  "formVersion": "13d7371abf4b12e545bd8590f45a90a7",
+  "submitPath": "/api/marketplaces/default/valuations",
+  "baseUrl": "https://app.demo.valutico.dev",
+  "privacyStatementUrl": "https://app.demo.valutico.dev/privacy_statement?locale=en&logo_only=true",
+  "marketplaceUrl": null,
+  "locale": "en",
+  "autoContact": false,
+  "logoHidden": false,
+  "socialsHidden": false,
+  "primaryColor": false,
+  "secondaryColor": false,
+  "intercomEnabled": false,
+  "vouchersEnabled": false,
+  "tocLink": false,
+  "collectPhoneNumber": false,
+  "requirePhoneNumber": false,
+  "gaTrackingId": false,
+  "email": "vickyjr88@yahoo.co.uk",
+  "questions": [
+    {
+      "email": "vickyjr88@yahoo.co.uk"
+    },
+    {
+      "id": "25642a58-77e9-4794-9203-18a9aaf2d438",
+      "type": "remote_autocomplete",
+      "question": "In which country is the head office located?",
+      "required": true,
+      "placeholder": "Select country",
+      "source": "/api/finance_countries?term=:param&flat=true&locale=en",
+      "showDefaultOptions": true,
+      "value": null
+    },
+    {
+      "id": "e5b9a792-8e08-4d29-9083-54e5f563f629",
+      "type": "remote_autocomplete",
+      "question": "In which industry is the company active?",
+      "required": true,
+      "placeholder": "Select or search industry",
+      "source": "/api/nace_industries?term=:param&flat=true&locale=en",
+      "showDefaultOptions": true,
+      "value": null
+    },
+    {
+      "id": "4caa4ee2-95e1-4657-8ffe-5810b06cbb39",
+      "type": "input_with_select",
+      "question": "What was the company’s last annual turnover?",
+      "description": "",
+      "placeholder": "Last annual turnover",
+      "required": true,
+      "validationRule": "^[1-9]\\d*$",
+      "numberFormat": true,
+      "errorMessage": "The number must not contain any special characters and must be positive.",
+      "value": "",
+      "selectedValue": null,
+      "options": [
+        {
+          "label": "Popular",
+          "options": [
+            {
+              "value": "EUR",
+              "label": "EUR"
+            },
+            {
+              "value": "GBP",
+              "label": "GBP"
+            },
+            {
+              "value": "USD",
+              "label": "USD"
+            }
+          ]
+        },
+        {
+          "label": "More",
+          "options": [
+            {
+              "value": "AED",
+              "label": "AED"
+            },
+            {
+              "value": "AEO",
+              "label": "AEO"
+            },
+            {
+              "value": "ARS",
+              "label": "ARS"
+            },
+            {
+              "value": "ATS",
+              "label": "ATS"
+            },
+            {
+              "value": "AUD",
+              "label": "AUD"
+            },
+            {
+              "value": "BBD",
+              "label": "BBD"
+            },
+            {
+              "value": "BDT",
+              "label": "BDT"
+            },
+            {
+              "value": "BGN",
+              "label": "BGN"
+            },
+            {
+              "value": "BHD",
+              "label": "BHD"
+            },
+            {
+              "value": "BMD",
+              "label": "BMD"
+            },
+            {
+              "value": "BRL",
+              "label": "BRL"
+            },
+            {
+              "value": "BWP",
+              "label": "BWP"
+            },
+            {
+              "value": "CAD",
+              "label": "CAD"
+            },
+            {
+              "value": "CHF",
+              "label": "CHF"
+            },
+            {
+              "value": "CLP",
+              "label": "CLP"
+            },
+            {
+              "value": "CNY",
+              "label": "CNY"
+            },
+            {
+              "value": "COP",
+              "label": "COP"
+            },
+            {
+              "value": "CRC",
+              "label": "CRC"
+            },
+            {
+              "value": "CZK",
+              "label": "CZK"
+            },
+            {
+              "value": "DEM",
+              "label": "DEM"
+            },
+            {
+              "value": "DKK",
+              "label": "DKK"
+            },
+            {
+              "value": "DZD",
+              "label": "DZD"
+            },
+            {
+              "value": "EEK",
+              "label": "EEK"
+            },
+            {
+              "value": "EGP",
+              "label": "EGP"
+            },
+            {
+              "value": "FIM",
+              "label": "FIM"
+            },
+            {
+              "value": "FRF",
+              "label": "FRF"
+            },
+            {
+              "value": "GEL",
+              "label": "GEL"
+            },
+            {
+              "value": "GHC",
+              "label": "GHC"
+            },
+            {
+              "value": "GHS",
+              "label": "GHS"
+            },
+            {
+              "value": "HKD",
+              "label": "HKD"
+            },
+            {
+              "value": "HRK",
+              "label": "HRK"
+            },
+            {
+              "value": "HUF",
+              "label": "HUF"
+            },
+            {
+              "value": "IDR",
+              "label": "IDR"
+            },
+            {
+              "value": "ILS",
+              "label": "ILS"
+            },
+            {
+              "value": "INR",
+              "label": "INR"
+            },
+            {
+              "value": "IQD",
+              "label": "IQD"
+            },
+            {
+              "value": "IRR",
+              "label": "IRR"
+            },
+            {
+              "value": "ISK",
+              "label": "ISK"
+            },
+            {
+              "value": "ITL",
+              "label": "ITL"
+            },
+            {
+              "value": "JMD",
+              "label": "JMD"
+            },
+            {
+              "value": "JOD",
+              "label": "JOD"
+            },
+            {
+              "value": "JPY",
+              "label": "JPY"
+            },
+            {
+              "value": "KES",
+              "label": "KES"
+            },
+            {
+              "value": "KRW",
+              "label": "KRW"
+            },
+            {
+              "value": "KWD",
+              "label": "KWD"
+            },
+            {
+              "value": "KZT",
+              "label": "KZT"
+            },
+            {
+              "value": "LBP",
+              "label": "LBP"
+            },
+            {
+              "value": "LKR",
+              "label": "LKR"
+            },
+            {
+              "value": "LTL",
+              "label": "LTL"
+            },
+            {
+              "value": "LVL",
+              "label": "LVL"
+            },
+            {
+              "value": "LYD",
+              "label": "LYD"
+            },
+            {
+              "value": "MAD",
+              "label": "MAD"
+            },
+            {
+              "value": "MKD",
+              "label": "MKD"
+            },
+            {
+              "value": "MOP",
+              "label": "MOP"
+            },
+            {
+              "value": "MUR",
+              "label": "MUR"
+            },
+            {
+              "value": "MWK",
+              "label": "MWK"
+            },
+            {
+              "value": "MXN",
+              "label": "MXN"
+            },
+            {
+              "value": "MYR",
+              "label": "MYR"
+            },
+            {
+              "value": "NAD",
+              "label": "NAD"
+            },
+            {
+              "value": "NGN",
+              "label": "NGN"
+            },
+            {
+              "value": "NLG",
+              "label": "NLG"
+            },
+            {
+              "value": "NOK",
+              "label": "NOK"
+            },
+            {
+              "value": "NZD",
+              "label": "NZD"
+            },
+            {
+              "value": "OMR",
+              "label": "OMR"
+            },
+            {
+              "value": "PEN",
+              "label": "PEN"
+            },
+            {
+              "value": "PGK",
+              "label": "PGK"
+            },
+            {
+              "value": "PHP",
+              "label": "PHP"
+            },
+            {
+              "value": "PKR",
+              "label": "PKR"
+            },
+            {
+              "value": "PLN",
+              "label": "PLN"
+            },
+            {
+              "value": "PTE",
+              "label": "PTE"
+            },
+            {
+              "value": "QAR",
+              "label": "QAR"
+            },
+            {
+              "value": "RON",
+              "label": "RON"
+            },
+            {
+              "value": "RSD",
+              "label": "RSD"
+            },
+            {
+              "value": "RUB",
+              "label": "RUB"
+            },
+            {
+              "value": "SAR",
+              "label": "SAR"
+            },
+            {
+              "value": "SDG",
+              "label": "SDG"
+            },
+            {
+              "value": "SEK",
+              "label": "SEK"
+            },
+            {
+              "value": "SGD",
+              "label": "SGD"
+            },
+            {
+              "value": "SZL",
+              "label": "SZL"
+            },
+            {
+              "value": "THB",
+              "label": "THB"
+            },
+            {
+              "value": "TND",
+              "label": "TND"
+            },
+            {
+              "value": "TRL",
+              "label": "TRL"
+            },
+            {
+              "value": "TRY",
+              "label": "TRY"
+            },
+            {
+              "value": "TTD",
+              "label": "TTD"
+            },
+            {
+              "value": "TWD",
+              "label": "TWD"
+            },
+            {
+              "value": "TZS",
+              "label": "TZS"
+            },
+            {
+              "value": "UAH",
+              "label": "UAH"
+            },
+            {
+              "value": "UGX",
+              "label": "UGX"
+            },
+            {
+              "value": "VEF",
+              "label": "VEF"
+            },
+            {
+              "value": "VES",
+              "label": "VES"
+            },
+            {
+              "value": "VND",
+              "label": "VND"
+            },
+            {
+              "value": "XAF",
+              "label": "XAF"
+            },
+            {
+              "value": "XOF",
+              "label": "XOF"
+            },
+            {
+              "value": "ZAR",
+              "label": "ZAR"
+            },
+            {
+              "value": "ZMW",
+              "label": "ZMW"
+            },
+            {
+              "value": "ZWL",
+              "label": "ZWL"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "9d8c9bd4-dcd8-437a-9669-8e46e17f6c24",
+      "type": "free_form_question",
+      "question": "How have Sales developed over the last three years?",
+      "description": "",
+      "required": true,
+      "validationRule": "",
+      "errorMessage": "Please select a value",
+      "options": [
+        {
+          "id": "71a71665-f492-46ee-bd9a-6e2fa8959002",
+          "label": "Sales have declined",
+          "editable": false
+        },
+        {
+          "id": "e08943d5-96e7-409a-8575-a1e3c9a3030b",
+          "label": "Sales have been stagnant",
+          "editable": false
+        },
+        {
+          "id": "9d89d43b-8789-431a-a919-91b84a5b91cb",
+          "label": "Sales have grown by up to 5% annually",
+          "editable": false
+        },
+        {
+          "id": "d0d15b1c-f328-4fd2-8b61-26619ec43ffe",
+          "label": "Sales have grown by up to 10% annually",
+          "editable": false
+        },
+        {
+          "id": "3ceea2e1-1d0a-4541-aea9-e712c2eb73fe",
+          "label": "Sales have grown more than 10% annually",
+          "editable": false
+        }
+      ]
+    },
+    {
+      "id": "66a8beb7-bbd2-455c-ba56-0ffe8f99aaf2",
+      "type": "free_form_question",
+      "question": "How do you expect Sales to develop over the next three years?",
+      "description": "",
+      "required": true,
+      "validationRule": "",
+      "errorMessage": "Please select a value",
+      "options": [
+        {
+          "id": "3b0d39d9-9845-4d54-8caa-0cd6056b6d1f",
+          "label": "Sales are expected to decline",
+          "editable": false
+        },
+        {
+          "id": "841aef33-7742-404a-a609-79fa49f08fd5",
+          "label": "Sales are expected to stagnate",
+          "editable": false
+        },
+        {
+          "id": "32ffb1d7-dd04-4d03-a6e3-5a90725f19d5",
+          "label": "Sales are expected to grow up to 5% annually",
+          "editable": false
+        },
+        {
+          "id": "4786925c-6de4-4e85-86b7-2448940cf308",
+          "label": "Sales are expected to grow up to 10% annually",
+          "editable": false
+        },
+        {
+          "id": "918344e9-d8f2-4426-bd3c-c328313b7a65",
+          "label": "Sales are expected to grow over 10% annually",
+          "editable": false
+        }
+      ]
+    },
+    {
+      "id": "efa91163-3fc2-4026-8537-cf2474f57c21",
+      "type": "input",
+      "question": "What was the company’s last EBIT?",
+      "description": "Note: The EBIT should be adjusted for extraordinary income/expenses, as well as normalised for (arm’s length) rent and wages. <a href=\"https://en.wikipedia.org/wiki/EBIT\" target=\"_blank\">For a detailed definition of EBIT visit Wikipedia.com</a>",
+      "required": true,
+      "placeholder": "Last available EBIT",
+      "validationRule": "^-?\\d*$",
+      "numberFormat": true,
+      "errorMessage": "Please enter number",
+      "value": ""
+    },
+    {
+      "id": "f8f291d0-a5b8-49bc-80e9-9399188fd309",
+      "type": "free_form_question",
+      "question": "How will the EBIT margin develop over the next 3 years?",
+      "description": "<a href=\"https://en.wikipedia.org/wiki/Operating_margin\" target=\"_blank\">For a detailed definition of the EBIT margin, visit Wikipedia.com</a>",
+      "required": true,
+      "validationRule": "",
+      "errorMessage": "Please select a value",
+      "options": [
+        {
+          "id": "56253360-8fb5-409d-b97b-e99fffe685d0",
+          "label": "Margin is expected to be significantly lower",
+          "editable": false
+        },
+        {
+          "id": "0898ec86-adbc-47fb-a8c9-c6e3be79c770",
+          "label": "Margin is expected to be lower",
+          "editable": false
+        },
+        {
+          "id": "6a05e294-fbc8-4a74-8f5e-974333b564cc",
+          "label": "Margin is expected to remain stable",
+          "editable": false
+        },
+        {
+          "id": "3adebf86-d9b4-42a9-83b8-09a6ae79015b",
+          "label": "Margin is expected to be higher",
+          "editable": false
+        },
+        {
+          "id": "dc7af0b2-cba2-47bd-a872-de95e76c1cd3",
+          "label": "Margin is expected to be significantly higher",
+          "editable": false
+        }
+      ]
+    },
+    {
+      "id": "General",
+      "type": "group_slider",
+      "question": "Risk Factors - General",
+      "description": "Please create a risk assessment based on the following \"soft factors\". Slider further to the left is lower risk, further to the right is higher risk.",
+      "questions": [
+        {
+          "id": "f432909e-7002-4f6f-a09b-7cc85bfcfd43",
+          "group-name": "General",
+          "question": "Company size",
+          "questionText": "How big is the company relative to its competitors?",
+          "lowRiskName": "Big",
+          "highRiskName": "Small",
+          "weight": 35,
+          "min": 1,
+          "max": 5,
+          "value": 3
+        },
+        {
+          "id": "6a5275c1-15b7-47b6-9a54-e7772352ad69",
+          "group-name": "General",
+          "question": "Positioning",
+          "questionText": "How are the company's products and services positioned relative to its competitors?",
+          "lowRiskName": "Premium",
+          "highRiskName": "Commodity",
+          "weight": 2,
+          "min": 1,
+          "max": 5,
+          "value": 3
+        }
+      ]
+    },
+    {
+      "id": "Market1",
+      "type": "group_slider",
+      "question": "Risk Factors - Market",
+      "description": "Please create a risk assessment based on the following \"soft factors\". Slider further to the left is lower risk, further to the right is higher risk.",
+      "questions": [
+        {
+          "id": "f436f5e3-31e2-4b6f-a0af-9eca00ff1d1d",
+          "group-name": "Market",
+          "question": "Market Size",
+          "questionText": "How big is the company's overall addressable market?",
+          "lowRiskName": "Big",
+          "highRiskName": "Small",
+          "weight": 3,
+          "min": 1,
+          "max": 5,
+          "value": 3
+        },
+        {
+          "id": "b8cf1e76-4fb6-411d-93ed-d343233dfaca",
+          "group-name": "Market",
+          "question": "Market Growth",
+          "questionText": "How fast is the company's market growing?",
+          "lowRiskName": "High",
+          "highRiskName": "Low",
+          "weight": 3,
+          "min": 1,
+          "max": 5,
+          "value": 3
+        }
+      ]
+    },
+    {
+      "id": "Market2",
+      "type": "group_slider",
+      "question": "Risk Factors - Market (cont.)",
+      "description": "Please create a risk assessment based on the following \"soft factors\". Slider further to the left is lower risk, further to the right is higher risk.",
+      "questions": [
+        {
+          "id": "51dac8d8-6b7c-406c-8bb8-16b2aedcc1f7",
+          "group-name": "Market",
+          "question": "Market Share",
+          "questionText": "How high is the company's market share relative to its competitors?",
+          "lowRiskName": "High",
+          "highRiskName": "Small",
+          "weight": 2,
+          "min": 1,
+          "max": 5,
+          "value": 3
+        },
+        {
+          "id": "dd808ae9-fed5-4cf6-9813-64327f1ed9e3",
+          "group-name": "Market",
+          "question": "Competition",
+          "questionText": "What is the level of competition within the market?",
+          "lowRiskName": "Low",
+          "highRiskName": "High",
+          "weight": 5,
+          "min": 1,
+          "max": 5,
+          "value": 3
+        }
+      ]
+    },
+    {
+      "id": "Market3",
+      "type": "group_slider",
+      "question": "Risk Factors - Market (cont.)",
+      "description": "Please create a risk assessment based on the following \"soft factors\". Slider further to the left is lower risk, further to the right is higher risk.",
+      "questions": [
+        {
+          "id": "979d7036-a815-419a-aef6-61d7906aaba5",
+          "group-name": "Market",
+          "question": "Exposure to Business Cycle",
+          "questionText": "What is the company's exposure to overall swings in the economy?",
+          "lowRiskName": "Low",
+          "highRiskName": "High",
+          "weight": 2,
+          "min": 1,
+          "max": 5,
+          "value": 3
+        },
+        {
+          "id": "0e0ae8d3-bfbd-4059-b43a-fd1a5390a069",
+          "group-name": "Market",
+          "question": "Exposure to Political-Legal Factors",
+          "questionText": "What is the company's exposure to changes in the political and legal environment?",
+          "lowRiskName": "Low",
+          "highRiskName": "High",
+          "weight": 1,
+          "min": 1,
+          "max": 5,
+          "value": 3
+        }
+      ]
+    },
+    {
+      "id": "Management",
+      "type": "group_slider",
+      "question": "Risk Factors - Management",
+      "description": "Please create a risk assessment based on the following \"soft factors\". Slider further to the left is lower risk, further to the right is higher risk.",
+      "questions": [
+        {
+          "id": "60e1f18b-932f-4745-96c7-04cb06242466",
+          "group-name": "Management",
+          "question": "Management Quality",
+          "questionText": "What is the level of quality of the management team?",
+          "lowRiskName": "High",
+          "highRiskName": "Low",
+          "weight": 5,
+          "min": 1,
+          "max": 5,
+          "value": 3
+        },
+        {
+          "id": "1b87ccf3-35aa-4307-995e-56accfc12d29",
+          "group-name": "Management",
+          "question": "Reliance on Key Persons",
+          "questionText": "How high is the company's reliance on individual key persons?",
+          "lowRiskName": "Low",
+          "highRiskName": "High",
+          "weight": 5,
+          "min": 1,
+          "max": 5,
+          "value": 3
+        }
+      ]
+    },
+    {
+      "id": "Sales",
+      "type": "group_slider",
+      "question": "Risk Factors - Sales",
+      "description": "Please create a risk assessment based on the following \"soft factors\". Slider further to the left is lower risk, further to the right is higher risk.",
+      "questions": [
+        {
+          "id": "4bf3f340-ba66-4f98-939e-2f6f4075d5f8",
+          "group-name": "Sales",
+          "question": "Reliance on Key Customers",
+          "questionText": "How high is the company's reliance on key customers?",
+          "lowRiskName": "Low",
+          "highRiskName": "High",
+          "weight": 5,
+          "min": 1,
+          "max": 5,
+          "value": 3
+        },
+        {
+          "id": "ba978c97-73c2-43a6-81ab-d24445ef5b36",
+          "group-name": "Sales",
+          "question": "Reliance on Distribution Partners",
+          "questionText": "How high is the company's reliance on key distribution partners?",
+          "lowRiskName": "Low",
+          "highRiskName": "High",
+          "weight": 2,
+          "min": 1,
+          "max": 5,
+          "value": 3
+        }
+      ]
+    },
+    {
+      "id": "Sale2",
+      "type": "group_slider",
+      "question": "Risk Factors - Sales (cont.)",
+      "description": "Please create a risk assessment based on the following \"soft factors\". Slider further to the left is lower risk, further to the right is higher risk.",
+      "questions": [
+        {
+          "id": "c9bdf222-35e1-4896-8670-9e3a0266076b",
+          "group-name": "Sales",
+          "question": "Customer Lock-in",
+          "questionText": "Are customers 'locked in' with regards to the services? How high is willingness to stay?",
+          "lowRiskName": "High",
+          "highRiskName": "Low",
+          "weight": 2,
+          "min": 1,
+          "max": 5,
+          "value": 3
+        }
+      ]
+    },
+    {
+      "id": "Purchasing",
+      "type": "group_slider",
+      "question": "Risk Factors - Purchasing",
+      "description": "Please create a risk assessment based on the following \"soft factors\". Slider further to the left is lower risk, further to the right is higher risk.",
+      "questions": [
+        {
+          "id": "ecb8a86c-2bb9-43e2-8bb1-83eeb441f279",
+          "group-name": "Purchasing",
+          "question": "Input-cost risk",
+          "questionText": "How high is the risk of rising input costs, such as material costs?",
+          "lowRiskName": "Low",
+          "highRiskName": "High",
+          "weight": 2,
+          "min": 1,
+          "max": 5,
+          "value": 3
+        },
+        {
+          "id": "3f1216e5-fc7c-4506-9097-96b8ae66f46d",
+          "group-name": "Purchasing",
+          "question": "Reliance on Key Suppliers",
+          "questionText": "How high is the company's reliance on key suppliers?",
+          "lowRiskName": "Low",
+          "highRiskName": "High",
+          "weight": 2,
+          "min": 1,
+          "max": 5,
+          "value": 3
+        }
+      ]
+    },
+    {
+      "id": "Product",
+      "type": "group_slider",
+      "question": "Risk Factors - Product",
+      "description": "Please create a risk assessment based on the following \"soft factors\". Slider further to the left is lower risk, further to the right is higher risk.",
+      "questions": [
+        {
+          "id": "79cfa283-e2a2-4a57-92d1-dd35393bf381",
+          "group-name": "Product",
+          "question": "Product Quality",
+          "questionText": "What is the level of quality of the company's products and/or services?",
+          "lowRiskName": "High",
+          "highRiskName": "Low",
+          "weight": 3,
+          "min": 1,
+          "max": 5,
+          "value": 3
+        },
+        {
+          "id": "5beeb5eb-1e83-4c08-b088-8c6f1f06394d",
+          "group-name": "Product",
+          "question": "Innovativeness",
+          "questionText": "How innovative is the company?",
+          "lowRiskName": "Very Innovative",
+          "highRiskName": "Not Innovative",
+          "weight": 3,
+          "min": 1,
+          "max": 5,
+          "value": 3
+        }
+      ]
+    },
+    {
+      "id": "Product2",
+      "type": "group_slider",
+      "question": "Risk Factors - Product (cont.)",
+      "description": "Please create a risk assessment based on the following \"soft factors\". Slider further to the left is lower risk, further to the right is higher risk.",
+      "questions": [
+        {
+          "id": "09e66cc1-f94e-418a-adbb-31ab861301be",
+          "group-name": "Product",
+          "question": "Intellectual Property Protection",
+          "questionText": "What is the level of intellectual property protection that the company has in place?",
+          "lowRiskName": "High",
+          "highRiskName": "Low",
+          "weight": 3,
+          "min": 1,
+          "max": 5,
+          "value": 3
+        },
+        {
+          "id": "85c9dfec-9e85-49de-84c1-6ef02d3e0524",
+          "group-name": "Product",
+          "question": "Risk of Technological Disruption",
+          "questionText": "How high is the risk of being replaced by technological advances?",
+          "lowRiskName": "Low",
+          "highRiskName": "High",
+          "weight": 2,
+          "min": 1,
+          "max": 5,
+          "value": 3
+        }
+      ]
+    },
+    {
+      "id": "Financial",
+      "type": "group_slider",
+      "question": "Risk Factors - Finance",
+      "description": "Please create a risk assessment based on the following \"soft factors\". Slider further to the left is lower risk, further to the right is higher risk.",
+      "questions": [
+        {
+          "id": "1bef52c5-2418-4986-bc57-860ab4d53087",
+          "group-name": "Financial",
+          "question": "Capital Intensity",
+          "questionText": "How high are the capital requirements of the company?",
+          "lowRiskName": "Low",
+          "highRiskName": "High",
+          "weight": 2,
+          "min": 1,
+          "max": 5,
+          "value": 3
+        },
+        {
+          "id": "31b5ea0c-d9e4-494c-b8b6-4af9eb5e0944",
+          "group-name": "Financial",
+          "question": "Leverage",
+          "questionText": "What is the level of debt financing in the company?",
+          "lowRiskName": "Low",
+          "highRiskName": "High",
+          "weight": 10,
+          "min": 1,
+          "max": 5,
+          "value": 3
+        }
+      ]
+    },
+    {
+      "id": "Financial2",
+      "type": "group_slider",
+      "question": "Risk Factors - Finance (cont.)",
+      "description": "Please create a risk assessment based on the following \"soft factors\". Slider further to the left is lower risk, further to the right is higher risk.",
+      "questions": [
+        {
+          "id": "7250f76f-a1c0-401c-9a8e-8edb35bd7e92",
+          "group-name": "Financial",
+          "question": "Foreign exchange / currency risk",
+          "questionText": "What is the level of risk, related to changes in foreign exchange rates?",
+          "lowRiskName": "Low",
+          "highRiskName": "High",
+          "weight": 1,
+          "min": 1,
+          "max": 5,
+          "value": 3
+        }
+      ]
+    },
+    {
+      "id": "137c31ef-b2de-403a-98f5-07499601f006",
+      "type": "input",
+      "question": "Please briefly describe the activity of the company:",
+      "description": "",
+      "required": true,
+      "lines": 5,
+      "placeholder": "Our company operates in the ​​… industry and has … employees and …",
+      "validationRule": "",
+      "errorMessage": "",
+      "value": ""
+    },
+    {
+      "id": "c60395c0-b63c-466f-91fa-95efcbb25416",
+      "type": "remote_autocomplete",
+      "question": "Is there a publicly listed company that is similar to yours?",
+      "description": "If you are not aware of a comparable company, you may also leave this field blank.",
+      "placeholder": "Search for publicly listed companies",
+      "source": "/api/peers?term=:param&flat=true",
+      "value": null,
+      "required": false
+    },
+    {
+      "id": "b2f489ca-966b-42d2-91c2-83eb09ba3469",
+      "type": "free_form_question",
+      "question": "Why are you interested in getting a valuation?",
+      "description": "",
+      "placeholder": "Please fill in another reason",
+      "required": true,
+      "validationRule": "",
+      "errorMessage": "Please select a value or enter your own reason.",
+      "options": [
+        {
+          "id": "23c53657-5770-40ea-89e3-9804376bb5e9",
+          "label": "Potential sale of a company",
+          "editable": false
+        },
+        {
+          "id": "202bffb3-27b0-49d3-b5a7-6d9425761f9b",
+          "label": "Potential purchase of a company",
+          "editable": false
+        },
+        {
+          "id": "a577042a-0b1d-4660-8982-5012f333e0cb",
+          "label": "Tax reasons",
+          "editable": false
+        },
+        {
+          "id": "e00f4537-53e1-46c1-8d44-40a5189d6353",
+          "label": "Business succession",
+          "editable": false
+        },
+        {
+          "id": "6813b1bf-22d1-4486-8954-e8ce72b406cb",
+          "label": "Just curious",
+          "editable": false
+        },
+        {
+          "id": "58904139-4293-4a69-aa5d-1066f4d5867b",
+          "label": "",
+          "editable": true
+        }
+      ]
+    }
+  ]
+}
