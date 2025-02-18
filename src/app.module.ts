@@ -43,6 +43,7 @@ import { VoucherModule } from './voucher/voucher.module';
 import { WebexIntegrationModule } from './webex_integration/webex_integration.module';
 import { FinancesModule } from './finances/finances.module';
 import { UserReferralModule } from './user-referral/user-referral.module';
+import { InvestorsRepositoryModule } from './investors-repository/investors-repository.module';
 import { DealPipelineModule } from './deal-pipeline/deal-pipeline.module';
 import { BalanceSheetModule } from './balance-sheet/balance-sheet.module';
 import { BullmqModule } from './shared/bullmq/bullmq.module';
@@ -97,6 +98,7 @@ import { AdvisorProfileModule } from './advisor_profile/advisor_profile.module';
     WebexIntegrationModule,
     FinancesModule,
     UserReferralModule,
+    InvestorsRepositoryModule,
     DealPipelineModule,
     BalanceSheetModule,
     BullmqModule,
