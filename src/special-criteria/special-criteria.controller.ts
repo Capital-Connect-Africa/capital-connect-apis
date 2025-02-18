@@ -11,6 +11,7 @@ import {
   Post,
   Put,
   Query,
+  Req,
   UseGuards,
 } from '@nestjs/common';
 import { SpecialCriteriaService } from './special-criteria.service';
@@ -38,12 +39,12 @@ export class SpecialCriteriaController {
     Role.Investor,
     Role.ContactPerson,
   )
-  create(@Body() createSpecialCriterionDto: CreateSpecialCriterionDto) {
-    try {
-      return this.specialCriteriaService.create(createSpecialCriterionDto);
-    } catch (error) {
-      throwInternalServer(error);
+  async create(@Body() createSpecialCriterionDto: CreateSpecialCriterionDto, @Req() req) {
+    if (!req.user) {
+      throw new BadRequestException('User role is required.');
     }
+
+    return await this.specialCriteriaService.create(createSpecialCriterionDto, req.user);
   }
 
   @Post('add-questions')
