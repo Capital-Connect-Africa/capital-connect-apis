@@ -2,6 +2,18 @@
 GET http://localhost:3000/valutico
 Content-Type: application/json
 
+### Get Countries Data
+GET http://localhost:3000/valutico/countries
+Content-Type: application/json
+
+### Get Countries Data
+GET http://localhost:3000/valutico/industries
+Content-Type: application/json
+
+### Get Countries Data
+GET http://localhost:3000/valutico/peers
+Content-Type: application/json
+
 ### Submit Valuation Data
 POST http://localhost:3000/valutico/valuations
 Content-Type: application/json
