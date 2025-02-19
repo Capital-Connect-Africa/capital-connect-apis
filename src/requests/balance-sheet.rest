@@ -1,11 +1,11 @@
 ### Create a balance sheet record
 POST http://localhost:3000/balance-sheet
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmaXJzdE5hbWUiOm51bGwsImxhc3ROYW1lIjpudWxsLCJ1c2VybmFtZSI6ImdhdHVtYWlhbkBnbWFpbC5jb20iLCJzdWIiOjEsInJlZmVycmFsQ29kZSI6ImNkMWVkNzZjIiwicm9sZXMiOlsiYWRtaW4iXSwiaGFzQWNjZXB0ZWRUZXJtcyI6dHJ1ZSwic3Vic2NyaXB0aW9uVGllciI6ImJhc2ljIiwiaWF0IjoxNzM5NDU1OTUyLCJleHAiOjE3Mzk1NDIzNTJ9.ItQEToS_9LOPqywdzqiKCtBK6_dtp4RXBr_FqVhJIaM
 
 {
-    "companyId": 7,
-    "year": 2000,
+    "companyId": 2,
+    "year": 2002,
     "landProperty": 100,
     "plantEquipment": 100,
     "otherNonCurrentAssets": 100,
@@ -14,7 +14,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
     "inventory": 100,
     "otherCurrentAssets": 100,
     "tradePayables": 100,
-    "otherCurrentLiabilities": 200,
+    "otherCurrentLiabilities": 100,
     "loans": 100,
     "capital": 100,
     "otherNonCurrentLiabilities": 200
@@ -55,4 +55,9 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
 ### Delete a balance sheet record by Id
 DELETE http://localhost:3000/balance-sheet/company/1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+
+### Generate cashflow statement
+GET http://localhost:3000/cashflow/1/2010
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
