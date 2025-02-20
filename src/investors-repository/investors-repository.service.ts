@@ -26,10 +26,12 @@ import { InvestorsUsersSearchHistoryDto } from './dto/investors-users-search-his
 import { InvestmentStructure } from 'src/investment-structures/entities/investment-structure.entity';
 import { UseOfFunds } from 'src/use-of-funds/entities/use-of-funds.entity';
 import { InvestorsRepositorySearchHistory } from './entities/investors-respository-search-history.entity';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class InvestorsRepositoryService {
   constructor(
+    private jwtService: JwtService,
     @InjectRepository(InvestorsRepository)
     private readonly investorsRepository: Repository<InvestorsRepository>,
     @InjectRepository(InvestorType)
@@ -241,7 +243,6 @@ export class InvestorsRepositoryService {
   }
 
   async getInvestors(): Promise<InvestorsRepository[]> {
-   
     return await this.investorsRepository.find();
   }
 
@@ -283,12 +284,28 @@ export class InvestorsRepositoryService {
         id: investorId,
       },
     });
-    if (!investor) throw new NotFoundException(`Investor with not found`);
+    if (!investor)
+      throw new NotFoundException(`Investor with id ${investorId} not found`);
     await this.investorsRepository.delete(investorId);
   }
 
   async searchExternalInvestors(payload: InvestorsUsersSearchHistoryDto) {
-    const { sector, subSector, country, targetAmount, useOfFunds } = payload;
+    const { query } = payload;
+    const { sector, subSector, country, targetAmount, useOfFunds } =
+      (query && this.jwtService.decode(query)) ?? payload;
+    if (!sector && !subSector && !useOfFunds && !targetAmount && !country)
+      throw new NotFoundException('could not find search criteria');
+
+    const q = this.jwtService.sign(
+      {
+        sector,
+        subSector,
+        country,
+        targetAmount,
+        useOfFunds,
+      },
+      { secret: process.env.JWT_SECRET },
+    );
     const where: any = {};
     if (country) where.countries = ArrayContains([country]);
     if (sector) where.sectors = ArrayContains([sector]);
@@ -311,7 +328,7 @@ export class InvestorsRepositoryService {
       matches,
     });
     await this.userSearchRepository.save(newSearchEntry);
-    return investors;
+    return { investors, q };
   }
 
   async getUserSearchHistories(
