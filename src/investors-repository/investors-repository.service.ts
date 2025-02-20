@@ -240,16 +240,9 @@ export class InvestorsRepositoryService {
     };
   }
 
-  async getInvestors(
-    page: number = 1,
-    limit: number = 10,
-  ): Promise<{ data: InvestorsRepository[]; total_count: number }> {
-    const skip = (page - 1) * limit;
-    const [data, total_count] = await this.investorsRepository.findAndCount({
-      skip,
-      take: limit,
-    });
-    return { data, total_count };
+  async getInvestors(): Promise<InvestorsRepository[]> {
+   
+    return await this.investorsRepository.find();
   }
 
   async getInvestor(investorId: number): Promise<InvestorsRepository> {

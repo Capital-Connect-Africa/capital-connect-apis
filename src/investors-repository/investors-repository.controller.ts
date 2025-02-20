@@ -92,12 +92,9 @@ export class InvestorsRepositoryController {
     description: 'A little server oopsy occured! Not your bad 😃',
     type: ErrorDto,
   })
-  async getInvestors(
-    @Query('page') page: number,
-    @Query('limit') limit: number,
-  ) {
+  async getInvestors() {
     try {
-      return await this.investorRespositoryService.getInvestors(page, limit);
+      return await this.investorRespositoryService.getInvestors();
     } catch (error) {
       handleError(error, RequestMethod.GET);
     }
