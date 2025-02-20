@@ -67,7 +67,7 @@ export class SpecialCriteriaService {
 
     specialCriteria = await this.specialCriteriaRepository.findOne({
       where: { id: dto.specialCriteriaId },
-      relations: ['questions', 'questions.answers', 'investorProfile'],
+      relations: ['questions', 'questions.answers', 'investorProfile', 'user'],
     });
 
     return specialCriteria;
@@ -78,7 +78,12 @@ export class SpecialCriteriaService {
         throw new NotFoundException('Investor Profile ID is required for non-partner roles.');
     }
 
-    const specialCriteria = this.specialCriteriaRepository.create(createSpecialCriterionDto);
+    const specialCriteria = this.specialCriteriaRepository.create({
+      ...createSpecialCriterionDto,
+      user: { id: user.id } as User, 
+    });    
+    
+    await this.specialCriteriaRepository.save(specialCriteria);    
 
     if (!user.roles.includes('partner')) {
         specialCriteria.investorProfile = {
@@ -94,7 +99,7 @@ export class SpecialCriteriaService {
     return this.specialCriteriaRepository.find({
       skip,
       take: limit,
-      relations: ['questions', 'questions.answers', 'investorProfile'],
+      relations: ['questions', 'questions.answers', 'investorProfile', 'user'],
       order: {id: 'DESC'},
     });
   }
@@ -105,7 +110,7 @@ export class SpecialCriteriaService {
       where: {globalVisible: true},
       skip,
       take: limit,
-      relations: ['questions', 'questions.answers', 'investorProfile'],
+      relations: ['questions', 'questions.answers', 'investorProfile', 'user'],
       order: {id: 'DESC'},
     });
   }
@@ -113,7 +118,7 @@ export class SpecialCriteriaService {
   async findOne(id: number) {
     const special = await this.specialCriteriaRepository.findOne({
       where: { id },
-      relations: ['questions', 'questions.answers', 'investorProfile'],
+      relations: ['questions', 'questions.answers', 'investorProfile', 'user'],
     });
     if (!special) {
       throw new NotFoundException(`Special criteria with id ${id} not found`);
@@ -156,6 +161,23 @@ export class SpecialCriteriaService {
     });
   }
 
+  async findByPartnerProfileId(
+    partnerProfileId: number,
+    page: number = 1,
+    limit: number = 10,
+  ) {
+    const skip = (page - 1) * limit;
+    return this.specialCriteriaRepository.find({
+      where: {
+        user: { id: partnerProfileId },
+      },
+      skip,
+      take: limit,
+      relations: ['questions', 'questions.answers', 'user'],
+      order: {id: 'DESC'},
+    });
+  }
+
   async findByCompanyId(
     companyId: number,
     page: number = 1,
@@ -171,7 +193,7 @@ export class SpecialCriteriaService {
       },
       skip,
       take: limit,
-      relations: ['questions', 'questions.answers', 'investorProfile'],
+      relations: ['questions', 'questions.answers', 'investorProfile', 'user'],
       order: {id: 'DESC'},
     });
   }
@@ -184,7 +206,7 @@ export class SpecialCriteriaService {
     // Find the special criteria with its related questions
     const specialCriteria = await this.specialCriteriaRepository.findOne({
       where: { id: specialCriteriaId },
-      relations: ['questions', 'questions.answers', 'investorProfile'], // Load answers too
+      relations: ['questions', 'questions.answers', 'investorProfile', 'user'], // Load answers too
     });
   
     if (!specialCriteria) {
