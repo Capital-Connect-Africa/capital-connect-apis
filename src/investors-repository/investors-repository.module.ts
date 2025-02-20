@@ -12,10 +12,11 @@ import { Stage } from 'src/stage/entities/stage.entity';
 import { InvestmentStructure } from 'src/investment-structures/entities/investment-structure.entity';
 import { UseOfFunds } from 'src/use-of-funds/entities/use-of-funds.entity';
 import { InvestorsRepositorySearchHistory } from './entities/investors-respository-search-history.entity';
+import { JwtService } from '@nestjs/jwt';
 
 @Module({
   controllers: [InvestorsRepositoryController],
-  providers: [InvestorsRepositoryService],
+  providers: [InvestorsRepositoryService, JwtService],
   imports: [
     TypeOrmModule.forFeature([
       InvestorsRepository,
