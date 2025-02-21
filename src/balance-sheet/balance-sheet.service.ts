@@ -21,6 +21,26 @@ export class BalanceSheetService {
     if (!company) {
       throw new NotFoundException(`Company with ID ${companyId} does not exist.`);
     }
+
+    // Add year constraint
+    const balanceSheets = await this.balanceSheetRepository.find({ 
+      where: { company: { id: companyId } } 
+    });
+    
+    if (balanceSheets.length > 0) {
+      const sortedBalanceSheets = balanceSheets.sort((a, b) => a.year - b.year);
+      const lastBalanceSheet = sortedBalanceSheets[sortedBalanceSheets.length - 1];
+    
+      if (createBalanceSheetDto.year !== lastBalanceSheet.year + 1) {
+        throw new NotFoundException(
+          `Balance sheet year must be exactly one year after the last recorded year (${lastBalanceSheet.year}).`
+        );
+      }
+    } else {
+      if (!createBalanceSheetDto.year) {
+        throw new NotFoundException('The first balance sheet must have a valid year.');
+      }
+    }    
   
     const balanceSheet = this.balanceSheetRepository.create({
       ...createBalanceSheetDto,

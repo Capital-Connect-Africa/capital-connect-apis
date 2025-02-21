@@ -21,6 +21,26 @@ export class CostOfSalesService {
     if (!company) {
       throw new NotFoundException(`Company with ID ${companyId} does not exist.`);
     }
+
+    // Add year constraint
+    const costOfSalesRecords = await this.costOfSalesRepository.find({ 
+      where: { company: { id: companyId } }
+    });
+
+    if (costOfSalesRecords.length > 0) {
+        const sortedRecords = costOfSalesRecords.sort((a, b) => a.year - b.year);
+        const lastRecord = sortedRecords[sortedRecords.length - 1];
+
+        if (createCostOfSalesDto.year !== lastRecord.year + 1) {
+            throw new NotFoundException(
+              `Cost of Sales year must be exactly one year after the last recorded year (${lastRecord.year}).`
+            );
+        }
+    } else {
+        if (!createCostOfSalesDto.year) {
+            throw new NotFoundException('The first Cost of Sales record must have a valid year.');
+        }
+    }
   
     const CostOfSales = this.costOfSalesRepository.create({
       ...createCostOfSalesDto,

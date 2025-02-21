@@ -1,8 +1,10 @@
-import { IsNotEmpty, IsNumber, IsString } from "class-validator";
+import { IsInt, IsNotEmpty, IsNumber, IsString, Validate } from "class-validator";
+import { MaxYearConstraint } from "src/decorators/maxYear.decorator";
 
 export class CreateOpexDto {
-    @IsNumber()
     @IsNotEmpty()
+    @IsInt()
+    @Validate(MaxYearConstraint)
     year: number;
     
     @IsString()
