@@ -5,22 +5,22 @@ import { Company } from 'src/company/entities/company.entity';
 @Entity('cost_of_sales')
 export class CostOfSales {
     @PrimaryGeneratedColumn()
-      id: number;
+    id: number;
     
-      @Column()
-      year: number;
+    @Column({ type: 'int', default: () => `date_part('year', now())::INTEGER` })
+    year: number;
     
-      @Column()
-      description: string; 
+    @Column()
+    description: string; 
     
-      @Column()
-      value: number; 
+    @Column()
+    value: number; 
     
-      @ManyToOne(() => Finances, (finances) => finances.costOfSales, { onDelete: 'CASCADE' })
-      @JoinColumn({ name: 'financesId' })
-      finances: Finances;
+    @ManyToOne(() => Finances, (finances) => finances.costOfSales, { onDelete: 'CASCADE' })
+    @JoinColumn({ name: 'financesId' })
+    finances: Finances;
     
-      @ManyToOne(() => Company, (company) => company.finances)
-      @JoinColumn({ name: 'companyId' })
-      company: Company;
+    @ManyToOne(() => Company, (company) => company.finances)
+    @JoinColumn({ name: 'companyId' })
+    company: Company;
 }

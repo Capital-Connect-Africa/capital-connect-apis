@@ -1,8 +1,10 @@
-import { IsArray, IsNotEmpty, IsNumber, IsOptional} from "class-validator";
+import { IsArray, IsInt, IsNotEmpty, IsNumber, IsOptional, Validate} from "class-validator";
+import { MaxYearConstraint } from "src/decorators/maxYear.decorator";
 
 export class CreateFinanceDto {
-    @IsNumber()
     @IsNotEmpty()
+    @IsInt()
+    @Validate(MaxYearConstraint)
     year: number;
 
     @IsNumber()

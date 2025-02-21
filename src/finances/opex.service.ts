@@ -22,6 +22,26 @@ export class OpexService {
       throw new NotFoundException(`Company with ID ${companyId} does not exist.`);
     }
 
+    // Add year constraint
+    const opexRecords = await this.opexRepository.find({ 
+      where: { company: { id: companyId } }
+    });
+
+    if (opexRecords.length > 0) {
+        const sortedRecords = opexRecords.sort((a, b) => a.year - b.year);
+        const lastRecord = sortedRecords[sortedRecords.length - 1];
+
+        if (createOpexDto.year !== lastRecord.year + 1) {
+            throw new NotFoundException(
+              `Opex year must be exactly one year after the last recorded year (${lastRecord.year}).`
+            );
+        }
+    } else {
+        if (!createOpexDto.year) {
+            throw new NotFoundException('The first Opex record must have a valid year.');
+        }
+    }
+
     const opex = this.opexRepository.create({
       ...createOpexDto,
       company: { id: companyId }, 

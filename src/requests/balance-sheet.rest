@@ -4,20 +4,20 @@ Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
 {
-    "companyId": 2,
-    "year": 2001,
-    "landProperty": 100,
-    "plantEquipment": 100,
-    "otherNonCurrentAssets": 100,
-    "tradeReceivables": 100,
-    "cash": 100,
-    "inventory": 100,
-    "otherCurrentAssets": 100,
-    "tradePayables": 100,
-    "otherCurrentLiabilities": 200,
-    "loans": 100,
-    "capital": 100,
-    "otherNonCurrentLiabilities": 200
+    "companyId": 1,
+    "year": 2020,
+    "landProperty": 1000,
+    "plantEquipment": 1000,
+    "otherNonCurrentAssets": 1000,
+    "tradeReceivables": 1000,
+    "cash": 1000,
+    "inventory": 1000,
+    "otherCurrentAssets": 1000,
+    "tradePayables": 1000,
+    "otherCurrentLiabilities": 2000,
+    "loans": 1000,
+    "capital": 1000,
+    "otherNonCurrentLiabilities": 2000
 }
 
 ### Get all balance sheet records
@@ -54,7 +54,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 }
 
 ### Delete a balance sheet record by Id
-DELETE http://localhost:3000/balance-sheet/company/1
+DELETE http://localhost:3000/balance-sheet/1
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
 
