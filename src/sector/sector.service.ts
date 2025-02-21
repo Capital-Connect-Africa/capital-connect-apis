@@ -21,6 +21,7 @@ export class SectorService {
     return this.sectionRepository.find({
       skip,
       take: limit,
+      relations: ['subSectors']
     });
   }
 
