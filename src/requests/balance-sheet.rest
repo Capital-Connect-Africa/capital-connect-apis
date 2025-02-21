@@ -4,8 +4,8 @@ Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
 {
-    "companyId": 7,
-    "year": 2000,
+    "companyId": 2,
+    "year": 2001,
     "landProperty": 100,
     "plantEquipment": 100,
     "otherNonCurrentAssets": 100,
@@ -55,4 +55,9 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
 ### Delete a balance sheet record by Id
 DELETE http://localhost:3000/balance-sheet/company/1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+
+### Generate cashflow statement
+GET http://localhost:3000/cashflow/2/2001
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
