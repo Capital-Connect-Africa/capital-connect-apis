@@ -26,6 +26,7 @@ import { Referral } from 'src/user-referral/entities/referral.entity';
 import { DealCustomer } from 'src/deal-pipeline/entities/deal-customer.entity';
 import { DealPipeline } from 'src/deal-pipeline/entities/deal-pipeline.entity';
 import { AdvisorProfile } from 'src/advisor_profile/entities/advisor_profile.entity';
+import { SpecialCriterion } from 'src/special-criteria/entities/special-criterion.entity';
 
 
 @Entity('users')
@@ -113,6 +114,12 @@ export class User {
     (investorProfile) => investorProfile.investor,
   )
   investorProfile: InvestorProfile;
+
+  @OneToMany(
+      () => SpecialCriterion,
+      (specialCriteria) => specialCriteria.user,
+    )
+    specialCriteria: SpecialCriterion[];
 
   @OneToOne(
     () => AdvisorProfile,

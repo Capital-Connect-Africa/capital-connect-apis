@@ -15,4 +15,8 @@ export class CreateSpecialCriterionDto {
     @IsNumber()
     @IsOptional()
     investorProfileId: number;
+
+    @IsNumber()
+    @IsOptional()
+    userId: number;
 }

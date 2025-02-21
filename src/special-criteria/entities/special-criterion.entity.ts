@@ -1,5 +1,6 @@
 import { InvestorProfile } from "src/investor-profile/entities/investor-profile.entity";
 import { Question } from "src/question/entities/question.entity";
+import { User } from "src/users/entities/user.entity";
 import { Column, Entity, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity("special_criteria")
@@ -22,4 +23,7 @@ export class SpecialCriterion {
 
     @ManyToOne(() => InvestorProfile, (investorProfile) => investorProfile.specialCriteria, { onDelete: 'CASCADE' })
     investorProfile: InvestorProfile;
+
+    @ManyToOne(() => User, (user) => user.specialCriteria, { onDelete: 'CASCADE' })
+    user: User;
 }
