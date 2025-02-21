@@ -1,4 +1,4 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn } from 'typeorm';
 import { Currency } from 'src/shared/enums/currency.enum';
 
 @Entity('investors-repository')
@@ -59,4 +59,7 @@ export class InvestorsRepository {
 
   @Column('text', { nullable: true })
   description: string;
+
+  @CreateDateColumn({type: 'timestamp'})
+  createdAt: Date;
 }
