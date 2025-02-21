@@ -5,6 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { AdvisorProfile } from './entities/advisor_profile.entity';
 import { User } from 'src/users/entities/user.entity';
+import { feeStructure, Role, servicesOffered } from './advisor.type';
 
 @Injectable()
 export class AdvisorProfileService {
@@ -43,6 +44,15 @@ export class AdvisorProfileService {
     return advisor;
   }
 
+  async findByUserId(userId: number): Promise<AdvisorProfile> {
+    const advisor = await this.advisorProfileRepository.findOne({ 
+      where: { user: { id: userId } },
+      relations: ['user'], 
+    });
+    if (!advisor) throw new NotFoundException(`Advisor with userId ${userId} not found`);
+    return advisor;
+  }
+
   async update(id: number, data: Partial<AdvisorProfile>): Promise<AdvisorProfile> {
     await this.advisorProfileRepository.update(id, data);
     return this.findOne(id);
@@ -51,5 +61,17 @@ export class AdvisorProfileService {
   async remove(id: number): Promise<void> {
     const advisor = await this.findOne(id);
     await this.advisorProfileRepository.remove(advisor);
+  }
+
+  roles(): Array<string> {
+    return Object.values(Role);
+  }
+
+  servicesOffered(): Array<string> {
+    return Object.values(servicesOffered);
+  }
+
+  feeStructure(): Array<string> {
+    return Object.values(feeStructure);
   }
 }
