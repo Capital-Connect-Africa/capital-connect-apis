@@ -101,6 +101,19 @@ export class SpecialCriteriaController {
     );
   }
 
+  @Get('partner-profile/:partnerProfileId')
+  async findByPartnerProfileId(
+    @Param('partnerProfileId') partnerProfileId: number,
+    @Query('page') page: number,
+    @Query('limit') limit: number,
+  ) {
+    return this.specialCriteriaService.findByPartnerProfileId(
+      partnerProfileId,
+      page,
+      limit,
+    );
+  }
+
   @Get('company/:companyId')
   async findByCompanyId(
     @Param('companyId') companyId: number,

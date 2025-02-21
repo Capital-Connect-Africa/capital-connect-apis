@@ -14,4 +14,19 @@ export class ValuticoController {
   async submitValuation(@Body() valuationData: any) {
     return this.valuticoService.submitValuation(valuationData);
   }
+
+  @Get('countries')
+  async getCountries() {
+    return this.valuticoService.getCountries();
+  }
+
+  @Get('industries')
+  async getIndustries() {
+    return this.valuticoService.getIndustries();
+  }
+
+  @Get('peers')
+  async getPeers() {
+    return this.valuticoService.getPeers();
+  }
 }

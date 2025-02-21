@@ -1,4 +1,4 @@
-### Create Special criteria
+### Create Special criteria (userId for Partner & InvestorProfile for Investor)
 POST http://localhost:3000/special-criteria
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
@@ -7,6 +7,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
     "title": "New Special Criteria",
     "description": "This is a test criteria.",
     "globalVisible": false,
+    "userId": 7, 
     "investorProfileId": 2
 }
 
@@ -44,6 +45,10 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
 ### Get all Special criteria by Investor profile
 GET http://localhost:3000/special-criteria/investor-profile/2
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+### Get all Special criteria by Partner profile
+GET http://localhost:3000/special-criteria/partner-profile/2
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
 ### Get all Special criteria by Investor profile prod
