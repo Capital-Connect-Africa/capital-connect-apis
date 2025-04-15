@@ -32,6 +32,7 @@ export class WebexIntegrationController {
 
   @Post('calendly-callback')
   async CalendlyCallback(@Body() body: any) {
+    console.log("************The Response from the calendly webhook is *******************", body)
     const {
       payload: {
           tracking: { utm_content },
