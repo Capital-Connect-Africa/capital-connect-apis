@@ -30,6 +30,11 @@ GET http://localhost:3000/advisor-profile/1
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
+### Get by User Id
+GET http://localhost:3000/advisor-profile/user/7
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
 ### Get All Advisor Profiles
 GET http://localhost:3000/advisor-profile
 Content-Type: application/json
@@ -66,3 +71,13 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 DELETE http://localhost:3000/advisor-profile/2
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+
+### Get Advisor Profile Roles
+GET http://localhost:3000/advisor-profile/list/roles
+
+### Get Advisor Profile Services Offered
+GET http://localhost:3000/advisor-profile/list/services-offered
+
+### Get Advisor Profile Fees Structure
+GET http://localhost:3000/advisor-profile/list/fee-structure

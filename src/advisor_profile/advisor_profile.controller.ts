@@ -25,6 +25,11 @@ export class AdvisorProfileController {
     return this.advisorProfileService.findOne(id);
   }
 
+  @Get('user/:userId')
+  findByUserId(@Param('userId') userId: number): Promise<AdvisorProfile> {
+    return this.advisorProfileService.findByUserId(userId);
+  }
+
   @Put(':id')
   update(
     @Param('id') id: number, @Body() updateAdvisorDto: 
