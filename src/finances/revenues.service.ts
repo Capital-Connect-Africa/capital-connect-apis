@@ -21,6 +21,28 @@ export class RevenuesService {
     if (!company) {
       throw new NotFoundException(`Company with ID ${companyId} does not exist.`);
     }
+
+    // Add year constraint
+    const revenueRecords = await this.revenueRepository.find({ 
+      where: { company: { id: companyId } }
+    });
+
+    if (revenueRecords.length > 0) {
+        // Sort records by year
+        const sortedRecords = revenueRecords.sort((a, b) => a.year - b.year);
+        const lastRecord = sortedRecords[sortedRecords.length - 1];
+
+        if (createRevenueDto.year !== lastRecord.year + 1) {
+            throw new NotFoundException(
+              `Revenue year must be exactly one year after the last recorded year (${lastRecord.year}).`
+            );
+        }
+    } else {
+        // First entry validation: Ensure a valid base year
+        if (!createRevenueDto.year) {
+            throw new NotFoundException('The first Revenue record must have a valid year.');
+        }
+    }
   
     const revenue = this.revenueRepository.create({
       ...createRevenueDto,

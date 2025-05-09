@@ -7,7 +7,7 @@ export class Revenue {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({ type: 'int', default: () => `date_part('year', now())::INTEGER` })
   year: number;
 
   @Column()

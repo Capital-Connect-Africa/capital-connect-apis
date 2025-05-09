@@ -1,7 +1,9 @@
-import { IsNumber } from "class-validator";
+import { IsInt, IsNumber, Validate } from "class-validator";
+import { MaxYearConstraint } from "src/decorators/maxYear.decorator";
 
 export class CreateBalanceSheetDto {
-    @IsNumber()
+    @IsInt()
+    @Validate(MaxYearConstraint)
     year: number;
 
     @IsNumber()

@@ -48,6 +48,29 @@ export class FinancesService {
         'A financial record with the same year already exists for this company.'
       );
     }
+
+    // Add year constraint
+    const financeRecords = await this.financeRepository.find({ 
+      where: { company: { id: companyId } },
+    });
+
+    if (financeRecords.length > 0) {
+        // Sort records by year
+        const sortedRecords = financeRecords.sort((a, b) => a.year - b.year);
+        const lastRecord = sortedRecords[sortedRecords.length - 1];
+
+        if (year !== lastRecord.year + 1) {
+            throw new NotFoundException(
+              `Finance year must be exactly one year after the last recorded year (${lastRecord.year}).`
+            );
+        }
+    } else {
+        // First entry validation: Ensure a valid base year
+        if (!year) {
+            throw new NotFoundException('The first financial record must have a valid year.');
+        }
+    }
+
     const finance = this.financeRepository.create({
       ...rest,
       year,
